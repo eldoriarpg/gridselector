@@ -10,9 +10,7 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import de.eldoria.gridselector.adapter.WorldAdapter;
 import de.eldoria.gridselector.adapter.regionadapter.RegionResult;
 import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.List;
@@ -140,10 +138,11 @@ public class SelectionBrush implements Brush {
     }
 
     public void clearMarker() {
-        var air = Material.AIR.createBlockData();
+        var world = owner.getWorld();
         for (var region : regions.values()) {
             for (var corner : region.getCorners()) {
-                owner.sendBlockChange(corner.toLocation(owner.getWorld()), air);
+                var loc = corner.toLocation(world);
+                owner.sendBlockChange(loc, world.getBlockAt(loc).getBlockData());
             }
         }
     }
