@@ -7,30 +7,36 @@ plugins {
 group = "de.eldoria"
 version = "1.0"
 val publishData = PublishData(project)
-val shadebase = "de.eldoria.gridselector.libs"
+val shadebase = "de.eldoria.gridselector.libs."
 
 repositories {
+    mavenCentral()
     maven("https://eldonexus.de/repository/maven-public/")
     maven("https://eldonexus.de/repository/maven-proxies/")
 }
 
 dependencies {
-    implementation("de.eldoria", "eldo-util", "1.10.3")
-    compileOnly("de.eldoria", "schematicbrushreborn", "1.5.0-20210919.131332-5")
+    implementation("de.eldoria", "eldo-util", "1.10.5-DEV")
+    compileOnly("de.eldoria", "schematicbrushreborn", "1.5.0a-SNAPSHOT")
     compileOnly("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
+    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.6")
+    compileOnly("com.plotsquared", "PlotSquared-Core", "6.1.2") // PlotSquared Core API
+    compileOnly("com.plotsquared:PlotSquared-Bukkit:6.1.2") { isTransitive = false } // PlotSquared Bukkit API
 
     testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.6.0")
+    testImplementation("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine")
 }
 
 java {
     withSourcesJar()
     withJavadocJar()
-    sourceCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_16
 }
 
 publishing {
     publications.create<MavenPublication>("maven") {
+        artifact(tasks["jar"])
         artifact(tasks["shadowJar"])
         artifact(tasks["sourcesJar"])
         artifact(tasks["javadocJar"])
@@ -62,6 +68,7 @@ tasks {
     compileTestJava{
         options.encoding = "UTF-8"
     }
+
     test {
         useJUnitPlatform()
         testLogging {
@@ -69,7 +76,7 @@ tasks {
         }
     }
     shadowJar{
-        relocate("de.eldoutilities", shadebase + "eldoutilities")
+        relocate("de.eldoria.eldoutilities", shadebase + "eldoutilities")
         mergeServiceFiles()
     }
     processResources {

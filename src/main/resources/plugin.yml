@@ -5,6 +5,8 @@ author: Hadde
 main: de.eldoria.gridselector.GridSelector
 depend:
   - SchematicBrushReborn
+softdepend:
+  - PlotSquared
 commands:
-  SchematicBrushGrid:
+  schematicbrushgrid:
     aliases: sbrg
