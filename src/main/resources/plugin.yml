@@ -1,0 +1,10 @@
+name: GridSelector
+version: ${version}
+api-version: 1.13
+author: Hadde
+main: de.eldoria.gridselector.GridSelector
+depend:
+  - SchematicBrushReborn
+commands:
+  SchematicBrushGrid:
+    aliases: sbrg
