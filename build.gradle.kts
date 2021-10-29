@@ -25,6 +25,7 @@ dependencies {
 
     testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.6.0")
     testImplementation("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
+    testImplementation("de.eldoria", "eldo-util", "1.10.11-DEV")
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine")
 }
 
