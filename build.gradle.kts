@@ -16,8 +16,8 @@ repositories {
 }
 
 dependencies {
-    implementation("de.eldoria", "eldo-util", "1.10.5-DEV")
-    compileOnly("de.eldoria", "schematicbrushreborn", "1.5.0c-SNAPSHOT")
+    compileOnly("de.eldoria", "eldo-util", "1.10.11-DEV")
+    compileOnly("de.eldoria", "schematicbrushreborn-api", "2.0.0-20211029.174513-2")
     compileOnly("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.6")
     compileOnly("com.plotsquared", "PlotSquared-Core", "6.1.2") // PlotSquared Core API
@@ -76,7 +76,7 @@ tasks {
         }
     }
     shadowJar{
-        relocate("de.eldoria.eldoutilities", shadebase + "eldoutilities")
+        relocate("de.eldoria.eldoutilities", "de.eldoria.schematicbrush.libs.eldoutilities")
         mergeServiceFiles()
     }
     processResources {

@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class Configuration extends EldoConfig {
 
-    List<GridWorld> gridWorlds = new ArrayList<>();
+    private List<GridWorld> gridWorlds;
 
     public Configuration(Plugin plugin) {
         super(plugin);
@@ -36,11 +36,19 @@ public class Configuration extends EldoConfig {
     }
 
     public Optional<GridWorld> getGridWorld(@NotNull Location location) {
-        if(location.getWorld() == null) return Optional.empty();
+        if (location.getWorld() == null) return Optional.empty();
         return getGridWorld(location.getWorld());
     }
 
     public Optional<GridWorld> getGridWorld(World world) {
         return getGridWorld(world.getName());
+    }
+
+    public GridWorld createGridWorld(World world) {
+        var gridWorld = getGridWorld(world).orElse(new GridWorld(world.getName()));
+        if (!gridWorlds.contains(gridWorld)) {
+            gridWorlds.add(gridWorld);
+        }
+        return gridWorld;
     }
 }

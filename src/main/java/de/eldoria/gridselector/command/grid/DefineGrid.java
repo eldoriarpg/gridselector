@@ -2,13 +2,46 @@ package de.eldoria.gridselector.command.grid;
 
 import de.eldoria.eldoutilities.commands.command.AdvancedCommand;
 import de.eldoria.eldoutilities.commands.command.CommandMeta;
+import de.eldoria.eldoutilities.commands.command.util.Arguments;
+import de.eldoria.eldoutilities.commands.command.util.CommandAssertions;
+import de.eldoria.eldoutilities.commands.exceptions.CommandException;
+import de.eldoria.eldoutilities.commands.executor.IPlayerTabExecutor;
+import de.eldoria.eldoutilities.simplecommands.TabCompleteUtil;
+import de.eldoria.gridselector.config.Configuration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class DefineGrid extends AdvancedCommand {
-    public DefineGrid(Plugin plugin) {
+import java.util.Collections;
+import java.util.List;
+
+public class DefineGrid extends AdvancedCommand implements IPlayerTabExecutor {
+    private final Configuration config;
+
+    public DefineGrid(Plugin plugin, Configuration config) {
         super(plugin, CommandMeta
                 .builder("defineGrid")
                 .addAlias("dg")
+                .addUnlocalizedArgument("size", true)
                 .build());
+        this.config = config;
+    }
+
+    @Override
+    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+        var gridWorld = config.createGridWorld(player.getWorld());
+        gridWorld.gridSize(args.asInt(0));
+        CommandAssertions.range(args.asInt(0), 2, 500);
+        config.save();
+        messageSender().sendMessage(player, "Set grid size");
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+        if (args.size() == 1) {
+            return TabCompleteUtil.completeInt(args.asString(0), 2, 500, localizer());
+        }
+        return Collections.emptyList();
     }
 }

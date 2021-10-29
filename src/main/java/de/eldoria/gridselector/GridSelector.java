@@ -9,8 +9,12 @@ import de.eldoria.gridselector.adapter.regionadapter.PlotWorldAdapter;
 import de.eldoria.gridselector.adapter.regionadapter.RegionAdapter;
 import de.eldoria.gridselector.command.Grid;
 import de.eldoria.gridselector.config.Configuration;
+import de.eldoria.gridselector.config.elements.GridWorld;
 import de.eldoria.gridselector.listener.SelectionListener;
+import de.eldoria.gridselector.schematics.GridSchematics;
+import de.eldoria.gridselector.selector.GridProvider;
 import de.eldoria.schematicbrush.SchematicBrushReborn;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +26,13 @@ public class GridSelector extends EldoPlugin {
     public void onPluginEnable() throws Throwable {
         var config = new Configuration(this);
 
+        var sbr = (SchematicBrushReborn) getPluginManager().getPlugin("SchematicBrushReborn");
+
+        var gridSchematics = new GridSchematics(this);
+
+        sbr.brushSettingsRegistry().registerSelector(new GridProvider(sbr.schematics()));
+        sbr.schematics().register(GridSchematics.KEY, gridSchematics);
+
         List<RegionAdapter> regionAdapters = new ArrayList<>();
         regionAdapters.add(new GridWorldAdapter(config));
 
@@ -31,14 +42,16 @@ public class GridSelector extends EldoPlugin {
             regionAdapters.add(new PlotWorldAdapter(plotSquared));
         }
 
-        var schematicService = new SchematicService(this);
-
         var worldAdapter = new WorldAdapter(regionAdapters);
-        var selectionListener = new SelectionListener(worldAdapter, schematicService);
+        var selectionListener = new SelectionListener(worldAdapter, gridSchematics);
 
         registerListener(selectionListener);
 
-        registerCommand(new Grid(this, (SchematicBrushReborn) getPluginManager().getPlugin("SchematicBrushReborn"),
-                selectionListener, schematicService));
+        registerCommand(new Grid(this, selectionListener, config));
+    }
+
+    @Override
+    public List<Class<? extends ConfigurationSerializable>> getConfigSerialization() {
+        return List.of(GridWorld.class);
     }
 }

@@ -1,6 +1,6 @@
 package de.eldoria.gridselector.listener;
 
-import de.eldoria.gridselector.SchematicService;
+import de.eldoria.gridselector.schematics.GridSchematics;
 import de.eldoria.gridselector.adapter.WorldAdapter;
 import de.eldoria.gridselector.brush.SelectionBrush;
 import de.eldoria.schematicbrush.util.WorldEditBrush;
@@ -11,7 +11,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.plugin.Plugin;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,9 +19,9 @@ import java.util.UUID;
 public class SelectionListener implements Listener {
     private final Map<UUID, SelectionBrush> players = new HashMap<>();
     private final WorldAdapter adapter;
-    private final SchematicService schematicService;
+    private final GridSchematics schematicService;
 
-    public SelectionListener(WorldAdapter adapter, SchematicService schematicService) {
+    public SelectionListener(WorldAdapter adapter, GridSchematics schematicService) {
         this.adapter = adapter;
         this.schematicService = schematicService;
     }
