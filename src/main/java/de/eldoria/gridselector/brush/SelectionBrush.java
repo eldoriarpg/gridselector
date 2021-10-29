@@ -148,6 +148,7 @@ public class SelectionBrush implements Brush {
     }
 
     public void clearRegions() {
+        clearMarker();
         regions.clear();
     }
 }
