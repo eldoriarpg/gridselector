@@ -2,6 +2,8 @@ package de.eldoria.gridselector;
 
 
 import com.plotsquared.core.PlotSquared;
+import de.eldoria.eldoutilities.localization.ILocalizer;
+import de.eldoria.eldoutilities.messages.MessageSender;
 import de.eldoria.eldoutilities.plugin.EldoPlugin;
 import de.eldoria.gridselector.adapter.WorldAdapter;
 import de.eldoria.gridselector.adapter.regionadapter.GridWorldAdapter;
@@ -18,18 +20,22 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-@SuppressWarnings("unused")
 public class GridSelector extends EldoPlugin {
 
     @Override
     public void onPluginEnable() throws Throwable {
         var config = new Configuration(this);
 
-        var sbr = (SchematicBrushReborn) getPluginManager().getPlugin("SchematicBrushReborn");
+        var sbr = (SchematicBrushReborn) Objects.requireNonNull(getPluginManager().getPlugin("SchematicBrushReborn"));
+
+        var messageSender = MessageSender.create(this, "§3[GS]");
 
         var gridSchematics = new GridSchematics(this);
 
+        var iLocalizer = ILocalizer.create(this, "en_US");
+        iLocalizer.setLocale("en_US");
         sbr.brushSettingsRegistry().registerSelector(new GridProvider(sbr.schematics()));
         sbr.schematics().register(GridSchematics.KEY, gridSchematics);
 
@@ -43,11 +49,11 @@ public class GridSelector extends EldoPlugin {
         }
 
         var worldAdapter = new WorldAdapter(regionAdapters);
-        var selectionListener = new SelectionListener(worldAdapter, gridSchematics);
+        var selectionListener = new SelectionListener(worldAdapter, gridSchematics, messageSender);
 
         registerListener(selectionListener);
 
-        registerCommand(new Grid(this, selectionListener, config));
+        registerCommand(new Grid(this, sbr, selectionListener, config, gridSchematics));
     }
 
     @Override

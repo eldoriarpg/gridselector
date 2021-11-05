@@ -98,7 +98,7 @@ public class GridSchematics implements SchematicCache {
     public Set<Schematic> getSchematicsByName(Player player, String name) {
         try (var stream = Files.walk(getPlayerDirectory(player))) {
             return stream.filter(Files::isRegularFile)
-                    .map(f -> new Schematic(ClipboardFormats.findByFile(f.toFile()), f.toFile()))
+                    .map(f -> Schematic.of(f.toFile()))
                     .collect(Collectors.toSet());
         } catch (IOException e) {
             plugin.getLogger().log(Level.SEVERE, "Could not load player schematics");

@@ -6,22 +6,7 @@ import org.bukkit.util.Vector;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RegionResult {
-    private final String identifier;
-    private final CuboidRegion region;
-
-    public RegionResult(String identifier, CuboidRegion region) {
-        this.identifier = identifier;
-        this.region = region;
-    }
-
-    public String identifier() {
-        return identifier;
-    }
-
-    public CuboidRegion region() {
-        return region;
-    }
+public record RegionResult(String identifier, CuboidRegion region) {
 
     @Override
     public boolean equals(Object o) {
