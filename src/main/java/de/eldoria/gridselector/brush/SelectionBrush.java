@@ -7,9 +7,12 @@ import com.sk89q.worldedit.command.tool.brush.Brush;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.world.block.BlockState;
+import de.eldoria.eldoutilities.messages.MessageSender;
 import de.eldoria.gridselector.adapter.WorldAdapter;
 import de.eldoria.gridselector.adapter.regionadapter.RegionResult;
 import org.bukkit.Material;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -19,11 +22,13 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class SelectionBrush implements Brush {
+    private final MessageSender messageSender;
     private final Player owner;
     private final Map<String, RegionResult> regions = new HashMap<>();
     private final WorldAdapter worldAdapter;
 
-    public SelectionBrush(Player owner, WorldAdapter worldAdapter) {
+    public SelectionBrush(MessageSender messageSender, Player owner, WorldAdapter worldAdapter) {
+        this.messageSender = messageSender;
         this.owner = owner;
         this.worldAdapter = worldAdapter;
     }
@@ -32,15 +37,15 @@ public class SelectionBrush implements Brush {
     public void build(EditSession editSession, BlockVector3 position, Pattern pattern, double size) throws MaxChangedBlocksException {
         var optRegion = worldAdapter.getRegion(new com.sk89q.worldedit.util.Location(editSession.getWorld(), position.toVector3()));
         if (optRegion.isEmpty()) {
-            owner.sendMessage("No grid or plot present.");
+            messageSender.sendError(owner, "No grid or plot present.");
             return;
         }
         var result = optRegion.get();
 
         if (regions.containsKey(result.identifier())) {
-            var air = Material.AIR.createBlockData();
             for (var corner : regions.remove(result.identifier()).getCorners()) {
-                owner.sendBlockChange(corner.toLocation(owner.getWorld()), air);
+                var block = editSession.getBlock(BlockVector3.at(corner.getX(), corner.getY(), corner.getZ()));
+                owner.sendBlockChange(corner.toLocation(owner.getWorld()), BukkitAdapter.adapt(block));
             }
             return;
         }
