@@ -41,7 +41,8 @@ public class DrawGrid extends AdvancedCommand implements IPlayerTabExecutor {
     public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
         var world = BukkitAdapter.adapt(player.getWorld());
         var actor = BukkitAdapter.adapt(player);
-        try (var session = worldEdit.newEditSessionBuilder().actor(actor).world(world).build()) {
+        var session = worldEdit.newEditSessionBuilder().actor(actor).world(world).build();
+        try (session ) {
             var loc = player.getLocation();
             var floor = session.getHighestTerrainBlock(loc.getBlockX(), loc.getBlockZ(), player.getWorld().getMinHeight(), player.getWorld().getMaxHeight());
 
@@ -80,6 +81,7 @@ public class DrawGrid extends AdvancedCommand implements IPlayerTabExecutor {
         } catch (MaxChangedBlocksException e) {
             throw CommandException.message("Operation too large");
         }
+        worldEdit.getSessionManager().get(actor).remember(session);
 
         messageSender().sendMessage(player, "Grid drawn.");
     }
