@@ -31,6 +31,16 @@ public class GridProvider extends SelectorProvider {
     }
 
     @Override
+    public String description() {
+        return "Use the schematics you have selected with GridSelector previously.";
+    }
+
+    @Override
+    public String permission() {
+        return "gridselector.selector.use";
+    }
+
+    @Override
     public boolean hasArguments() {
         return false;
     }
