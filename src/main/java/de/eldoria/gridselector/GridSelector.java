@@ -9,6 +9,7 @@ import de.eldoria.gridselector.adapter.WorldAdapter;
 import de.eldoria.gridselector.adapter.regionadapter.GridWorldAdapter;
 import de.eldoria.gridselector.adapter.regionadapter.PlotWorldAdapter;
 import de.eldoria.gridselector.adapter.regionadapter.RegionAdapter;
+import de.eldoria.gridselector.adapter.regionadapter.RegionResult;
 import de.eldoria.gridselector.command.Grid;
 import de.eldoria.gridselector.config.Configuration;
 import de.eldoria.gridselector.config.elements.GridWorld;
@@ -16,11 +17,13 @@ import de.eldoria.gridselector.listener.SelectionListener;
 import de.eldoria.gridselector.schematics.GridSchematics;
 import de.eldoria.gridselector.selector.GridProvider;
 import de.eldoria.schematicbrush.SchematicBrushReborn;
+import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class GridSelector extends EldoPlugin {
 
@@ -42,10 +45,24 @@ public class GridSelector extends EldoPlugin {
         List<RegionAdapter> regionAdapters = new ArrayList<>();
         regionAdapters.add(new GridWorldAdapter(config));
 
+        RegionAdapter plotWorldAdapter;
         if (getPluginManager().isPluginEnabled("PlotSquared")) {
             logger().info("Found plot squared. Registering plot squared world adapter");
             var plotSquared = PlotSquared.get();
-            regionAdapters.add(new PlotWorldAdapter(plotSquared));
+            plotWorldAdapter = new PlotWorldAdapter(plotSquared);
+            regionAdapters.add(plotWorldAdapter);
+        } else {
+            plotWorldAdapter = new RegionAdapter() {
+                @Override
+                public boolean isApplicable(Location location) {
+                    return false;
+                }
+
+                @Override
+                public Optional<RegionResult> getRegion(Location location) {
+                    return Optional.empty();
+                }
+            };
         }
 
         var worldAdapter = new WorldAdapter(regionAdapters);
@@ -53,7 +70,7 @@ public class GridSelector extends EldoPlugin {
 
         registerListener(selectionListener);
 
-        registerCommand(new Grid(this, sbr, selectionListener, config, gridSchematics));
+        registerCommand(new Grid(this, sbr, selectionListener, config, gridSchematics, plotWorldAdapter));
     }
 
     @Override

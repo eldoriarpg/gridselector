@@ -13,6 +13,7 @@ import de.eldoria.eldoutilities.commands.command.util.CommandAssertions;
 import de.eldoria.eldoutilities.commands.exceptions.CommandException;
 import de.eldoria.eldoutilities.commands.executor.IPlayerTabExecutor;
 import de.eldoria.eldoutilities.simplecommands.TabCompleteUtil;
+import de.eldoria.gridselector.adapter.regionadapter.RegionAdapter;
 import de.eldoria.gridselector.config.Configuration;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -27,18 +28,22 @@ import java.util.logging.Level;
 public class DrawGrid extends AdvancedCommand implements IPlayerTabExecutor {
     private final WorldEdit worldEdit = WorldEdit.getInstance();
     private final Configuration config;
+    private final RegionAdapter plotWorldAdapter;
 
-    public DrawGrid(Plugin plugin, Configuration config) {
+    public DrawGrid(Plugin plugin, Configuration config, RegionAdapter plotWorldAdapter) {
         super(plugin, CommandMeta.builder("drawgrid")
                 .addUnlocalizedArgument("range", true)
                 .addUnlocalizedArgument("material", true)
                 .addUnlocalizedArgument("material", true)
                 .build());
         this.config = config;
+        this.plotWorldAdapter = plotWorldAdapter;
     }
 
     @Override
     public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+        CommandAssertions.isFalse(plotWorldAdapter.isApplicable(player.getLocation()), "error.gridInPlot");
+
         var world = BukkitAdapter.adapt(player.getWorld());
         var actor = BukkitAdapter.adapt(player);
         var session = worldEdit.newEditSessionBuilder().actor(actor).world(world).build();
@@ -76,7 +81,7 @@ public class DrawGrid extends AdvancedCommand implements IPlayerTabExecutor {
                 }
             }
         } catch (RegionOperationException e) {
-            plugin().getLogger().log(Level.SEVERE, "Operation operation failed", e);
+            plugin().getLogger().log(Level.SEVERE, "Operation failed", e);
             throw CommandException.message("Operation failed.");
         } catch (MaxChangedBlocksException e) {
             throw CommandException.message("Operation too large");

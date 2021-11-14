@@ -54,8 +54,8 @@ publishing {
                 }
             }
 
+            setUrl(publishData.getRepository())
             name = "EldoNexus"
-            url = uri(publishData.getRepository())
         }
     }
 }
