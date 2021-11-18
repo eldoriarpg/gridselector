@@ -1,4 +1,4 @@
-rootProject.name = "GridSelector"
+rootProject.name = "gridselector"
 
 pluginManagement{
     repositories{

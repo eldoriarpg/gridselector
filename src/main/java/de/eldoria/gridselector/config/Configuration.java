@@ -18,23 +18,23 @@ import java.util.List;
 import java.util.Optional;
 
 public class Configuration extends EldoConfig {
-
+    private static final String GRID_WORLDS = "gridworlds";
     private List<GridWorld> gridWorlds;
 
     public Configuration(Plugin plugin) {
         super(plugin);
     }
 
-
     @Override
     protected void saveConfigs() {
-        getConfig().set("gridWorlds", gridWorlds);
+        setVersion(1, false);
+        loadConfig(GRID_WORLDS, null, false).set("gridWorlds", gridWorlds);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     protected void reloadConfigs() {
-        gridWorlds = (List<GridWorld>) getConfig().getList("gridWorlds", new ArrayList<>());
+        gridWorlds = (List<GridWorld>) loadConfig(GRID_WORLDS, null, true).getList("gridWorlds", new ArrayList<>());
     }
 
     public Optional<GridWorld> getGridWorld(String name) {

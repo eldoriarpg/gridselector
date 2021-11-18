@@ -44,7 +44,7 @@ public class SaveSchematics extends AdvancedCommand implements IPlayerTabExecuto
 
         var basePath = schematicBrushReborn.getDataFolder().toPath().resolve(Path.of("schematics"));
 
-        if (!args.hasFlag("g")) {
+        if (!args.flags().has("g")) {
             basePath = basePath.resolve(Path.of(player.getUniqueId().toString()));
         } else {
             CommandAssertions.permission(player, false, Permissions.SAVE_GLOBAL);
@@ -61,7 +61,7 @@ public class SaveSchematics extends AdvancedCommand implements IPlayerTabExecuto
         for (var schematic : schematics) {
             try {
                 var target = basePath.resolve(args.asString(0) + "_" + schematic.getFile().getName());
-                if (target.toFile().exists() && !args.hasFlag("f")) {
+                if (target.toFile().exists() && !args.flags().has("f")) {
                     messageSender().sendError(player, "Name already in use.");
                     return;
                 }

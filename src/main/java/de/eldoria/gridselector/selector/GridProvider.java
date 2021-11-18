@@ -8,6 +8,7 @@ package de.eldoria.gridselector.selector;
 
 import de.eldoria.eldoutilities.commands.command.util.Arguments;
 import de.eldoria.eldoutilities.commands.exceptions.CommandException;
+import de.eldoria.gridselector.util.Permissions;
 import de.eldoria.schematicbrush.brush.config.provider.SelectorProvider;
 import de.eldoria.schematicbrush.brush.config.selector.Selector;
 import de.eldoria.schematicbrush.schematics.SchematicRegistry;
@@ -43,7 +44,7 @@ public class GridProvider extends SelectorProvider {
 
     @Override
     public String permission() {
-        return "gridselector.selector.use";
+        return Permissions.USE;
     }
 
     @Override

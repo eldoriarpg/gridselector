@@ -52,7 +52,7 @@ public class DefineGrid extends AdvancedCommand implements IPlayerTabExecutor {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
         if (args.size() == 1) {
-            return TabCompleteUtil.completeInt(args.asString(0), 2, 500, localizer());
+            return TabCompleteUtil.completeInt(args.asString(0), 2, 500);
         }
         return Collections.emptyList();
     }

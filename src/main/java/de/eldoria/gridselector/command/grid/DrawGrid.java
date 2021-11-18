@@ -102,7 +102,7 @@ public class DrawGrid extends AdvancedCommand implements IPlayerTabExecutor {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
         return switch (args.size()) {
-            case 1 -> TabCompleteUtil.completeInt(args.asString(0), 0, 500, localizer());
+            case 1 -> TabCompleteUtil.completeInt(args.asString(0), 0, 500);
             case 2 -> TabCompleteUtil.completeMaterial(args.asString(1), true);
             case 3 -> TabCompleteUtil.completeMaterial(args.asString(2), true);
             default -> Collections.emptyList();
