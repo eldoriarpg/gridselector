@@ -10,3 +10,4 @@ softdepend:
 commands:
   schematicbrushgrid:
     aliases: sbrg
+    permission: gridselector.use

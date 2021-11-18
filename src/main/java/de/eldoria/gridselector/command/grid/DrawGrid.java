@@ -15,6 +15,7 @@ import de.eldoria.eldoutilities.commands.executor.IPlayerTabExecutor;
 import de.eldoria.eldoutilities.simplecommands.TabCompleteUtil;
 import de.eldoria.gridselector.adapter.regionadapter.RegionAdapter;
 import de.eldoria.gridselector.config.Configuration;
+import de.eldoria.gridselector.util.Permissions;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -35,6 +36,7 @@ public class DrawGrid extends AdvancedCommand implements IPlayerTabExecutor {
                 .addUnlocalizedArgument("range", true)
                 .addUnlocalizedArgument("material", true)
                 .addUnlocalizedArgument("material", true)
+                .withPermission(Permissions.GRID_DRAW)
                 .build());
         this.config = config;
         this.plotWorldAdapter = plotWorldAdapter;

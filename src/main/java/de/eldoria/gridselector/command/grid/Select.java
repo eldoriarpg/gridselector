@@ -6,6 +6,7 @@ import de.eldoria.eldoutilities.commands.command.util.Arguments;
 import de.eldoria.eldoutilities.commands.exceptions.CommandException;
 import de.eldoria.eldoutilities.commands.executor.IPlayerTabExecutor;
 import de.eldoria.gridselector.listener.SelectionListener;
+import de.eldoria.gridselector.util.Permissions;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +17,7 @@ public class Select extends AdvancedCommand implements IPlayerTabExecutor {
     public Select(Plugin plugin, SelectionListener selectionListener) {
         super(plugin, CommandMeta
                 .builder("select")
+                .withPermission(Permissions.USE)
                 .build());
         this.selectionListener = selectionListener;
     }

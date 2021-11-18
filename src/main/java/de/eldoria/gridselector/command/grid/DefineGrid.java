@@ -9,6 +9,7 @@ import de.eldoria.eldoutilities.commands.executor.IPlayerTabExecutor;
 import de.eldoria.eldoutilities.simplecommands.TabCompleteUtil;
 import de.eldoria.gridselector.adapter.regionadapter.RegionAdapter;
 import de.eldoria.gridselector.config.Configuration;
+import de.eldoria.gridselector.util.Permissions;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -25,6 +26,7 @@ public class DefineGrid extends AdvancedCommand implements IPlayerTabExecutor {
         super(plugin, CommandMeta
                 .builder("defineGrid")
                 .addUnlocalizedArgument("size", true)
+                .withPermission(Permissions.GRID_DEFINE)
                 .build());
         this.config = config;
         this.plotWorldAdapter = plotWorldAdapter;

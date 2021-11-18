@@ -3,9 +3,11 @@ package de.eldoria.gridselector.command.grid;
 import de.eldoria.eldoutilities.commands.command.AdvancedCommand;
 import de.eldoria.eldoutilities.commands.command.CommandMeta;
 import de.eldoria.eldoutilities.commands.command.util.Arguments;
+import de.eldoria.eldoutilities.commands.command.util.CommandAssertions;
 import de.eldoria.eldoutilities.commands.exceptions.CommandException;
 import de.eldoria.eldoutilities.commands.executor.IPlayerTabExecutor;
 import de.eldoria.gridselector.schematics.GridSchematics;
+import de.eldoria.gridselector.util.Permissions;
 import de.eldoria.schematicbrush.SchematicBrushReborn;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -24,6 +26,7 @@ public class SaveSchematics extends AdvancedCommand implements IPlayerTabExecuto
     public SaveSchematics(Plugin plugin, SchematicBrushReborn schematicBrushReborn, GridSchematics gridSchematics) {
         super(plugin, CommandMeta.builder("saveSchematics")
                 .addArgument("name", true)
+                .withPermission(Permissions.SAVE)
                 .build());
         this.schematicBrushReborn = schematicBrushReborn;
         this.gridSchematics = gridSchematics;
@@ -37,6 +40,8 @@ public class SaveSchematics extends AdvancedCommand implements IPlayerTabExecuto
 
         if (!args.hasFlag("g")) {
             basePath = basePath.resolve(Path.of(player.getUniqueId().toString()));
+        } else {
+            CommandAssertions.permission(player, false, Permissions.SAVE_GLOBAL);
         }
 
         try {
