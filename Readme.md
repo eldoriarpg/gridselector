@@ -16,3 +16,10 @@
 [release]: https://eldonexus.de/#browse/browse:maven-releases:de%2Feldoria%2Fgridselector
 [development]: https://eldonexus.de/#browse/browse:maven-dev:de%2Feldoria%2Fgridselector
 [snapshot]: https://eldonexus.de/#browse/browse:maven-snapshots:de%2Feldoria%2Fgridselector
+
+# What is GridSelector
+GridSelector is an Add-On for [Schematic Brush 2.0](https://github.com/eldoriarpg/SchematicBrushReborn).
+
+It allows to define grid worlds and select schematics directly from this grid. As an alternative plot squared worlds can be used.
+
+Take a look at the [wiki](https://github.com/eldoriarpg/gridselector/wiki) for more information.
