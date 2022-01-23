@@ -4,7 +4,7 @@
  *     Copyright (C) 2021 EldoriaRPG Team and Contributor
  */
 
-package de.eldoria.gridselector.command.grid;
+package de.eldoria.gridselector.command.grid.grid;
 
 import de.eldoria.eldoutilities.commands.command.AdvancedCommand;
 import de.eldoria.eldoutilities.commands.command.CommandMeta;
@@ -24,11 +24,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public class DefineGrid extends AdvancedCommand implements IPlayerTabExecutor {
+public class Define extends AdvancedCommand implements IPlayerTabExecutor {
     private final Configuration config;
     private final RegionAdapter plotWorldAdapter;
 
-    public DefineGrid(Plugin plugin, Configuration config, RegionAdapter plotWorldAdapter) {
+    public Define(Plugin plugin, Configuration config, RegionAdapter plotWorldAdapter) {
         super(plugin, CommandMeta
                 .builder("defineGrid")
                 .addUnlocalizedArgument("size", true)

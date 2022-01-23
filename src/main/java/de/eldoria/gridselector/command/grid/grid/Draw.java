@@ -4,7 +4,7 @@
  *     Copyright (C) 2021 EldoriaRPG Team and Contributor
  */
 
-package de.eldoria.gridselector.command.grid;
+package de.eldoria.gridselector.command.grid.grid;
 
 import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEdit;
@@ -32,12 +32,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 
-public class DrawGrid extends AdvancedCommand implements IPlayerTabExecutor {
+public class Draw extends AdvancedCommand implements IPlayerTabExecutor {
     private final WorldEdit worldEdit = WorldEdit.getInstance();
     private final Configuration config;
     private final RegionAdapter plotWorldAdapter;
 
-    public DrawGrid(Plugin plugin, Configuration config, RegionAdapter plotWorldAdapter) {
+    public Draw(Plugin plugin, Configuration config, RegionAdapter plotWorldAdapter) {
         super(plugin, CommandMeta.builder("drawgrid")
                 .addUnlocalizedArgument("range", true)
                 .addUnlocalizedArgument("material", true)

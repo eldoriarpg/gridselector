@@ -1,7 +1,7 @@
 plugins {
     id("org.cadixdev.licenser") version "0.6.1"
     id("com.github.johnrengelman.shadow") version "7.0.0"
-    id("de.chojo.publishdata") version "1.0.2"
+    id("de.chojo.publishdata") version "1.0.4"
     java
     `maven-publish`
 }
@@ -17,16 +17,17 @@ repositories {
 }
 
 dependencies {
-    compileOnly("de.eldoria", "schematicbrushreborn-api", "2.0.0-DEV")
-    compileOnly("de.eldoria", "eldo-util", "1.12.8-DEV")
+    compileOnly("de.eldoria", "schematicbrushreborn-api", "2.1.0")
+    compileOnly("de.eldoria", "eldo-util", "1.13.0-DEV")
     compileOnly("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.6")
     compileOnly("com.plotsquared", "PlotSquared-Core", "6.1.2") // PlotSquared Core API
     compileOnly("com.plotsquared:PlotSquared-Bukkit:6.1.2") { isTransitive = false } // PlotSquared Bukkit API
 
     testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.6.0")
+    testImplementation("com.sk89q.worldedit", "worldedit-bukkit", "7.2.6")
     testImplementation("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
-    testImplementation("de.eldoria", "eldo-util", "1.10.11-DEV")
+    testImplementation("de.eldoria", "eldo-util", "1.13.0-DEV")
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine")
 }
 
@@ -38,7 +39,7 @@ license {
 java {
     withSourcesJar()
     withJavadocJar()
-    sourceCompatibility = JavaVersion.VERSION_16
+    sourceCompatibility = JavaVersion.VERSION_17
 }
 
 publishData {
