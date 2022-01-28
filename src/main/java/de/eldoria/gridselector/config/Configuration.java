@@ -7,6 +7,7 @@
 package de.eldoria.gridselector.config;
 
 import de.eldoria.eldoutilities.configuration.EldoConfig;
+import de.eldoria.gridselector.config.elements.ClusterWorld;
 import de.eldoria.gridselector.config.elements.GridWorld;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -14,12 +15,16 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 public class Configuration extends EldoConfig {
     private static final String GRID_WORLDS = "gridworlds";
     private List<GridWorld> gridWorlds;
+    private Map<UUID, ClusterWorld> clusterWorlds = new HashMap<>();
 
     public Configuration(Plugin plugin) {
         super(plugin);
@@ -56,5 +61,9 @@ public class Configuration extends EldoConfig {
             gridWorlds.add(gridWorld);
         }
         return gridWorld;
+    }
+
+    public ClusterWorld getClusterWorld(World world){
+        return clusterWorlds.computeIfAbsent(world.getUID(), k-> new ClusterWorld(world));
     }
 }

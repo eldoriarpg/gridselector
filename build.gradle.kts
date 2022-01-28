@@ -18,11 +18,15 @@ repositories {
 
 dependencies {
     compileOnly("de.eldoria", "schematicbrushreborn-api", "2.1.0")
-    compileOnly("de.eldoria", "eldo-util", "1.13.0-DEV")
+    compileOnly("de.eldoria", "eldo-util", "1.13.1-DEV")
     compileOnly("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.6")
     compileOnly("com.plotsquared", "PlotSquared-Core", "6.1.2") // PlotSquared Core API
     compileOnly("com.plotsquared:PlotSquared-Bukkit:6.1.2") { isTransitive = false } // PlotSquared Bukkit API
+    implementation("de.eldoria", "messageblocker", "1.0.3c-DEV")
+    implementation("net.kyori", "adventure-platform-bukkit", "4.0.1")
+    implementation("net.kyori", "adventure-text-minimessage", "4.10.0-SNAPSHOT")
+
 
     testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.6.0")
     testImplementation("com.sk89q.worldedit", "worldedit-bukkit", "7.2.6")
@@ -88,6 +92,8 @@ tasks {
     }
     shadowJar{
         relocate("de.eldoria.eldoutilities",  "de.eldoria.schematicbrush.libs.eldoutilities")
+        relocate("de.eldoria.messageblocker", "de.eldoria.schematicbrush.libs.messageblocker")
+        relocate("net.kyori", "de.eldoria.schematicbrush.libs.kyori")
         mergeServiceFiles()
     }
     processResources {

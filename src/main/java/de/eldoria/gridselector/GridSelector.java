@@ -22,6 +22,7 @@ import de.eldoria.gridselector.config.elements.GridWorld;
 import de.eldoria.gridselector.listener.SelectionListener;
 import de.eldoria.gridselector.schematics.GridSchematics;
 import de.eldoria.gridselector.selector.GridProvider;
+import de.eldoria.messageblocker.MessageBlockerAPI;
 import de.eldoria.schematicbrush.SchematicBrushReborn;
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -40,6 +41,7 @@ public class GridSelector extends EldoPlugin {
         var sbr = (SchematicBrushReborn) Objects.requireNonNull(getPluginManager().getPlugin("SchematicBrushReborn"));
 
         var messageSender = MessageSender.create(this, "§3[GS]");
+        var messageBlocker = MessageBlockerAPI.builder(this).addWhitelisted("[GS]").build();
 
         var gridSchematics = new GridSchematics(this);
 
@@ -76,7 +78,7 @@ public class GridSelector extends EldoPlugin {
 
         registerListener(selectionListener);
 
-        registerCommand(new Grid(this, sbr, selectionListener, config, gridSchematics, plotWorldAdapter));
+        registerCommand(new Grid(this, sbr, selectionListener, config, gridSchematics, plotWorldAdapter, messageBlocker));
     }
 
     @Override

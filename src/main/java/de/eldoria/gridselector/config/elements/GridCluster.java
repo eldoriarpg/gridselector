@@ -1,3 +1,9 @@
+/*
+ *     SPDX-License-Identifier: AGPL-3.0-only
+ *
+ *     Copyright (C) 2021 EldoriaRPG Team and Contributor
+ */
+
 package de.eldoria.gridselector.config.elements;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -6,7 +12,9 @@ import com.sk89q.worldedit.util.Direction;
 import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BlockState;
+import de.eldoria.eldoutilities.localization.MessageComposer;
 import de.eldoria.eldoutilities.utils.EMath;
+import de.eldoria.gridselector.util.Colors;
 import org.bukkit.Material;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.BoundingBox;
@@ -15,6 +23,7 @@ import org.bukkit.util.Vector;
 import java.util.Optional;
 
 public class GridCluster {
+    private int id = -1;
     private BoundingBox boundingBox;
     private int elementSize = 7;
     private int offset = 1;
@@ -146,8 +155,23 @@ public class GridCluster {
         return floorMaterial;
     }
 
+    public int id() {
+        return id;
+    }
+
+    public void id(int id) {
+        if (this.id != -1) {
+            throw new IllegalStateException("Id already set");
+        }
+        this.id = id;
+    }
+
     public static Builder builder(Location center, Direction direction) {
         return new Builder(center, direction);
+    }
+
+    public boolean contains(org.bukkit.Location location) {
+        return boundingBox.contains(location.toVector());
     }
 
     public static class Builder {
@@ -220,12 +244,91 @@ public class GridCluster {
         }
 
         public String asComponent() {
-            return "";
+            String message = MessageComposer.create()
+                    .text("<%s>Cluster Settings", Colors.HEADING).newLine()
+                    .text("<%s>Location: <%s>%s|%s", Colors.NAME, Colors.VALUE, center.getBlockX(), center.getBlockZ())
+                    .space()
+                    .text("<%s><click:run_command:'/sbrg grid cluster modify location'>[change]</click>", Colors.CHANGE)
+                    .newLine()
+                    .text("<%s>Direction: <%s>%s", Colors.NAME, Colors.VALUE, direction.name()).space()
+                    .text("<%s><click:run_command:'/sbrg grid cluster modify direction'>[change]</click>", Colors.CHANGE)
+                    .newLine()
+                    .text("<%s>Expand: <%s>%s", Colors.NAME, Colors.VALUE, expandRight ? "right" : "left").space()
+                    .text("<%s><click:run_command:'/sbrg grid cluster modify expandRight'>[change]</click>", Colors.CHANGE)
+                    .newLine()
+                    .text("<%s>Rows: <%s>%s", Colors.NAME, Colors.VALUE, rows).space()
+                    .text("<%s><click:suggest_command:'/sbrg grid cluster modify rows '>[change]</click>", Colors.CHANGE)
+                    .newLine()
+                    .text("<%s>Columns: <%s>%s", Colors.NAME, Colors.VALUE, columns).space()
+                    .text("<%s><click:suggest_command:'/sbrg grid cluster modify colums '>[change]</click>", Colors.CHANGE)
+                    .newLine()
+                    .text("<%s>Offset: <%s>%s", Colors.NAME, Colors.VALUE, offset).space()
+                    .text("<%s><click:suggest_command:'/sbrg grid cluster modify offsetMaterial'>[change]</click>", Colors.CHANGE)
+                    .newLine()
+                    .text("<%s>Floor Material: <%s>%s", Colors.NAME, Colors.VALUE, floorMaterial).space()
+                    .text("<%s><click:suggest_command:'/sbrg grid cluster modify floorMaterial'>[change]</click>", Colors.CHANGE)
+                    .newLine()
+                    .text("<%s>Border Material: <%s>%s", Colors.NAME, Colors.VALUE, borderMaterial).space()
+                    .text("<%s><click:suggest_command:'/sbrg grid cluster modify borderMaterial '>[change]</click>", Colors.CHANGE)
+                    .newLine()
+                    .text("<%s>Offset Material: <%s>%s", Colors.NAME, Colors.VALUE, offsetMaterial).space()
+                    .text("<%s><click:suggest_command:'/sbrg grid cluster modify offsetMaterial '>[change]</click>", Colors.CHANGE)
+                    .build();
+            return message;
         }
 
         private static Direction rotate(Direction direction, boolean rotateRight) {
             var index = direction.toRotationIndex().getAsInt() + (rotateRight ? 4 : 12);
             return Direction.fromRotationIndex(index % 16).get();
+        }
+
+        public Location center() {
+            return center;
+        }
+
+        public Direction direction() {
+            return direction;
+        }
+
+        public int elementSize() {
+            return elementSize;
+        }
+
+        public int offset() {
+            return offset;
+        }
+
+        public int rows() {
+            return rows;
+        }
+
+        public int columns() {
+            return columns;
+        }
+
+        public boolean isExpandRight() {
+            return expandRight;
+        }
+
+        public Material borderMaterial() {
+            return borderMaterial;
+        }
+
+        public Material offsetMaterial() {
+            return offsetMaterial;
+        }
+
+        public Material floorMaterial() {
+            return floorMaterial;
+        }
+
+        public void center(Location center) {
+            this.world = (World) center.getExtent();
+            this.center = center.setY(world.getMinY());
+        }
+
+        public void direction(Direction direction) {
+            this.direction = direction;
         }
     }
 }

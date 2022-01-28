@@ -1,3 +1,9 @@
+/*
+ *     SPDX-License-Identifier: AGPL-3.0-only
+ *
+ *     Copyright (C) 2021 EldoriaRPG Team and Contributor
+ */
+
 package de.eldoria.gridselector.command.grid;
 
 import de.eldoria.eldoutilities.commands.command.AdvancedCommand;
@@ -10,7 +16,7 @@ import org.bukkit.plugin.Plugin;
 
 public class Grid extends AdvancedCommand {
     public Grid(Plugin plugin, Configuration configuration, RegionAdapter plotAdapter) {
-        super(plugin, CommandMeta.builder("cluster")
+        super(plugin, CommandMeta.builder("grid")
                 .withSubCommand(new Define(plugin, configuration, plotAdapter))
                 .withSubCommand(new Draw(plugin, configuration, plotAdapter))
                 .build());

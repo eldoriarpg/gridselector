@@ -15,13 +15,15 @@ import de.eldoria.gridselector.command.grid.Select;
 import de.eldoria.gridselector.config.Configuration;
 import de.eldoria.gridselector.listener.SelectionListener;
 import de.eldoria.gridselector.schematics.GridSchematics;
+import de.eldoria.messageblocker.blocker.IMessageBlockerService;
 import de.eldoria.schematicbrush.SchematicBrushReborn;
 import org.bukkit.plugin.Plugin;
 
 public class Grid extends AdvancedCommand {
-    public Grid(Plugin plugin, SchematicBrushReborn schematicBrushReborn, SelectionListener selectionListener, Configuration config, GridSchematics gridSchematics, RegionAdapter plotWorldAdapter) {
+    public Grid(Plugin plugin, SchematicBrushReborn schematicBrushReborn, SelectionListener selectionListener, Configuration config,
+                GridSchematics gridSchematics, RegionAdapter plotWorldAdapter, IMessageBlockerService messageBlocker) {
         super(plugin, CommandMeta.builder("schematicbrushgrid")
-                .withSubCommand(new Cluster(plugin))
+                .withSubCommand(new Cluster(plugin, messageBlocker, config))
                 .withSubCommand(new Select(plugin, selectionListener))
                 .withSubCommand(new SaveSchematics(plugin, schematicBrushReborn, gridSchematics))
                 .build());
