@@ -7,8 +7,9 @@
 package de.eldoria.gridselector.listener;
 
 import de.eldoria.eldoutilities.messages.MessageSender;
-import de.eldoria.gridselector.adapter.WorldAdapter;
+import de.eldoria.gridselector.adapter.regionadapter.WorldAdapter;
 import de.eldoria.gridselector.brush.SelectionBrush;
+import de.eldoria.gridselector.config.Configuration;
 import de.eldoria.gridselector.schematics.GridSchematics;
 import de.eldoria.schematicbrush.util.WorldEditBrush;
 import org.bukkit.entity.Player;
@@ -28,11 +29,13 @@ public class SelectionListener implements Listener {
     private final WorldAdapter adapter;
     private final GridSchematics schematicService;
     private final MessageSender messageSender;
+    private final Configuration configuration;
 
-    public SelectionListener(WorldAdapter adapter, GridSchematics schematicService, MessageSender messageSender) {
+    public SelectionListener(WorldAdapter adapter, GridSchematics schematicService, MessageSender messageSender, Configuration configuration) {
         this.adapter = adapter;
         this.schematicService = schematicService;
         this.messageSender = messageSender;
+        this.configuration = configuration;
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -69,7 +72,7 @@ public class SelectionListener implements Listener {
     }
 
     public void register(Player player) {
-        var brush = new SelectionBrush(messageSender, player, adapter);
+        var brush = new SelectionBrush(messageSender, player, adapter, configuration);
         if (!WorldEditBrush.setBrush(player, brush)) {
             return;
         }

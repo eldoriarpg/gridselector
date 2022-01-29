@@ -4,44 +4,17 @@
  *     Copyright (C) 2021 EldoriaRPG Team and Contributor
  */
 
-package de.eldoria.gridselector.adapter.regionadapter;
+package de.eldoria.gridselector.brush;
 
-import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-public class MarkerResult {
-
-    String identifier;
-    CuboidRegion region;
-    private final CuboidRegion fullRegion;
-    private int yMin;
-
-    public MarkerResult(String identifier, CuboidRegion region, CuboidRegion fullRegion, int minHeight) {
-        this.identifier = identifier;
-        this.region = region;
-        this.fullRegion = fullRegion;
-        this.yMin = minHeight;
-    }
-
-    public void yMin(int yMin) {
-        this.yMin = yMin;
-    }
-
-    public String identifier() {
-        return identifier;
-    }
-
-    public CuboidRegion region() {
-        return region;
-    }
-
-    public int yMin() {
-        return yMin;
-    }
+public record MarkerResult(String identifier, CuboidRegion region, CuboidRegion fullRegion, int minHeight) {
 
     @Override
     public boolean equals(Object o) {
@@ -74,26 +47,26 @@ public class MarkerResult {
 
     public CuboidRegion getBorder() {
         var region = fullRegion.clone();
-        region.setPos1(region.getMinimumPoint().withY(yMin).add(-1,0,-1));
-        region.setPos2(region.getMaximumPoint().withY(yMin).add(1,0,1));
+        region.setPos1(region.getMinimumPoint().withY(minHeight).add(-1, 0, -1));
+        region.setPos2(region.getMaximumPoint().withY(minHeight).add(1, 0, 1));
         return region;
     }
 
-    public List<Vector> getBorderBlocks() {
+    public Set<Vector> getBorderBlocks() {
         var border = getBorder();
         var min = border.getMinimumPoint();
         var max = border.getMaximumPoint();
 
-        List<Vector> blocks = new ArrayList<>();
+        Set<Vector> blocks = new HashSet<>();
 
-        for (int x = min.getBlockX(); x < max.getBlockX(); x++) {
-            blocks.add(new Vector(x, yMin, min.getBlockZ()));
-            blocks.add(new Vector(x, yMin, max.getBlockZ()));
+        for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
+            blocks.add(new Vector(x, minHeight, min.getBlockZ()));
+            blocks.add(new Vector(x, minHeight, max.getBlockZ()));
         }
 
-        for (int z = min.getBlockZ(); z < max.getBlockZ(); z++) {
-            blocks.add(new Vector(min.getBlockX(), yMin, z));
-            blocks.add(new Vector(max.getBlockX(), yMin, z));
+        for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
+            blocks.add(new Vector(min.getBlockX(), minHeight, z));
+            blocks.add(new Vector(max.getBlockX(), minHeight, z));
         }
         return blocks;
     }

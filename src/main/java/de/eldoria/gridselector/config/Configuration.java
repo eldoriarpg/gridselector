@@ -7,7 +7,7 @@
 package de.eldoria.gridselector.config;
 
 import de.eldoria.eldoutilities.configuration.EldoConfig;
-import de.eldoria.gridselector.config.elements.ClusterWorld;
+import de.eldoria.gridselector.config.elements.cluster.ClusterWorld;
 import de.eldoria.gridselector.config.elements.ClusterWorlds;
 import de.eldoria.gridselector.config.elements.GeneralSettings;
 import org.bukkit.World;
@@ -15,8 +15,8 @@ import org.bukkit.plugin.Plugin;
 
 public class Configuration extends EldoConfig {
     private static final String CLUSTER_WORLDS = "clusterWorlds";
-    private ClusterWorlds clusterWorlds = new ClusterWorlds();
-    private GeneralSettings generalSettings = new GeneralSettings();
+    private ClusterWorlds clusterWorlds;
+    private GeneralSettings generalSettings;
 
     public Configuration(Plugin plugin) {
         super(plugin);
@@ -31,7 +31,7 @@ public class Configuration extends EldoConfig {
 
     @Override
     protected void reloadConfigs() {
-        clusterWorlds = loadConfig(CLUSTER_WORLDS, null, true).getObject("clusterWorlds", ClusterWorlds.class);
+        clusterWorlds = loadConfig(CLUSTER_WORLDS, null, true).getObject("clusterWorlds", ClusterWorlds.class, new ClusterWorlds());
         generalSettings = getConfig().getObject("generalSettings", GeneralSettings.class, new GeneralSettings());
     }
 

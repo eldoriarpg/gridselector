@@ -7,6 +7,8 @@
 package de.eldoria.gridselector.config.elements;
 
 import com.sk89q.worldedit.math.BlockVector2;
+import de.eldoria.gridselector.config.elements.cluster.GridCluster;
+import de.eldoria.gridselector.config.elements.cluster.Plot;
 import org.bukkit.Material;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

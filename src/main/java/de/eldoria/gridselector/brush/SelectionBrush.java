@@ -14,12 +14,11 @@ import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import de.eldoria.eldoutilities.messages.MessageSender;
-import de.eldoria.gridselector.adapter.WorldAdapter;
-import de.eldoria.gridselector.adapter.regionadapter.MarkerResult;
+import de.eldoria.gridselector.adapter.regionadapter.WorldAdapter;
+import de.eldoria.gridselector.config.Configuration;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,11 +31,13 @@ public class SelectionBrush implements Brush {
     private final Player owner;
     private final Map<String, MarkerResult> regions = new HashMap<>();
     private final WorldAdapter worldAdapter;
+    private final Configuration configuration;
 
-    public SelectionBrush(MessageSender messageSender, Player owner, WorldAdapter worldAdapter) {
+    public SelectionBrush(MessageSender messageSender, Player owner, WorldAdapter worldAdapter, Configuration configuration) {
         this.messageSender = messageSender;
         this.owner = owner;
         this.worldAdapter = worldAdapter;
+        this.configuration = configuration;
     }
 
     @Override
@@ -70,13 +71,17 @@ public class SelectionBrush implements Brush {
 
         regions.put(result.identifier(), marker);
 
-        var data = Material.SEA_LANTERN.createBlockData();
-        for (var corner : marker.getCorners()) {
-            owner.sendBlockChange(corner.toLocation(owner.getWorld()), data);
+        var data = configuration.generalSettings().highlight().createBlockData();
+        if (configuration.generalSettings().isHighlightBounds()) {
+            for (var corner : marker.getCorners()) {
+                owner.sendBlockChange(corner.toLocation(owner.getWorld()), data);
+            }
         }
 
-        for (Vector borderBlock : marker.getBorderBlocks()) {
-            owner.sendBlockChange(borderBlock.toLocation(owner.getWorld()), data);
+        if (configuration.generalSettings().isHighlightBorder()) {
+            for (var borderBlock : marker.getBorderBlocks()) {
+                owner.sendBlockChange(borderBlock.toLocation(owner.getWorld()), data);
+            }
         }
     }
 
@@ -84,7 +89,7 @@ public class SelectionBrush implements Brush {
         var min = region.getMinimumPoint();
         var max = region.getMaximumPoint();
         for (var y = minHeight; y <= max.getY(); y++) {
-            if (checkFlat(session, y, min, max, m -> m == Material.AIR)) {
+            if (checkFlat(session, y, min, max, mat -> mat == Material.AIR)) {
                 return y;
             }
         }
@@ -157,7 +162,7 @@ public class SelectionBrush implements Brush {
         }
     }
 
-    private void resolveMarker(MarkerResult region, World world){
+    private void resolveMarker(MarkerResult region, World world) {
         for (var corner : region.getCorners()) {
             var loc = corner.toLocation(world);
             owner.sendBlockChange(loc, world.getBlockAt(loc).getBlockData());

@@ -7,6 +7,7 @@
 package de.eldoria.gridselector.config.elements;
 
 import de.eldoria.eldoutilities.serialization.SerializationUtil;
+import de.eldoria.gridselector.config.elements.cluster.ClusterWorld;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.jetbrains.annotations.NotNull;

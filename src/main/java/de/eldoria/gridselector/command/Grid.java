@@ -9,6 +9,7 @@ package de.eldoria.gridselector.command;
 import de.eldoria.eldoutilities.commands.command.AdvancedCommand;
 import de.eldoria.eldoutilities.commands.command.CommandMeta;
 import de.eldoria.gridselector.adapter.regionadapter.RegionAdapter;
+import de.eldoria.gridselector.adapter.worldguard.IWorldGuardAdapter;
 import de.eldoria.gridselector.command.grid.Cluster;
 import de.eldoria.gridselector.command.grid.SaveSchematics;
 import de.eldoria.gridselector.command.grid.Select;
@@ -21,9 +22,9 @@ import org.bukkit.plugin.Plugin;
 
 public class Grid extends AdvancedCommand {
     public Grid(Plugin plugin, SchematicBrushReborn schematicBrushReborn, SelectionListener selectionListener, Configuration config,
-                GridSchematics gridSchematics, RegionAdapter plotWorldAdapter, IMessageBlockerService messageBlocker) {
+                GridSchematics gridSchematics, IMessageBlockerService messageBlocker, IWorldGuardAdapter worldGuardAdapter) {
         super(plugin, CommandMeta.builder("schematicbrushgrid")
-                .withSubCommand(new Cluster(plugin, messageBlocker, config))
+                .withSubCommand(new Cluster(plugin, messageBlocker, config, worldGuardAdapter))
                 .withSubCommand(new Select(plugin, selectionListener))
                 .withSubCommand(new SaveSchematics(plugin, schematicBrushReborn, gridSchematics))
                 .build());

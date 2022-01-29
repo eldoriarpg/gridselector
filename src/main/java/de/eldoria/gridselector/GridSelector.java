@@ -11,17 +11,20 @@ import com.plotsquared.core.PlotSquared;
 import de.eldoria.eldoutilities.localization.ILocalizer;
 import de.eldoria.eldoutilities.messages.MessageSender;
 import de.eldoria.eldoutilities.plugin.EldoPlugin;
-import de.eldoria.gridselector.adapter.WorldAdapter;
 import de.eldoria.gridselector.adapter.regionadapter.ClusterWorldAdapter;
 import de.eldoria.gridselector.adapter.regionadapter.PlotWorldAdapter;
 import de.eldoria.gridselector.adapter.regionadapter.RegionAdapter;
 import de.eldoria.gridselector.adapter.regionadapter.RegionResult;
+import de.eldoria.gridselector.adapter.regionadapter.WorldAdapter;
+import de.eldoria.gridselector.adapter.worldguard.IWorldGuardAdapter;
+import de.eldoria.gridselector.adapter.worldguard.WorldGuardAdapter;
 import de.eldoria.gridselector.command.Grid;
 import de.eldoria.gridselector.config.Configuration;
-import de.eldoria.gridselector.config.elements.ClusterWorld;
+import de.eldoria.gridselector.config.elements.cluster.ClusterWorld;
 import de.eldoria.gridselector.config.elements.ClusterWorlds;
-import de.eldoria.gridselector.config.elements.GridCluster;
-import de.eldoria.gridselector.config.elements.Plot;
+import de.eldoria.gridselector.config.elements.GeneralSettings;
+import de.eldoria.gridselector.config.elements.cluster.GridCluster;
+import de.eldoria.gridselector.config.elements.cluster.Plot;
 import de.eldoria.gridselector.listener.SelectionListener;
 import de.eldoria.gridselector.schematics.GridSchematics;
 import de.eldoria.gridselector.selector.GridProvider;
@@ -39,7 +42,7 @@ public class GridSelector extends EldoPlugin {
 
     @Override
     public void onPluginEnable() throws Throwable {
-        var config = new Configuration(this);
+        var configuration = new Configuration(this);
 
         var sbr = (SchematicBrushReborn) Objects.requireNonNull(getPluginManager().getPlugin("SchematicBrushReborn"));
 
@@ -54,7 +57,7 @@ public class GridSelector extends EldoPlugin {
         sbr.schematics().register(GridSchematics.KEY, gridSchematics);
 
         List<RegionAdapter> regionAdapters = new ArrayList<>();
-        regionAdapters.add(new ClusterWorldAdapter(config));
+        regionAdapters.add(new ClusterWorldAdapter(configuration));
 
         RegionAdapter plotWorldAdapter;
         if (getPluginManager().isPluginEnabled("PlotSquared")) {
@@ -77,15 +80,21 @@ public class GridSelector extends EldoPlugin {
         }
 
         var worldAdapter = new WorldAdapter(regionAdapters);
-        var selectionListener = new SelectionListener(worldAdapter, gridSchematics, messageSender);
+        var selectionListener = new SelectionListener(worldAdapter, gridSchematics, messageSender, configuration);
 
         registerListener(selectionListener);
 
-        registerCommand(new Grid(this, sbr, selectionListener, config, gridSchematics, plotWorldAdapter, messageBlocker));
+        var worldGuardAdapter = IWorldGuardAdapter.DEFAULT;
+
+        if (getPluginManager().isPluginEnabled("WorldGuard")) {
+            worldGuardAdapter = new WorldGuardAdapter(configuration);
+        }
+
+        registerCommand(new Grid(this, sbr, selectionListener, configuration, gridSchematics, messageBlocker, worldGuardAdapter));
     }
 
     @Override
     public List<Class<? extends ConfigurationSerializable>> getConfigSerialization() {
-        return List.of(GridCluster.class, Plot.class, ClusterWorld.class, ClusterWorlds.class);
+        return List.of(GridCluster.class, Plot.class, ClusterWorld.class, ClusterWorlds.class, GeneralSettings.class);
     }
 }

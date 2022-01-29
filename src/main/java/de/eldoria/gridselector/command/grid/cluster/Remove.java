@@ -6,17 +6,15 @@
 
 package de.eldoria.gridselector.command.grid.cluster;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import de.eldoria.eldoutilities.commands.command.AdvancedCommand;
 import de.eldoria.eldoutilities.commands.command.CommandMeta;
 import de.eldoria.eldoutilities.commands.command.util.Arguments;
 import de.eldoria.eldoutilities.commands.command.util.CommandAssertions;
 import de.eldoria.eldoutilities.commands.exceptions.CommandException;
 import de.eldoria.eldoutilities.commands.executor.IPlayerTabExecutor;
+import de.eldoria.gridselector.adapter.worldguard.IWorldGuardAdapter;
 import de.eldoria.gridselector.config.Configuration;
-import de.eldoria.gridselector.config.elements.GridCluster;
+import de.eldoria.gridselector.config.elements.cluster.GridCluster;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -27,16 +25,14 @@ import java.util.Optional;
 
 public class Remove extends AdvancedCommand implements IPlayerTabExecutor {
     private final Configuration configuration;
-    private WorldGuard worldGuard = null;
+    private final IWorldGuardAdapter worldGuardAdapter;
 
-    public Remove(Plugin plugin, Configuration configuration) {
+    public Remove(Plugin plugin, Configuration configuration, IWorldGuardAdapter worldGuardAdapter) {
         super(plugin, CommandMeta.builder("remove")
                 .addUnlocalizedArgument("id", false)
                 .build());
         this.configuration = configuration;
-        if (plugin.getServer().getPluginManager().isPluginEnabled("WorldGuard")) {
-            worldGuard = WorldGuard.getInstance();
-        }
+        this.worldGuardAdapter = worldGuardAdapter;
     }
 
     @Override
@@ -50,10 +46,7 @@ public class Remove extends AdvancedCommand implements IPlayerTabExecutor {
             CommandAssertions.isTrue(cluster.isPresent(), "Unkown cluster id");
         }
 
-        if (configuration.generalSettings().isCreateWorldGuardRegions() && worldGuard != null) {
-            var world = BukkitAdapter.adapt(player.getWorld());
-            worldGuard.getPlatform().getRegionContainer().get(world).removeRegion(cluster.get().boundingBox().id());
-        }
+        worldGuardAdapter.unregister(cluster.get(), player);
 
         configuration.getClusterWorld(player.getWorld()).unregister(cluster.get().id());
         messageSender().sendMessage(player, "Cluster removed");

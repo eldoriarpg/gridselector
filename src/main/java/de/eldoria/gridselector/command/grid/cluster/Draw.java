@@ -10,9 +10,6 @@ import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.domains.DefaultDomain;
-import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import de.eldoria.eldoutilities.commands.command.AdvancedCommand;
 import de.eldoria.eldoutilities.commands.command.CommandMeta;
 import de.eldoria.eldoutilities.commands.command.util.Arguments;
@@ -20,8 +17,9 @@ import de.eldoria.eldoutilities.commands.exceptions.CommandException;
 import de.eldoria.eldoutilities.commands.executor.IPlayerTabExecutor;
 import de.eldoria.eldoutilities.messages.MessageSender;
 import de.eldoria.gridselector.GridSelector;
+import de.eldoria.gridselector.adapter.worldguard.IWorldGuardAdapter;
 import de.eldoria.gridselector.config.Configuration;
-import de.eldoria.gridselector.config.elements.GridCluster;
+import de.eldoria.gridselector.config.elements.cluster.GridCluster;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -29,17 +27,15 @@ import org.jetbrains.annotations.NotNull;
 public class Draw extends AdvancedCommand implements IPlayerTabExecutor {
     private final Sessions sessions;
     private final Configuration configuration;
-    private WorldGuard worldGuard = null;
+    private final IWorldGuardAdapter worldGuardAdapter;
 
-    public Draw(Plugin plugin, Sessions sessions, Configuration configuration) {
+    public Draw(Plugin plugin, Sessions sessions, Configuration configuration, IWorldGuardAdapter worldGuardAdapter) {
         super(plugin, CommandMeta.builder("draw")
                 .hidden()
                 .build());
         this.sessions = sessions;
         this.configuration = configuration;
-        if (plugin.getServer().getPluginManager().isPluginEnabled("WorldGuard")) {
-            worldGuard = WorldGuard.getInstance();
-        }
+        this.worldGuardAdapter = worldGuardAdapter;
     }
 
 
@@ -51,16 +47,8 @@ public class Draw extends AdvancedCommand implements IPlayerTabExecutor {
         var cluster = builder.build();
 
         configuration.getClusterWorld(player.getWorld()).register(cluster);
-        configuration.save();
         draw(cluster, player);
-        if (configuration.generalSettings().isCreateWorldGuardRegions() && worldGuard != null) {
-            var world = BukkitAdapter.adapt(player.getWorld());
-            var region = new ProtectedCuboidRegion(cluster.boundingBox().id(),
-                    cluster.boundingBox().min().toBlockVector3(world.getMinY()),
-                    cluster.boundingBox().max().toBlockVector3(world.getMaxY()));
-            region.getOwners().addPlayer(player.getUniqueId());
-            worldGuard.getPlatform().getRegionContainer().get(world).addRegion(region);
-        }
+        worldGuardAdapter.register(cluster, player);
         configuration.save();
     }
 
