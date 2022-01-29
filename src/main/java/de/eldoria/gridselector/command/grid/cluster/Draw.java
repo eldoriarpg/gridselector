@@ -47,10 +47,10 @@ public class Draw extends AdvancedCommand implements IPlayerTabExecutor {
     }
 
     public static void draw(GridCluster cluster, Player player) {
-        var min = cluster.boundingBox().getMin();
-        var max = cluster.boundingBox().getMax();
+        var min = cluster.boundingBox().min();
+        var max = cluster.boundingBox().max();
 
-        var y = player.getWorld().getHighestBlockYAt(min.toLocation(player.getWorld()));
+        var y = player.getWorld().getHighestBlockYAt(BukkitAdapter.adapt(player.getWorld(), min.toBlockVector3()));
 
         var actor = BukkitAdapter.adapt(player);
 

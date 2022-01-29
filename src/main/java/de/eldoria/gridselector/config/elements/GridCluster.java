@@ -7,38 +7,64 @@
 package de.eldoria.gridselector.config.elements;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.util.Direction;
 import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BlockState;
 import de.eldoria.eldoutilities.localization.MessageComposer;
+import de.eldoria.eldoutilities.serialization.SerializationUtil;
 import de.eldoria.eldoutilities.utils.EMath;
+import de.eldoria.eldoutilities.utils.EnumUtil;
 import de.eldoria.gridselector.util.Colors;
 import org.bukkit.Material;
-import org.bukkit.util.BlockVector;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Optional;
 
-public class GridCluster {
+public class GridCluster implements ConfigurationSerializable {
     private int id = -1;
-    private BoundingBox boundingBox;
+    private Plot plot;
     private int elementSize = 7;
     private int offset = 1;
     private int rows = 2;
     private int columns = 2;
-    private Material borderMaterial = Material.BLUE_WOOL;
+    private Material borderMaterial = Material.RED_WOOL;
     private Material offsetMaterial = Material.LIGHT_GRAY_WOOL;
     private Material floorMaterial = Material.WHITE_WOOL;
+
+    public GridCluster(Map<String, Object> objectMap) {
+        var map = SerializationUtil.mapOf(objectMap);
+        id = map.getValue("id");
+        plot = map.getValue("plot");
+        elementSize = map.getValue("elementSize");
+        offset = map.getValue("offset");
+        rows = map.getValue("rows");
+        columns = map.getValue("columns");
+        borderMaterial = map.getValue("borderMaterial", e -> EnumUtil.parse(e, Material.class).orElse(borderMaterial));
+        offsetMaterial = map.getValue("offsetMaterial", e -> EnumUtil.parse(e, Material.class).orElse(offsetMaterial));
+        floorMaterial = map.getValue("floorMaterial", e -> EnumUtil.parse(e, Material.class).orElse(floorMaterial));
+    }
+
+    @Override
+    @NotNull
+    public Map<String, Object> serialize() {
+        return SerializationUtil.newBuilder()
+                .build();
+    }
+
 
     public GridCluster() {
     }
 
-    public GridCluster(BoundingBox boundings, int elementSize, int offset, int rows, int columns,
+    public GridCluster(Plot boundings, int elementSize, int offset, int rows, int columns,
                        Material borderMaterial, Material offsetMaterial, Material floorMaterial) {
-        boundingBox = boundings;
+        plot = boundings;
         this.elementSize = elementSize;
         this.offset = offset;
         this.rows = rows;
@@ -53,17 +79,17 @@ public class GridCluster {
     }
 
     public Material getMaterial(Location location) {
-        return getMaterial(location.toVector());
+        return getMaterial(location.toVector().toBlockPoint().toBlockVector2());
     }
 
-    public Material getMaterial(Vector3 location) {
+    public Material getMaterial(BlockVector2 location) {
         var optRegion = getRegion(location);
         if (optRegion.isEmpty()) return offsetMaterial;
         var region = optRegion.get();
 
-        var shrink = shrink(region, -1);
+        var borderless = region.borderLessPlot();
 
-        if (shrink.contains(toVector(location))) {
+        if (borderless.contains(location)) {
             return floorMaterial;
         }
 
@@ -74,23 +100,22 @@ public class GridCluster {
         return shrink.clone().expand(amount, 0, amount);
     }
 
-    public Optional<BoundingBox> getRegion(Location location) {
-        return getRegion(location.toVector());
+    public Optional<Plot> getRegion(Location location) {
+        return getRegion(location.toVector().toVector2().toBlockPoint());
     }
 
-    public Optional<BoundingBox> getRegion(Vector3 vector) {
-        var bukkitVec = toVector(vector);
-        if (!boundingBox.contains(bukkitVec)) {
+    public Optional<Plot> getRegion(BlockVector2 vector) {
+        if (!plot.contains(vector)) {
             return Optional.empty();
         }
 
         var totalElementSize = elementSize + 2 + offset;
-        var min = toVector(boundingBox.getMin());
+        var min = plot.min();
 
         var xOffset = EMath.diff(min.getX(), vector.getX());
         var zOffset = EMath.diff(min.getZ(), vector.getZ());
 
-        var minOffset = Vector3.at(xOffset, 0, zOffset);
+        var minOffset = BlockVector2.at(xOffset, zOffset);
 
         var xIndex = minOffset.getX() % totalElementSize;
         var zIndex = minOffset.getZ() % totalElementSize;
@@ -109,22 +134,22 @@ public class GridCluster {
         return Optional.ofNullable(getRegion(min, (int) gridX, (int) gridZ));
     }
 
-    private Vector toVector(Vector3 vector3) {
-        return new Vector(vector3.getX(), 0, vector3.getZ());
+    private BlockVector2 toVector(Vector3 vector3) {
+        return BlockVector2.at(vector3.getX(), vector3.getZ());
     }
 
-    private Vector3 toVector(Vector vector) {
-        return Vector3.at(vector.getX(), vector.getY(), vector.getZ());
+    private BlockVector2 toVector(Vector vector) {
+        return BlockVector2.at(vector.getX(), vector.getZ());
     }
 
-    public BoundingBox getRegion(Vector3 base, int x, int z) {
+    public Plot getRegion(BlockVector2 base, int x, int z) {
         var totalElementSize = elementSize + 2 + offset;
-        var min = new BlockVector(base.getX() + x * totalElementSize, 0, base.getZ() + z * totalElementSize);
-        return BoundingBox.of(min, min.clone().add(new BlockVector(elementSize + 1.9, 1, elementSize + 1.9)));
+        var min = BlockVector2.at(base.getX() + x * totalElementSize, base.getZ() + z * totalElementSize);
+        return Plot.of(min, min.add(BlockVector2.at(elementSize + 1, elementSize + 1)));
     }
 
-    public BoundingBox boundingBox() {
-        return boundingBox;
+    public Plot boundingBox() {
+        return plot;
     }
 
     public int elementSize() {
@@ -170,8 +195,8 @@ public class GridCluster {
         return new Builder(center, direction);
     }
 
-    public boolean contains(org.bukkit.Location location) {
-        return boundingBox.contains(location.toVector());
+    public boolean contains(BlockVector2 location) {
+        return plot.contains(location);
     }
 
     public static class Builder {
@@ -235,12 +260,12 @@ public class GridCluster {
             var first = BukkitAdapter.adapt(center).toVector().toBlockVector();
             var second = BukkitAdapter.adapt(new Location(world, center.toVector().add(offsetVec).withY(world.getMaxY()))).toVector().toBlockVector();
 
-            var boundings = BoundingBox.of(floorVector(first), floorVector(second));
+            var boundings = Plot.of(floorVector(first), floorVector(second));
             return new GridCluster(boundings, elementSize, offset, rows, columns, borderMaterial, offsetMaterial, floorMaterial);
         }
 
-        public BlockVector floorVector(Vector vector) {
-            return new BlockVector(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ());
+        public BlockVector2 floorVector(Vector vector) {
+            return BlockVector2.at(vector.getBlockX(), vector.getBlockZ());
         }
 
         public String asComponent() {

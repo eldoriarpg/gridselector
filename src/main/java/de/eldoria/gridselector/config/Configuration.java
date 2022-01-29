@@ -8,7 +8,6 @@ package de.eldoria.gridselector.config;
 
 import de.eldoria.eldoutilities.configuration.EldoConfig;
 import de.eldoria.gridselector.config.elements.ClusterWorld;
-import de.eldoria.gridselector.config.elements.GridWorld;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.plugin.Plugin;

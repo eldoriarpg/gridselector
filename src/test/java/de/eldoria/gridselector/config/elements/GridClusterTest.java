@@ -6,10 +6,8 @@
 
 package de.eldoria.gridselector.config.elements;
 
-import com.sk89q.worldedit.math.Vector3;
+import com.sk89q.worldedit.math.BlockVector2;
 import org.bukkit.Material;
-import org.bukkit.util.BoundingBox;
-import org.bukkit.util.Vector;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,185 +22,191 @@ class GridClusterTest {
 
     @BeforeEach
     void setUp() {
-        pCluster = new GridCluster(BoundingBox.of(new Vector(0, 0, 0), new Vector(17, 256, 17)), 3, 1, 3, 3,
+        pCluster = new GridCluster(Plot.of(0, 0, 17, 17), 3, 1, 3, 3,
                 border, offset, floor);
-        nCluster = new GridCluster(BoundingBox.of(new Vector(-17, 0, -17), new Vector(0, 256, 0)), 3, 1, 3, 3,
+        nCluster = new GridCluster(Plot.of(-17, -17, 0, 0), 3, 1, 3, 3,
                 border, offset, floor);
     }
 
     @Test
     void getRegion() {
-        // Border
-        var region = pCluster.getRegion(Vector3.at(0, 0, 0));
-        Assertions.assertTrue(region.isPresent());
-        Assertions.assertEquals(BoundingBox.of(new Vector(0, 0, 0), new Vector(4, 0, 4)), region.get());
+        var p1 = Plot.of(0, 0, 4, 4);
+        var p2 = Plot.of(6, 6, 10, 10);
+        var n1 = Plot.of(-17, -17, -13, -13);
+        var n2 = Plot.of(-11, -11, -7, -7);
+        var n3 = Plot.of(-5, -5, -1, -1);
 
         // Border
-        region = pCluster.getRegion(Vector3.at(4, 0, 4));
+        var region = pCluster.getRegion(BlockVector2.at(0, 0));
         Assertions.assertTrue(region.isPresent());
-        Assertions.assertEquals(BoundingBox.of(new Vector(0, 0, 0), new Vector(4, 0, 4)), region.get());
+        Assertions.assertEquals(p1, region.get());
+
+        // Border
+        region = pCluster.getRegion(BlockVector2.at(4, 4));
+        Assertions.assertTrue(region.isPresent());
+        Assertions.assertEquals(p1, region.get());
 
         // Offset
-        region = pCluster.getRegion(Vector3.at(5, 0, 5));
+        region = pCluster.getRegion(BlockVector2.at(5, 5));
         Assertions.assertTrue(region.isEmpty());
 
         // Border
-        region = pCluster.getRegion(Vector3.at(6, 0, 6));
+        region = pCluster.getRegion(BlockVector2.at(6, 6));
         Assertions.assertTrue(region.isPresent());
-        Assertions.assertEquals(BoundingBox.of(new Vector(6, 0, 6), new Vector(10, 0, 10)), region.get());
+        Assertions.assertEquals(p2, region.get());
 
         // Border
-        region = pCluster.getRegion(Vector3.at(10, 0, 10));
+        region = pCluster.getRegion(BlockVector2.at(10, 10));
         Assertions.assertTrue(region.isPresent());
-        Assertions.assertEquals(BoundingBox.of(new Vector(6, 0, 6), new Vector(10, 0, 10)), region.get());
+        Assertions.assertEquals(p2, region.get());
 
         // Offset
-        region = pCluster.getRegion(Vector3.at(11, 0, 11));
+        region = pCluster.getRegion(BlockVector2.at(11, 11));
         Assertions.assertTrue(region.isEmpty());
 
         // Border
-        region = nCluster.getRegion(Vector3.at(-17, 0, -17));
+        region = nCluster.getRegion(BlockVector2.at(-17, -17));
         Assertions.assertTrue(region.isPresent());
-        Assertions.assertEquals(BoundingBox.of(new Vector(-17, 0, -17), new Vector(-13, 0, -13)), region.get());
+        Assertions.assertEquals(n1, region.get());
 
         // Border
-        region = nCluster.getRegion(Vector3.at(-13, 0, -13));
+        region = nCluster.getRegion(BlockVector2.at(-13, -13));
         Assertions.assertTrue(region.isPresent());
-        Assertions.assertEquals(BoundingBox.of(new Vector(-17, 0, -17), new Vector(-13, 0, -13)), region.get());
+        Assertions.assertEquals(n1, region.get());
 
         // Offset
-        region = nCluster.getRegion(Vector3.at(-12, 0, -12));
+        region = nCluster.getRegion(BlockVector2.at(-12, -12));
         Assertions.assertTrue(region.isEmpty());
 
         // Border
-        region = nCluster.getRegion(Vector3.at(-11, 0, -11));
+        region = nCluster.getRegion(BlockVector2.at(-11, -11));
         Assertions.assertTrue(region.isPresent());
-        Assertions.assertEquals(BoundingBox.of(new Vector(-11, 0, -11), new Vector(-7, 0, -7)), region.get());
+        Assertions.assertEquals(n2, region.get());
 
         // Border
-        region = nCluster.getRegion(Vector3.at(-7, 0, -7));
+        region = nCluster.getRegion(BlockVector2.at(-7, -7));
         Assertions.assertTrue(region.isPresent());
-        Assertions.assertEquals(BoundingBox.of(new Vector(-11, 0, -11), new Vector(-7, 0, -7)), region.get());
+        Assertions.assertEquals(n2, region.get());
 
         // Offset
-        region = nCluster.getRegion(Vector3.at(-6, 0, -6));
+        region = nCluster.getRegion(BlockVector2.at(-6, -6));
         Assertions.assertTrue(region.isEmpty());
 
         // Border
-        region = nCluster.getRegion(Vector3.at(-5, 0, -5));
+        region = nCluster.getRegion(BlockVector2.at(-5, -5));
         Assertions.assertTrue(region.isPresent());
-        Assertions.assertEquals(BoundingBox.of(new Vector(-5, 0, -5), new Vector(-1, 0, -1)), region.get());
+        Assertions.assertEquals(n3, region.get());
 
         // Border
-        region = nCluster.getRegion(Vector3.at(-1, 0, -1));
+        region = nCluster.getRegion(BlockVector2.at(-1, -1));
         Assertions.assertTrue(region.isPresent());
-        Assertions.assertEquals(BoundingBox.of(new Vector(-5, 0, -5), new Vector(-1, 0, -1)), region.get());
+        Assertions.assertEquals(n3, region.get());
 
         // Offset
-        region = nCluster.getRegion(Vector3.at(0, 0, 0));
+        region = nCluster.getRegion(BlockVector2.at(0, 0));
         Assertions.assertTrue(region.isEmpty());
     }
 
     @Test
     void getMaterial() {
         // Border
-        var material = pCluster.getMaterial(Vector3.at(0, 0, 0));
+        var material = pCluster.getMaterial(BlockVector2.at(0, 0));
         Assertions.assertEquals(border, material);
 
         // Floor
-        material = pCluster.getMaterial(Vector3.at(1, 0, 1));
+        material = pCluster.getMaterial(BlockVector2.at(1, 1));
         Assertions.assertEquals(floor, material);
 
         // Floor
-        material = pCluster.getMaterial(Vector3.at(3, 0, 3));
+        material = pCluster.getMaterial(BlockVector2.at(3, 3));
         Assertions.assertEquals(floor, material);
 
         // Border
-        material = pCluster.getMaterial(Vector3.at(4, 0, 4));
+        material = pCluster.getMaterial(BlockVector2.at(4, 4));
         Assertions.assertEquals(border, material);
 
         // Offset
-        material = pCluster.getMaterial(Vector3.at(5, 0, 5));
+        material = pCluster.getMaterial(BlockVector2.at(5, 5));
         Assertions.assertEquals(material, offset);
 
         // Border
-        material = pCluster.getMaterial(Vector3.at(6, 0, 6));
+        material = pCluster.getMaterial(BlockVector2.at(6, 6));
         Assertions.assertEquals(border, material);
 
         // Floor
-        material = pCluster.getMaterial(Vector3.at(7, 0, 7));
+        material = pCluster.getMaterial(BlockVector2.at(7, 7));
         Assertions.assertEquals(floor, material);
 
         // Floor
-        material = pCluster.getMaterial(Vector3.at(9, 0, 9));
+        material = pCluster.getMaterial(BlockVector2.at(9, 9));
         Assertions.assertEquals(floor, material);
 
         // Border
-        material = pCluster.getMaterial(Vector3.at(10, 0, 10));
+        material = pCluster.getMaterial(BlockVector2.at(10, 10));
         Assertions.assertEquals(border, material);
 
         // Offset
-        material = pCluster.getMaterial(Vector3.at(11, 0, 11));
+        material = pCluster.getMaterial(BlockVector2.at(11, 11));
         Assertions.assertEquals(material, offset);
 
         // Border
-        material = nCluster.getMaterial(Vector3.at(-17, 0, -17));
+        material = nCluster.getMaterial(BlockVector2.at(-17, -17));
         Assertions.assertEquals(border, material);
 
         // Floor
-        material = nCluster.getMaterial(Vector3.at(-16, 0, -16));
+        material = nCluster.getMaterial(BlockVector2.at(-16, -16));
         Assertions.assertEquals(floor, material);
 
         // Floor
-        material = nCluster.getMaterial(Vector3.at(-14, 0, -14));
+        material = nCluster.getMaterial(BlockVector2.at(-14, -14));
         Assertions.assertEquals(floor, material);
 
         // Border
-        material = nCluster.getMaterial(Vector3.at(-13, 0, -13));
+        material = nCluster.getMaterial(BlockVector2.at(-13, -13));
         Assertions.assertEquals(border, material);
 
         // Offset
-        material = nCluster.getMaterial(Vector3.at(-12, 0, -12));
+        material = nCluster.getMaterial(BlockVector2.at(-12, -12));
         Assertions.assertEquals(material, offset);
 
         // Border
-        material = nCluster.getMaterial(Vector3.at(-11, 0, -11));
+        material = nCluster.getMaterial(BlockVector2.at(-11, -11));
         Assertions.assertEquals(border, material);
 
         // Floor
-        material = nCluster.getMaterial(Vector3.at(-10, 0, -10));
+        material = nCluster.getMaterial(BlockVector2.at(-10, -10));
         Assertions.assertEquals(floor, material);
 
         // Floor
-        material = nCluster.getMaterial(Vector3.at(-8, 0, -8));
+        material = nCluster.getMaterial(BlockVector2.at(-8, -8));
         Assertions.assertEquals(floor, material);
 
         // Border
-        material = nCluster.getMaterial(Vector3.at(-7, 0, -7));
+        material = nCluster.getMaterial(BlockVector2.at(-7, -7));
         Assertions.assertEquals(border, material);
 
         // Offset
-        material = nCluster.getMaterial(Vector3.at(-6, 0, -6));
+        material = nCluster.getMaterial(BlockVector2.at(-6, -6));
         Assertions.assertEquals(material, offset);
 
         // Border
-        material = nCluster.getMaterial(Vector3.at(-5, 0, -5));
+        material = nCluster.getMaterial(BlockVector2.at(-5, -5));
         Assertions.assertEquals(border, material);
 
         // Floor
-        material = nCluster.getMaterial(Vector3.at(-4, 0, -4));
+        material = nCluster.getMaterial(BlockVector2.at(-4, -4));
         Assertions.assertEquals(floor, material);
 
         // Floor
-        material = nCluster.getMaterial(Vector3.at(-2, 0, -2));
+        material = nCluster.getMaterial(BlockVector2.at(-2, -2));
         Assertions.assertEquals(floor, material);
 
         // Border
-        material = nCluster.getMaterial(Vector3.at(-1, 0, -1));
+        material = nCluster.getMaterial(BlockVector2.at(-1, -1));
         Assertions.assertEquals(border, material);
 
         // Offset
-        material = nCluster.getMaterial(Vector3.at(0, 0, 0));
+        material = nCluster.getMaterial(BlockVector2.at(0, 0));
         Assertions.assertEquals(material, offset);
     }
 }

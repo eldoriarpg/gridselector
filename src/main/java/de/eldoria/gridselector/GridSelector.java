@@ -12,13 +12,14 @@ import de.eldoria.eldoutilities.localization.ILocalizer;
 import de.eldoria.eldoutilities.messages.MessageSender;
 import de.eldoria.eldoutilities.plugin.EldoPlugin;
 import de.eldoria.gridselector.adapter.WorldAdapter;
-import de.eldoria.gridselector.adapter.regionadapter.GridWorldAdapter;
 import de.eldoria.gridselector.adapter.regionadapter.PlotWorldAdapter;
 import de.eldoria.gridselector.adapter.regionadapter.RegionAdapter;
 import de.eldoria.gridselector.adapter.regionadapter.RegionResult;
 import de.eldoria.gridselector.command.Grid;
 import de.eldoria.gridselector.config.Configuration;
-import de.eldoria.gridselector.config.elements.GridWorld;
+import de.eldoria.gridselector.config.elements.ClusterWorld;
+import de.eldoria.gridselector.config.elements.GridCluster;
+import de.eldoria.gridselector.config.elements.Plot;
 import de.eldoria.gridselector.listener.SelectionListener;
 import de.eldoria.gridselector.schematics.GridSchematics;
 import de.eldoria.gridselector.selector.GridProvider;
@@ -51,7 +52,6 @@ public class GridSelector extends EldoPlugin {
         sbr.schematics().register(GridSchematics.KEY, gridSchematics);
 
         List<RegionAdapter> regionAdapters = new ArrayList<>();
-        regionAdapters.add(new GridWorldAdapter(config));
 
         RegionAdapter plotWorldAdapter;
         if (getPluginManager().isPluginEnabled("PlotSquared")) {
@@ -83,6 +83,6 @@ public class GridSelector extends EldoPlugin {
 
     @Override
     public List<Class<? extends ConfigurationSerializable>> getConfigSerialization() {
-        return List.of(GridWorld.class);
+        return List.of(GridCluster.class, Plot.class, ClusterWorld.class);
     }
 }

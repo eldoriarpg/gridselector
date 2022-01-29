@@ -13,27 +13,34 @@ import de.eldoria.eldoutilities.commands.command.util.CommandAssertions;
 import de.eldoria.eldoutilities.commands.exceptions.CommandException;
 import de.eldoria.eldoutilities.commands.executor.IPlayerTabExecutor;
 import de.eldoria.gridselector.config.Configuration;
+import de.eldoria.gridselector.config.elements.GridCluster;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.Optional;
 
 public class Repair extends AdvancedCommand implements IPlayerTabExecutor {
     private final Configuration configuration;
 
     public Repair(Plugin plugin, Configuration configuration) {
         super(plugin, CommandMeta.builder("repair")
-                .addUnlocalizedArgument("id", true)
+                .addUnlocalizedArgument("id", false)
                 .build());
         this.configuration = configuration;
     }
 
     @Override
     public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
-        var cluster = configuration.getClusterWorld(player.getWorld()).getCluster(player.getLocation());
-        CommandAssertions.isTrue(cluster.isPresent(), "Unkown cluster id");
+        Optional<GridCluster> cluster;
+        if (args.isEmpty()) {
+            cluster = configuration.getClusterWorld(player.getWorld()).getCluster(player.getLocation());
+            CommandAssertions.isTrue(cluster.isPresent(), "You are not inside a cluster");
+        } else {
+            cluster = configuration.getClusterWorld(player.getWorld()).getCluster(args.asInt(0));
+            CommandAssertions.isTrue(cluster.isPresent(), "Unkown cluster id");
+        }
+
         Draw.draw(cluster.get(), player);
         messageSender().sendMessage(player, "Cluster redrawn.");
     }

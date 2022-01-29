@@ -6,6 +6,7 @@
 
 package de.eldoria.gridselector.config.elements;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import de.eldoria.eldoutilities.commands.command.util.CommandAssertions;
 import de.eldoria.eldoutilities.commands.exceptions.CommandException;
 import de.eldoria.eldoutilities.serialization.SerializationUtil;
@@ -61,6 +62,15 @@ public class ClusterWorld implements ConfigurationSerializable {
     }
 
     public Optional<GridCluster> getCluster(Location location) {
-        return cluster.stream().filter(c -> c.contains(location)).findFirst();
+        var vec2 = BukkitAdapter.adapt(location).toVector().toBlockPoint().toBlockVector2();
+        return cluster.stream().filter(c -> c.contains(vec2)).findFirst();
+    }
+
+    public Optional<GridCluster> getCluster(int id) {
+        return cluster.stream().filter(c -> c.id() == id).findFirst();
+    }
+
+    public List<GridCluster> cluster() {
+        return cluster;
     }
 }

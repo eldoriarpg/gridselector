@@ -50,6 +50,7 @@ public class Sessions {
         var session = getOrCreateSession(player);
         var composer = MessageComposer.create()
                 .text(session.asComponent());
+        composer.text("<%s><click:run_command:'/sbrg cluster draw'>[Create]</click>");
         composer.prependLines(20);
         messageBlocker.ifEnabled(composer, mess -> mess.newLine().text("<click:run_command:'/sbrg grid cluster close'><%s>[x]</click>", Colors.REMOVE));
         messageBlocker.announce(player, "[x]");

@@ -8,9 +8,7 @@ package de.eldoria.gridselector.adapter.regionadapter;
 
 import com.plotsquared.bukkit.util.BukkitUtil;
 import com.plotsquared.core.PlotSquared;
-import com.plotsquared.core.plot.Plot;
 import com.plotsquared.core.plot.world.PlotAreaManager;
-import com.sk89q.worldedit.regions.CuboidRegion;
 import org.bukkit.Location;
 
 import java.util.Optional;
