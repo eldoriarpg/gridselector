@@ -27,8 +27,12 @@ public class ClusterWorldAdapter implements RegionAdapter {
     @Override
     public Optional<RegionResult> getRegion(Location location) {
         return configuration.getClusterWorld(location.getWorld()).getCluster(location)
-                .flatMap(p -> p.getRegion(BukkitAdapter.adapt(location)))
-                .map(plot -> new RegionResult(plot.id(), plot.as2DRegion(location.getBlockY())));
+                .flatMap(cluster -> {
+                    var optPlot = cluster.getRegion(BukkitAdapter.adapt(location));
+                    return optPlot.map(plot -> new RegionResult(plot.id(),
+                            plot.borderLessPlot().asRegion(BukkitAdapter.adapt(location.getWorld())),
+                            plot.asRegion(BukkitAdapter.adapt(location.getWorld())), cluster.minHeight()));
+                });
 
     }
 }

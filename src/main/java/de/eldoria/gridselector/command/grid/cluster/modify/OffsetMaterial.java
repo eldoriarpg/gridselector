@@ -11,6 +11,7 @@ import de.eldoria.eldoutilities.commands.command.CommandMeta;
 import de.eldoria.eldoutilities.commands.command.util.Arguments;
 import de.eldoria.eldoutilities.commands.exceptions.CommandException;
 import de.eldoria.eldoutilities.commands.executor.IPlayerTabExecutor;
+import de.eldoria.eldoutilities.simplecommands.TabCompleteUtil;
 import de.eldoria.gridselector.command.grid.cluster.Sessions;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -37,6 +38,6 @@ public class OffsetMaterial extends AdvancedCommand implements IPlayerTabExecuto
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
-        return IPlayerTabExecutor.super.onTabComplete(player, alias, args);
+        return TabCompleteUtil.completeMaterial(args.asString(0), true);
     }
 }

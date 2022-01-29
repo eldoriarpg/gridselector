@@ -8,6 +8,7 @@ package de.eldoria.gridselector.config.elements;
 
 import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.world.World;
 import de.eldoria.eldoutilities.serialization.SerializationUtil;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.jetbrains.annotations.NotNull;
@@ -25,8 +26,8 @@ public class Plot implements ConfigurationSerializable {
     }
 
     private Plot(BlockVector2 min, BlockVector2 max) {
-        this.min = min;
-        this.max = max;
+        this.min = BlockVector2.at(Math.min(min.getBlockX(), max.getBlockX()), Math.min(min.getBlockZ(), max.getBlockZ()));
+        this.max = BlockVector2.at(Math.max(min.getBlockX(), max.getBlockX()), Math.max(min.getBlockZ(), max.getBlockZ()));
     }
 
     public static Plot of(int minX, int minZ, int maxX, int maxZ) {
@@ -141,5 +142,9 @@ public class Plot implements ConfigurationSerializable {
 
     public String id() {
         return min.toParserString();
+    }
+
+    public CuboidRegion asRegion(World world) {
+        return new CuboidRegion(min.toBlockVector3(world.getMinY()), max.toBlockVector3(world.getMaxY()));
     }
 }

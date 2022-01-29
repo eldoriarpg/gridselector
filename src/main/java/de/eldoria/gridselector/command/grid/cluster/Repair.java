@@ -42,6 +42,7 @@ public class Repair extends AdvancedCommand implements IPlayerTabExecutor {
         }
 
         Draw.draw(cluster.get(), player);
+        configuration.save();
         messageSender().sendMessage(player, "Cluster redrawn.");
     }
 }

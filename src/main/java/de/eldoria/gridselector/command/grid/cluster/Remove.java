@@ -6,6 +6,9 @@
 
 package de.eldoria.gridselector.command.grid.cluster;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import de.eldoria.eldoutilities.commands.command.AdvancedCommand;
 import de.eldoria.eldoutilities.commands.command.CommandMeta;
 import de.eldoria.eldoutilities.commands.command.util.Arguments;
@@ -24,12 +27,16 @@ import java.util.Optional;
 
 public class Remove extends AdvancedCommand implements IPlayerTabExecutor {
     private final Configuration configuration;
+    private WorldGuard worldGuard = null;
 
     public Remove(Plugin plugin, Configuration configuration) {
         super(plugin, CommandMeta.builder("remove")
                 .addUnlocalizedArgument("id", false)
                 .build());
         this.configuration = configuration;
+        if (plugin.getServer().getPluginManager().isPluginEnabled("WorldGuard")) {
+            worldGuard = WorldGuard.getInstance();
+        }
     }
 
     @Override
@@ -41,6 +48,11 @@ public class Remove extends AdvancedCommand implements IPlayerTabExecutor {
         } else {
             cluster = configuration.getClusterWorld(player.getWorld()).getCluster(args.asInt(0));
             CommandAssertions.isTrue(cluster.isPresent(), "Unkown cluster id");
+        }
+
+        if (configuration.generalSettings().isCreateWorldGuardRegions() && worldGuard != null) {
+            var world = BukkitAdapter.adapt(player.getWorld());
+            worldGuard.getPlatform().getRegionContainer().get(world).removeRegion(cluster.get().boundingBox().id());
         }
 
         configuration.getClusterWorld(player.getWorld()).unregister(cluster.get().id());

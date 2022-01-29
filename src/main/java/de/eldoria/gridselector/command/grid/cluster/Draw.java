@@ -10,12 +10,16 @@ import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.util.Location;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.domains.DefaultDomain;
+import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import de.eldoria.eldoutilities.commands.command.AdvancedCommand;
 import de.eldoria.eldoutilities.commands.command.CommandMeta;
 import de.eldoria.eldoutilities.commands.command.util.Arguments;
 import de.eldoria.eldoutilities.commands.exceptions.CommandException;
 import de.eldoria.eldoutilities.commands.executor.IPlayerTabExecutor;
+import de.eldoria.eldoutilities.messages.MessageSender;
+import de.eldoria.gridselector.GridSelector;
 import de.eldoria.gridselector.config.Configuration;
 import de.eldoria.gridselector.config.elements.GridCluster;
 import org.bukkit.entity.Player;
@@ -25,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 public class Draw extends AdvancedCommand implements IPlayerTabExecutor {
     private final Sessions sessions;
     private final Configuration configuration;
+    private WorldGuard worldGuard = null;
 
     public Draw(Plugin plugin, Sessions sessions, Configuration configuration) {
         super(plugin, CommandMeta.builder("draw")
@@ -32,6 +37,9 @@ public class Draw extends AdvancedCommand implements IPlayerTabExecutor {
                 .build());
         this.sessions = sessions;
         this.configuration = configuration;
+        if (plugin.getServer().getPluginManager().isPluginEnabled("WorldGuard")) {
+            worldGuard = WorldGuard.getInstance();
+        }
     }
 
 
@@ -43,7 +51,17 @@ public class Draw extends AdvancedCommand implements IPlayerTabExecutor {
         var cluster = builder.build();
 
         configuration.getClusterWorld(player.getWorld()).register(cluster);
+        configuration.save();
         draw(cluster, player);
+        if (configuration.generalSettings().isCreateWorldGuardRegions() && worldGuard != null) {
+            var world = BukkitAdapter.adapt(player.getWorld());
+            var region = new ProtectedCuboidRegion(cluster.boundingBox().id(),
+                    cluster.boundingBox().min().toBlockVector3(world.getMinY()),
+                    cluster.boundingBox().max().toBlockVector3(world.getMaxY()));
+            region.getOwners().addPlayer(player.getUniqueId());
+            worldGuard.getPlatform().getRegionContainer().get(world).addRegion(region);
+        }
+        configuration.save();
     }
 
     public static void draw(GridCluster cluster, Player player) {
@@ -52,23 +70,24 @@ public class Draw extends AdvancedCommand implements IPlayerTabExecutor {
 
         var y = player.getWorld().getHighestBlockYAt(BukkitAdapter.adapt(player.getWorld(), min.toBlockVector3()));
 
+        cluster.updateMinHeight(y);
+
         var actor = BukkitAdapter.adapt(player);
 
-        var localSession = WorldEdit.getInstance().getSessionManager().get(actor);
         var session = WorldEdit.getInstance().newEditSessionBuilder().actor(actor).world(BukkitAdapter.adapt(player.getWorld())).build();
         try (session) {
             for (var x = min.getBlockX(); x < max.getBlockX(); x++) {
                 for (var z = min.getBlockZ(); z < max.getBlockZ(); z++) {
                     var loc = BlockVector3.at(x, y, z);
-                    session.setBlock(loc, cluster.getBlock(new Location(BukkitAdapter.adapt(player.getWorld()), loc.toVector3())));
+                    session.setBlock(loc, cluster.getBlock(loc.toBlockVector2()));
                 }
             }
         } catch (MaxChangedBlocksException e) {
 
         } finally {
-            localSession.remember(session);
+            WorldEdit.getInstance().getSessionManager().get(actor).remember(session);
         }
 
-        WorldEdit.getInstance().getSessionManager().get(actor).remember(session);
+        MessageSender.getPluginMessageSender(GridSelector.class).sendMessage(player, "Created grid. Changed " + session.size() + " blocks.");
     }
 }

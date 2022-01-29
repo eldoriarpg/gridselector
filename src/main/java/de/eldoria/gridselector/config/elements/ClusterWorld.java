@@ -22,18 +22,18 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class ClusterWorld implements ConfigurationSerializable {
-    private final UUID name;
+    private final UUID UID;
     private final List<GridCluster> cluster;
     private int id = 1;
 
     public ClusterWorld(World world) {
-        this.name = world.getUID();
+        this.UID = world.getUID();
         cluster = new ArrayList<>();
     }
 
     public ClusterWorld(Map<String, Object> objectMap) {
         var map = SerializationUtil.mapOf(objectMap);
-        name = UUID.fromString(map.getValue("name"));
+        UID = UUID.fromString(map.getValue("UID"));
         cluster = map.getValue("cluster");
         id = map.getValue("id");
     }
@@ -50,12 +50,11 @@ public class ClusterWorld implements ConfigurationSerializable {
         return cluster.removeIf(c -> c.id() == id);
     }
 
-
     @Override
     @NotNull
     public Map<String, Object> serialize() {
         return SerializationUtil.newBuilder()
-                .add("name", name.toString())
+                .add("UID", UID.toString())
                 .add("id", id)
                 .add("cluster", cluster)
                 .build();
@@ -72,5 +71,9 @@ public class ClusterWorld implements ConfigurationSerializable {
 
     public List<GridCluster> cluster() {
         return cluster;
+    }
+
+    public UUID UID() {
+        return UID;
     }
 }

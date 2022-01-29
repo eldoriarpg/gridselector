@@ -29,18 +29,20 @@ import java.util.Optional;
 
 public class GridCluster implements ConfigurationSerializable {
     private int id = -1;
+    private int minHeight = 0;
     private Plot plot;
     private int elementSize = 7;
     private int offset = 1;
     private int rows = 2;
     private int columns = 2;
-    private Material borderMaterial = Material.RED_WOOL;
-    private Material offsetMaterial = Material.LIGHT_GRAY_WOOL;
-    private Material floorMaterial = Material.WHITE_WOOL;
+    private Material borderMaterial = Material.RED_CONCRETE;
+    private Material offsetMaterial = Material.LIGHT_GRAY_CONCRETE;
+    private Material floorMaterial = Material.WHITE_CONCRETE;
 
     public GridCluster(Map<String, Object> objectMap) {
         var map = SerializationUtil.mapOf(objectMap);
         id = map.getValue("id");
+        minHeight = map.getValue("minHeight");
         plot = map.getValue("plot");
         elementSize = map.getValue("elementSize");
         offset = map.getValue("offset");
@@ -55,11 +57,29 @@ public class GridCluster implements ConfigurationSerializable {
     @NotNull
     public Map<String, Object> serialize() {
         return SerializationUtil.newBuilder()
+                .add("id", id)
+                .add("minHeight", minHeight)
+                .add("plot", plot)
+                .add("elementSize", elementSize)
+                .add("offset", offset)
+                .add("rows", rows)
+                .add("columns", columns)
+                .add("borderMaterial", borderMaterial)
+                .add("offsetMaterial", offsetMaterial)
+                .add("floorMaterial", floorMaterial)
                 .build();
     }
 
 
     public GridCluster() {
+    }
+
+    public void updateMinHeight(int minHeight){
+        this.minHeight = minHeight;
+    }
+
+    public int minHeight() {
+        return minHeight;
     }
 
     public GridCluster(Plot boundings, int elementSize, int offset, int rows, int columns,
@@ -74,7 +94,7 @@ public class GridCluster implements ConfigurationSerializable {
         this.floorMaterial = floorMaterial;
     }
 
-    public BlockState getBlock(Location location) {
+    public BlockState getBlock(BlockVector2 location) {
         return BukkitAdapter.adapt(getMaterial(location).createBlockData());
     }
 
@@ -200,17 +220,17 @@ public class GridCluster implements ConfigurationSerializable {
     }
 
     public static class Builder {
-        World world;
-        Location center;
-        Direction direction;
-        int elementSize = 7;
-        int offset = 1;
-        int rows = 2;
-        int columns = 2;
-        boolean expandRight = true;
-        Material borderMaterial = Material.BLUE_WOOL;
-        Material offsetMaterial = Material.LIGHT_GRAY_WOOL;
-        Material floorMaterial = Material.WHITE_WOOL;
+        private World world;
+        private Location center;
+        private Direction direction;
+        private int elementSize = 7;
+        private int offset = 1;
+        private int rows = 2;
+        private int columns = 2;
+        private boolean expandRight = true;
+        private Material borderMaterial = Material.RED_CONCRETE;
+        private Material offsetMaterial = Material.LIGHT_GRAY_CONCRETE;
+        private Material floorMaterial = Material.WHITE_CONCRETE;
 
         public Builder(Location center, Direction direction) {
             this.world = (World) center.getExtent();
@@ -273,31 +293,34 @@ public class GridCluster implements ConfigurationSerializable {
                     .text("<%s>Cluster Settings", Colors.HEADING).newLine()
                     .text("<%s>Location: <%s>%s|%s", Colors.NAME, Colors.VALUE, center.getBlockX(), center.getBlockZ())
                     .space()
-                    .text("<%s><click:run_command:'/sbrg grid cluster modify location'>[change]</click>", Colors.CHANGE)
+                    .text("<%s><click:run_command:'/sbrg cluster modify center'>[change]</click>", Colors.CHANGE)
                     .newLine()
                     .text("<%s>Direction: <%s>%s", Colors.NAME, Colors.VALUE, direction.name()).space()
-                    .text("<%s><click:run_command:'/sbrg grid cluster modify direction'>[change]</click>", Colors.CHANGE)
+                    .text("<%s><click:run_command:'/sbrg cluster modify direction'>[change]</click>", Colors.CHANGE)
                     .newLine()
                     .text("<%s>Expand: <%s>%s", Colors.NAME, Colors.VALUE, expandRight ? "right" : "left").space()
-                    .text("<%s><click:run_command:'/sbrg grid cluster modify expandRight'>[change]</click>", Colors.CHANGE)
+                    .text("<%s><click:run_command:'/sbrg cluster modify expandRight'>[change]</click>", Colors.CHANGE)
+                    .newLine()
+                    .text("<%s>Size: <%s>%s", Colors.NAME, Colors.VALUE, elementSize).space()
+                    .text("<%s><click:suggest_command:'/sbrg cluster modify size '>[change]</click>", Colors.CHANGE)
                     .newLine()
                     .text("<%s>Rows: <%s>%s", Colors.NAME, Colors.VALUE, rows).space()
-                    .text("<%s><click:suggest_command:'/sbrg grid cluster modify rows '>[change]</click>", Colors.CHANGE)
+                    .text("<%s><click:suggest_command:'/sbrg cluster modify rows '>[change]</click>", Colors.CHANGE)
                     .newLine()
                     .text("<%s>Columns: <%s>%s", Colors.NAME, Colors.VALUE, columns).space()
-                    .text("<%s><click:suggest_command:'/sbrg grid cluster modify colums '>[change]</click>", Colors.CHANGE)
+                    .text("<%s><click:suggest_command:'/sbrg cluster modify columns '>[change]</click>", Colors.CHANGE)
                     .newLine()
                     .text("<%s>Offset: <%s>%s", Colors.NAME, Colors.VALUE, offset).space()
-                    .text("<%s><click:suggest_command:'/sbrg grid cluster modify offsetMaterial'>[change]</click>", Colors.CHANGE)
+                    .text("<%s><click:suggest_command:'/sbrg cluster modify offset '>[change]</click>", Colors.CHANGE)
                     .newLine()
                     .text("<%s>Floor Material: <%s>%s", Colors.NAME, Colors.VALUE, floorMaterial).space()
-                    .text("<%s><click:suggest_command:'/sbrg grid cluster modify floorMaterial'>[change]</click>", Colors.CHANGE)
+                    .text("<%s><click:suggest_command:'/sbrg cluster modify floorMaterial '>[change]</click>", Colors.CHANGE)
                     .newLine()
                     .text("<%s>Border Material: <%s>%s", Colors.NAME, Colors.VALUE, borderMaterial).space()
-                    .text("<%s><click:suggest_command:'/sbrg grid cluster modify borderMaterial '>[change]</click>", Colors.CHANGE)
+                    .text("<%s><click:suggest_command:'/sbrg cluster modify borderMaterial '>[change]</click>", Colors.CHANGE)
                     .newLine()
                     .text("<%s>Offset Material: <%s>%s", Colors.NAME, Colors.VALUE, offsetMaterial).space()
-                    .text("<%s><click:suggest_command:'/sbrg grid cluster modify offsetMaterial '>[change]</click>", Colors.CHANGE)
+                    .text("<%s><click:suggest_command:'/sbrg cluster modify offsetMaterial '>[change]</click>", Colors.CHANGE)
                     .build();
             return message;
         }
@@ -307,44 +330,8 @@ public class GridCluster implements ConfigurationSerializable {
             return Direction.fromRotationIndex(index % 16).get();
         }
 
-        public Location center() {
-            return center;
-        }
-
-        public Direction direction() {
-            return direction;
-        }
-
-        public int elementSize() {
-            return elementSize;
-        }
-
-        public int offset() {
-            return offset;
-        }
-
-        public int rows() {
-            return rows;
-        }
-
-        public int columns() {
-            return columns;
-        }
-
         public boolean isExpandRight() {
             return expandRight;
-        }
-
-        public Material borderMaterial() {
-            return borderMaterial;
-        }
-
-        public Material offsetMaterial() {
-            return offsetMaterial;
-        }
-
-        public Material floorMaterial() {
-            return floorMaterial;
         }
 
         public void center(Location center) {

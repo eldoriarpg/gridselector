@@ -21,11 +21,12 @@ dependencies {
     compileOnly("de.eldoria", "eldo-util", "1.13.1-DEV")
     compileOnly("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.6")
-    compileOnly("com.plotsquared", "PlotSquared-Core", "6.1.2") // PlotSquared Core API
-    compileOnly("com.plotsquared:PlotSquared-Bukkit:6.1.2") { isTransitive = false } // PlotSquared Bukkit API
-    implementation("de.eldoria", "messageblocker", "1.0.3c-DEV")
-    implementation("net.kyori", "adventure-platform-bukkit", "4.0.1")
-    implementation("net.kyori", "adventure-text-minimessage", "4.10.0-SNAPSHOT")
+    compileOnly("com.plotsquared", "PlotSquared-Core", "6.4.0") // PlotSquared Core API
+    compileOnly("com.plotsquared:PlotSquared-Bukkit:6.4.0") { isTransitive = false } // PlotSquared Bukkit API
+    compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.6")
+    compileOnly("de.eldoria", "messageblocker", "1.0.3c-DEV")
+    compileOnly("net.kyori", "adventure-platform-bukkit", "4.0.1")
+    compileOnly("net.kyori", "adventure-text-minimessage", "4.10.0-SNAPSHOT")
 
 
     testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.6.0")
@@ -112,6 +113,7 @@ tasks {
             println("targetDir is not set in gradle properties")
             return@register
         }
+            println("Copying jar to $path")
         from(shadowJar)
         destinationDir = File(path.toString())
     }

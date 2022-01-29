@@ -17,17 +17,17 @@ import de.eldoria.gridselector.command.grid.cluster.modify.FloorMaterial;
 import de.eldoria.gridselector.command.grid.cluster.modify.Offset;
 import de.eldoria.gridselector.command.grid.cluster.modify.OffsetMaterial;
 import de.eldoria.gridselector.command.grid.cluster.modify.Rows;
+import de.eldoria.gridselector.command.grid.cluster.modify.Size;
 import org.bukkit.plugin.Plugin;
 
 public class Modify extends AdvancedCommand {
-    private final Sessions sessions;
-
     public Modify(Plugin plugin, Sessions sessions) {
         super(plugin, CommandMeta.builder("modify")
                 .hidden()
                 .withSubCommand(new Center(plugin, sessions))
                 .withSubCommand(new Direction(plugin, sessions))
                 .withSubCommand(new ExpandRight(plugin, sessions))
+                .withSubCommand(new Size(plugin, sessions))
                 .withSubCommand(new Rows(plugin, sessions))
                 .withSubCommand(new Columns(plugin, sessions))
                 .withSubCommand(new Offset(plugin, sessions))
@@ -36,6 +36,5 @@ public class Modify extends AdvancedCommand {
                 .withSubCommand(new OffsetMaterial(plugin, sessions))
                 .withSubCommand(new Center(plugin, sessions))
                 .build());
-        this.sessions = sessions;
     }
 }

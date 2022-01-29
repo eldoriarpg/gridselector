@@ -23,12 +23,14 @@ public class Cluster extends AdvancedCommand {
         super(plugin, CommandMeta.builder("cluster")
                 .buildSubCommands((cmds, builder) -> {
                     Sessions sessions = new Sessions(plugin, messageBlocker);
-                    cmds.add(new Create(plugin, sessions));
+                    var create = new Create(plugin, sessions);
+                    cmds.add(create);
                     cmds.add(new Draw(plugin, sessions, configuration));
                     cmds.add(new Modify(plugin, sessions));
                     cmds.add(new Repair(plugin, configuration));
                     cmds.add(new Remove(plugin,configuration));
                     cmds.add(new Modify(plugin, sessions));
+                    builder.withDefaultCommand(create);
                 })
                 .build());
     }

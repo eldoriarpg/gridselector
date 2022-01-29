@@ -13,13 +13,13 @@ import com.sk89q.worldedit.command.tool.brush.Brush;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.world.block.BlockState;
 import de.eldoria.eldoutilities.messages.MessageSender;
 import de.eldoria.gridselector.adapter.WorldAdapter;
-import de.eldoria.gridselector.adapter.regionadapter.RegionResult;
+import de.eldoria.gridselector.adapter.regionadapter.MarkerResult;
 import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 public class SelectionBrush implements Brush {
     private final MessageSender messageSender;
     private final Player owner;
-    private final Map<String, RegionResult> regions = new HashMap<>();
+    private final Map<String, MarkerResult> regions = new HashMap<>();
     private final WorldAdapter worldAdapter;
 
     public SelectionBrush(MessageSender messageSender, Player owner, WorldAdapter worldAdapter) {
@@ -49,39 +49,41 @@ public class SelectionBrush implements Brush {
         var result = optRegion.get();
 
         if (regions.containsKey(result.identifier())) {
-            for (var corner : regions.remove(result.identifier()).getCorners()) {
-                var block = editSession.getBlock(BlockVector3.at(corner.getX(), corner.getY(), corner.getZ()));
-                owner.sendBlockChange(corner.toLocation(owner.getWorld()), BukkitAdapter.adapt(block));
-            }
+            var marker = regions.remove(result.identifier());
+            resolveMarker(marker, owner.getWorld());
             return;
         }
 
         var region = result.region();
         var yMax = reduceTop(editSession, region);
-        var yMin = reduceFloor(editSession, region);
+        var yMin = reduceFloor(editSession, region, result.worldHeight());
         var xMin = reduceEastWestSide(editSession, yMin, yMax, region, true);
         var xMax = reduceEastWestSide(editSession, yMin, yMax, region, false);
         var zMin = reduceSouthNorthSide(editSession, yMin, yMax, region, true);
         var zMax = reduceSouthNorthSide(editSession, yMin, yMax, region, false);
 
-        region = new CuboidRegion(editSession.getWorld(),
+        var schemRegion = new CuboidRegion(editSession.getWorld(),
                 BlockVector3.at(xMin, yMin, zMin),
                 BlockVector3.at(xMax, yMax, zMax));
-        result = new RegionResult(result.identifier(), region);
+        var marker = new MarkerResult(result.identifier(), schemRegion, region, yMin);
 
 
-        regions.put(result.identifier(), result);
+        regions.put(result.identifier(), marker);
 
         var data = Material.SEA_LANTERN.createBlockData();
-        for (var corner : result.getCorners()) {
+        for (var corner : marker.getCorners()) {
             owner.sendBlockChange(corner.toLocation(owner.getWorld()), data);
+        }
+
+        for (Vector borderBlock : marker.getBorderBlocks()) {
+            owner.sendBlockChange(borderBlock.toLocation(owner.getWorld()), data);
         }
     }
 
-    public int reduceFloor(EditSession session, CuboidRegion region) {
+    public int reduceFloor(EditSession session, CuboidRegion region, int minHeight) {
         var min = region.getMinimumPoint();
         var max = region.getMaximumPoint();
-        for (var y = min.getY(); y <= max.getY(); y++) {
+        for (var y = minHeight; y <= max.getY(); y++) {
             if (checkFlat(session, y, min, max, m -> m == Material.AIR)) {
                 return y;
             }
@@ -145,17 +147,26 @@ public class SelectionBrush implements Brush {
     }
 
     public List<CuboidRegion> getRegions() {
-        return regions.values().stream().map(RegionResult::region).collect(Collectors.toList());
+        return regions.values().stream().map(MarkerResult::region).collect(Collectors.toList());
     }
 
     public void clearMarker() {
         var world = owner.getWorld();
         for (var region : regions.values()) {
-            for (var corner : region.getCorners()) {
-                var loc = corner.toLocation(world);
-                owner.sendBlockChange(loc, world.getBlockAt(loc).getBlockData());
-            }
+            resolveMarker(region, world);
         }
+    }
+
+    private void resolveMarker(MarkerResult region, World world){
+        for (var corner : region.getCorners()) {
+            var loc = corner.toLocation(world);
+            owner.sendBlockChange(loc, world.getBlockAt(loc).getBlockData());
+        }
+        for (var borderBlock : region.getBorderBlocks()) {
+            var loc = borderBlock.toLocation(owner.getWorld());
+            owner.sendBlockChange(loc, world.getBlockAt(loc).getBlockData());
+        }
+
     }
 
     public void clearRegions() {
