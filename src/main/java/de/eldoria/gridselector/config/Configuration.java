@@ -7,19 +7,18 @@
 package de.eldoria.gridselector.config;
 
 import de.eldoria.eldoutilities.configuration.EldoConfig;
-import de.eldoria.gridselector.config.elements.GridWorld;
-import org.bukkit.Location;
+import de.eldoria.gridselector.config.elements.ClusterWorlds;
+import de.eldoria.gridselector.config.elements.General;
+import de.eldoria.gridselector.config.elements.Highlight;
+import de.eldoria.gridselector.config.elements.cluster.ClusterWorld;
 import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 public class Configuration extends EldoConfig {
-    private static final String GRID_WORLDS = "gridworlds";
-    private List<GridWorld> gridWorlds;
+    private static final String CLUSTER_WORLDS = "clusterWorlds";
+    private ClusterWorlds cluster;
+    private General general;
+    private Highlight highlight;
 
     public Configuration(Plugin plugin) {
         super(plugin);
@@ -28,33 +27,39 @@ public class Configuration extends EldoConfig {
     @Override
     protected void saveConfigs() {
         setVersion(1, false);
-        loadConfig(GRID_WORLDS, null, false).set("gridWorlds", gridWorlds);
+
+        //Config
+        getConfig().set("general", general);
+        getConfig().set("highlight", highlight);
+
+        // External files
+        loadConfig(CLUSTER_WORLDS, null, false).set("clusterWorlds", cluster);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     protected void reloadConfigs() {
-        gridWorlds = (List<GridWorld>) loadConfig(GRID_WORLDS, null, true).getList("gridWorlds", new ArrayList<>());
+        // Config
+        general = getConfig().getObject("general", General.class, new General());
+        highlight = getConfig().getObject("highlight", Highlight.class, new Highlight());
+
+        // External files
+        cluster = loadConfig(CLUSTER_WORLDS, null, true).getObject("clusterWorlds", ClusterWorlds.class, new ClusterWorlds());
     }
 
-    public Optional<GridWorld> getGridWorld(String name) {
-        return gridWorlds.stream().filter(w -> w.name().equals(name)).findAny();
+    public General general() {
+        return general;
     }
 
-    public Optional<GridWorld> getGridWorld(@NotNull Location location) {
-        if (location.getWorld() == null) return Optional.empty();
-        return getGridWorld(location.getWorld());
+    public Highlight highlight() {
+        return highlight;
     }
 
-    public Optional<GridWorld> getGridWorld(World world) {
-        return getGridWorld(world.getName());
+    public ClusterWorlds cluster() {
+        return cluster;
     }
 
-    public GridWorld createGridWorld(World world) {
-        var gridWorld = getGridWorld(world).orElse(new GridWorld(world.getName()));
-        if (!gridWorlds.contains(gridWorld)) {
-            gridWorlds.add(gridWorld);
-        }
-        return gridWorld;
+    @Deprecated
+    public ClusterWorld getClusterWorld(World world) {
+        return cluster.world(world);
     }
 }

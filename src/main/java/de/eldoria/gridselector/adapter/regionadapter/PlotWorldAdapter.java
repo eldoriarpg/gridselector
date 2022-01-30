@@ -8,9 +8,9 @@ package de.eldoria.gridselector.adapter.regionadapter;
 
 import com.plotsquared.bukkit.util.BukkitUtil;
 import com.plotsquared.core.PlotSquared;
-import com.plotsquared.core.plot.Plot;
+import com.plotsquared.core.generator.ClassicPlotWorld;
 import com.plotsquared.core.plot.world.PlotAreaManager;
-import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.Location;
 
 import java.util.Optional;
@@ -32,7 +32,20 @@ public class PlotWorldAdapter implements RegionAdapter {
     public Optional<RegionResult> getRegion(Location location) {
         var loc = BukkitUtil.adapt(location);
         return Optional.ofNullable(manager.getPlotArea(loc))
-                .map(area -> area.getPlot(loc))
-                .map(p -> new RegionResult(p.getId().toString(), p.getLargestRegion()));
+                .map(area -> {
+
+                    var p = area.getPlot(loc);
+                    if (p == null) {
+                        return null;
+                    }
+                    var walls = p.getLargestRegion().clone();
+                    walls.expand(BlockVector3.at(1, 0, 1));
+                    var minHeight = p.getLargestRegion().getMinimumY();
+                    if (area instanceof ClassicPlotWorld world) {
+                        minHeight = world.PLOT_HEIGHT;
+                    }
+                    return new RegionResult(p.getId().toString(), p.getLargestRegion(), walls, minHeight);
+
+                });
     }
 }
