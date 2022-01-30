@@ -20,13 +20,14 @@ import de.eldoria.eldoutilities.utils.EnumUtil;
 import de.eldoria.gridselector.util.Colors;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.util.BoundingBox;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.Optional;
 
+@SerializableAs("gridSelectorGridCluster")
 public class GridCluster implements ConfigurationSerializable {
     private int id = -1;
     private int minHeight = 0;
@@ -53,6 +54,26 @@ public class GridCluster implements ConfigurationSerializable {
         floorMaterial = map.getValue("floorMaterial", e -> EnumUtil.parse(e, Material.class).orElse(floorMaterial));
     }
 
+    public GridCluster() {
+    }
+
+
+    public GridCluster(Plot boundings, int elementSize, int offset, int rows, int columns,
+                       Material borderMaterial, Material offsetMaterial, Material floorMaterial) {
+        plot = boundings;
+        this.elementSize = elementSize;
+        this.offset = offset;
+        this.rows = rows;
+        this.columns = columns;
+        this.borderMaterial = borderMaterial;
+        this.offsetMaterial = offsetMaterial;
+        this.floorMaterial = floorMaterial;
+    }
+
+    public static Builder builder(Location center, Direction direction) {
+        return new Builder(center, direction);
+    }
+
     @Override
     @NotNull
     public Map<String, Object> serialize() {
@@ -70,38 +91,43 @@ public class GridCluster implements ConfigurationSerializable {
                 .build();
     }
 
-
-    public GridCluster() {
-    }
-
-    public void updateMinHeight(int minHeight){
+    /**
+     * Update the min height of the cluster.
+     *
+     * @param minHeight new min height
+     */
+    public void updateMinHeight(int minHeight) {
         this.minHeight = minHeight;
     }
 
+    /**
+     * Get the min height of the cluster.
+     * <p>
+     * No structures should be expected below this value
+     *
+     * @return min hieght
+     */
     public int minHeight() {
         return minHeight;
     }
 
-    public GridCluster(Plot boundings, int elementSize, int offset, int rows, int columns,
-                       Material borderMaterial, Material offsetMaterial, Material floorMaterial) {
-        plot = boundings;
-        this.elementSize = elementSize;
-        this.offset = offset;
-        this.rows = rows;
-        this.columns = columns;
-        this.borderMaterial = borderMaterial;
-        this.offsetMaterial = offsetMaterial;
-        this.floorMaterial = floorMaterial;
-    }
-
+    /**
+     * Get the block of the pattern at this position inside the cluster.
+     *
+     * @param location location
+     * @return block state of the material returned by {@link #getMaterial(BlockVector2)}
+     */
     public BlockState getBlock(BlockVector2 location) {
         return BukkitAdapter.adapt(getMaterial(location).createBlockData());
     }
 
-    public Material getMaterial(Location location) {
-        return getMaterial(location.toVector().toBlockPoint().toBlockVector2());
-    }
-
+    /**
+     * Get the material which should be placed at this position. This material will be one of {@link #offsetMaterial()},
+     * {@link #borderMaterial()} or {@link #floorMaterial()}
+     *
+     * @param location location
+     * @return the material
+     */
     public Material getMaterial(BlockVector2 location) {
         var optRegion = getRegion(location);
         if (optRegion.isEmpty()) return offsetMaterial;
@@ -116,14 +142,22 @@ public class GridCluster implements ConfigurationSerializable {
         return borderMaterial;
     }
 
-    private BoundingBox shrink(BoundingBox shrink, double amount) {
-        return shrink.clone().expand(amount, 0, amount);
-    }
-
+    /**
+     * Gets the plot at the location.
+     *
+     * @param location location
+     * @return plot if the location is inside one
+     */
     public Optional<Plot> getRegion(Location location) {
         return getRegion(location.toVector().toVector2().toBlockPoint());
     }
 
+    /**
+     * Gets the plot at the position.
+     *
+     * @param vector vector
+     * @return plot if the location is inside one
+     */
     public Optional<Plot> getRegion(BlockVector2 vector) {
         if (!plot.contains(vector)) {
             return Optional.empty();
@@ -154,21 +188,30 @@ public class GridCluster implements ConfigurationSerializable {
         return Optional.ofNullable(getRegion(min, (int) gridX, (int) gridZ));
     }
 
-    private BlockVector2 toVector(Vector3 vector3) {
-        return BlockVector2.at(vector3.getX(), vector3.getZ());
-    }
-
-    private BlockVector2 toVector(Vector vector) {
-        return BlockVector2.at(vector.getX(), vector.getZ());
-    }
-
+    /**
+     * Get the plot region based on the plot coordinates
+     *
+     * @param base base of the plot region
+     * @param x    x coord
+     * @param z    z coord
+     * @return plot region
+     */
     public Plot getRegion(BlockVector2 base, int x, int z) {
         var totalElementSize = elementSize + 2 + offset;
         var min = BlockVector2.at(base.getX() + x * totalElementSize, base.getZ() + z * totalElementSize);
         return Plot.of(min, min.add(BlockVector2.at(elementSize + 1, elementSize + 1)));
     }
 
-    public Plot boundingBox() {
+    public boolean contains(BlockVector2 location) {
+        return plot.contains(location);
+    }
+
+    /**
+     * Get the plot region which contains all subplots of the cluster
+     *
+     * @return plot
+     */
+    public Plot plot() {
         return plot;
     }
 
@@ -204,19 +247,17 @@ public class GridCluster implements ConfigurationSerializable {
         return id;
     }
 
+    /**
+     * Set the id. Can be called only once.
+     *
+     * @param id new id
+     * @throws IllegalStateException when the id is already set
+     */
     public void id(int id) {
         if (this.id != -1) {
             throw new IllegalStateException("Id already set");
         }
         this.id = id;
-    }
-
-    public static Builder builder(Location center, Direction direction) {
-        return new Builder(center, direction);
-    }
-
-    public boolean contains(BlockVector2 location) {
-        return plot.contains(location);
     }
 
     public static class Builder {
@@ -236,6 +277,11 @@ public class GridCluster implements ConfigurationSerializable {
             this.world = (World) center.getExtent();
             this.center = center.setY(world.getMinY());
             this.direction = direction;
+        }
+
+        private static Direction rotate(Direction direction, boolean rotateRight) {
+            var index = direction.toRotationIndex().getAsInt() + (rotateRight ? 4 : 12);
+            return Direction.fromRotationIndex(index % 16).get();
         }
 
         public void elementSize(int elementSize) {
@@ -281,6 +327,7 @@ public class GridCluster implements ConfigurationSerializable {
             var second = BukkitAdapter.adapt(new Location(world, center.toVector().add(offsetVec).withY(world.getMaxY()))).toVector().toBlockVector();
 
             var boundings = Plot.of(floorVector(first), floorVector(second));
+
             return new GridCluster(boundings, elementSize, offset, rows, columns, borderMaterial, offsetMaterial, floorMaterial);
         }
 
@@ -289,7 +336,7 @@ public class GridCluster implements ConfigurationSerializable {
         }
 
         public String asComponent() {
-            String message = MessageComposer.create()
+            var message = MessageComposer.create()
                     .text("<%s>Cluster Settings", Colors.HEADING).newLine()
                     .text("<%s>Location: <%s>%s|%s", Colors.NAME, Colors.VALUE, center.getBlockX(), center.getBlockZ())
                     .space()
@@ -323,11 +370,6 @@ public class GridCluster implements ConfigurationSerializable {
                     .text("<%s><click:suggest_command:'/sbrg cluster modify offsetMaterial '>[change]</click>", Colors.CHANGE)
                     .build();
             return message;
-        }
-
-        private static Direction rotate(Direction direction, boolean rotateRight) {
-            var index = direction.toRotationIndex().getAsInt() + (rotateRight ? 4 : 12);
-            return Direction.fromRotationIndex(index % 16).get();
         }
 
         public boolean isExpandRight() {

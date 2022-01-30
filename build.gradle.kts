@@ -48,7 +48,6 @@ java {
 }
 
 publishData {
-    hashLength = 7
     useEldoNexusRepos()
     publishTask("jar")
     publishTask("shadowJar")

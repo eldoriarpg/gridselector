@@ -11,6 +11,7 @@ import de.eldoria.eldoutilities.commands.command.CommandMeta;
 import de.eldoria.eldoutilities.commands.command.util.Arguments;
 import de.eldoria.eldoutilities.commands.exceptions.CommandException;
 import de.eldoria.eldoutilities.commands.executor.IPlayerTabExecutor;
+import de.eldoria.gridselector.util.Permissions;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +21,7 @@ public class Create extends AdvancedCommand implements IPlayerTabExecutor {
 
     public Create(Plugin plugin, Sessions sessions) {
         super(plugin, CommandMeta.builder("create")
+                .withPermission(Permissions.Cluster.CREATE)
                 .build());
         this.sessions = sessions;
     }

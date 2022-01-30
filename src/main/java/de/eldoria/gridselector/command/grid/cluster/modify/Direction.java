@@ -32,7 +32,7 @@ public class Direction extends AdvancedCommand implements IPlayerTabExecutor {
 
     @Override
     public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
-        var direction = BukkitAdapter.adapt(player).getCardinalDirection();
+        var direction = com.sk89q.worldedit.util.Direction.findClosest(BukkitAdapter.adapt(player).getLocation().getDirection(), com.sk89q.worldedit.util.Direction.Flag.CARDINAL);
         CommandAssertions.isTrue(direction != null, "Invalid direction. Please look in the requested direction");
         sessions.getOrCreateSession(player).direction(direction);
         sessions.showBuilder(player);

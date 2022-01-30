@@ -25,14 +25,14 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 
-public class SaveSchematics extends AdvancedCommand implements IPlayerTabExecutor {
+public class Export extends AdvancedCommand implements IPlayerTabExecutor {
     private final SchematicBrushReborn schematicBrushReborn;
     private final GridSchematics gridSchematics;
 
-    public SaveSchematics(Plugin plugin, SchematicBrushReborn schematicBrushReborn, GridSchematics gridSchematics) {
-        super(plugin, CommandMeta.builder("saveSchematics")
+    public Export(Plugin plugin, SchematicBrushReborn schematicBrushReborn, GridSchematics gridSchematics) {
+        super(plugin, CommandMeta.builder("export")
                 .addArgument("name", true)
-                .withPermission(Permissions.SAVE)
+                .withPermission(Permissions.Save.EXPORT)
                 .build());
         this.schematicBrushReborn = schematicBrushReborn;
         this.gridSchematics = gridSchematics;
@@ -47,7 +47,7 @@ public class SaveSchematics extends AdvancedCommand implements IPlayerTabExecuto
         if (!args.flags().has("g")) {
             basePath = basePath.resolve(Path.of(player.getUniqueId().toString()));
         } else {
-            CommandAssertions.permission(player, false, Permissions.SAVE_GLOBAL);
+            CommandAssertions.permission(player, false, Permissions.Save.GLOBAL);
         }
 
         try {

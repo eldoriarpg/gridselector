@@ -6,7 +6,6 @@
 
 package de.eldoria.gridselector.adapter.regionadapter;
 
-import com.sk89q.worldedit.regions.CuboidRegion;
 import org.bukkit.Location;
 
 import java.util.Optional;
@@ -21,10 +20,10 @@ public interface RegionAdapter {
     boolean isApplicable(Location location);
 
     /**
-     * Get the region at a location.
+     * Get the schematicRegion at a location.
      *
      * @param location location
-     * @return the region at the location of there is one
+     * @return the schematicRegion at the location of there is one
      */
     Optional<RegionResult> getRegion(Location location);
 }

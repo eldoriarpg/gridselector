@@ -6,11 +6,9 @@
 
 package de.eldoria.gridselector.command.grid.cluster.modify;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import de.eldoria.eldoutilities.commands.command.AdvancedCommand;
 import de.eldoria.eldoutilities.commands.command.CommandMeta;
 import de.eldoria.eldoutilities.commands.command.util.Arguments;
-import de.eldoria.eldoutilities.commands.command.util.CommandAssertions;
 import de.eldoria.eldoutilities.commands.exceptions.CommandException;
 import de.eldoria.eldoutilities.commands.executor.IPlayerTabExecutor;
 import de.eldoria.gridselector.command.grid.cluster.Sessions;

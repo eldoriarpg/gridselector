@@ -10,7 +10,7 @@ import de.eldoria.gridselector.config.elements.cluster.GridCluster;
 import org.bukkit.entity.Player;
 
 public interface IWorldGuardAdapter {
-    public static IWorldGuardAdapter DEFAULT = new IWorldGuardAdapter() {
+    IWorldGuardAdapter DEFAULT = new IWorldGuardAdapter() {
         @Override
         public void register(GridCluster cluster, Player player) {
 
@@ -24,5 +24,5 @@ public interface IWorldGuardAdapter {
 
     void register(GridCluster cluster, Player player);
 
-    void unregister(GridCluster cluster, Player player) ;
+    void unregister(GridCluster cluster, Player player);
 }

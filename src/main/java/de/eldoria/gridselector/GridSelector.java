@@ -20,9 +20,10 @@ import de.eldoria.gridselector.adapter.worldguard.IWorldGuardAdapter;
 import de.eldoria.gridselector.adapter.worldguard.WorldGuardAdapter;
 import de.eldoria.gridselector.command.Grid;
 import de.eldoria.gridselector.config.Configuration;
-import de.eldoria.gridselector.config.elements.cluster.ClusterWorld;
 import de.eldoria.gridselector.config.elements.ClusterWorlds;
-import de.eldoria.gridselector.config.elements.GeneralSettings;
+import de.eldoria.gridselector.config.elements.General;
+import de.eldoria.gridselector.config.elements.Highlight;
+import de.eldoria.gridselector.config.elements.cluster.ClusterWorld;
 import de.eldoria.gridselector.config.elements.cluster.GridCluster;
 import de.eldoria.gridselector.config.elements.cluster.Plot;
 import de.eldoria.gridselector.listener.SelectionListener;
@@ -95,6 +96,6 @@ public class GridSelector extends EldoPlugin {
 
     @Override
     public List<Class<? extends ConfigurationSerializable>> getConfigSerialization() {
-        return List.of(GridCluster.class, Plot.class, ClusterWorld.class, ClusterWorlds.class, GeneralSettings.class);
+        return List.of(GridCluster.class, Plot.class, ClusterWorld.class, ClusterWorlds.class, Highlight.class, General.class);
     }
 }

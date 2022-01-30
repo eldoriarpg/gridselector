@@ -9,33 +9,50 @@ package de.eldoria.gridselector.config.elements;
 import de.eldoria.eldoutilities.serialization.SerializationUtil;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-public class GeneralSettings implements ConfigurationSerializable {
+@SerializableAs("gridSelectorHighlight")
+public class Highlight implements ConfigurationSerializable {
     private Material highlight = Material.SEA_LANTERN;
     private boolean highlightBorder = false;
     private boolean highlightBounds = true;
-    private boolean createWorldGuardRegions = false;
 
-    public GeneralSettings() {
+    public Highlight() {
     }
 
-    public GeneralSettings(Map<String, Object> objectMap) {
+    public Highlight(Map<String, Object> objectMap) {
         var map = SerializationUtil.mapOf(objectMap);
         highlight = map.getValueOrDefault("highlight", Material.SEA_LANTERN, Material.class);
-        createWorldGuardRegions = map.getValueOrDefault("createWorldGuardRegions", false);
         highlightBounds = map.getValueOrDefault("highlightBounds", true);
         highlightBorder = map.getValueOrDefault("highlightBorder", false);
+
     }
 
+    /**
+     * The material used to hightlight selections
+     * @return material
+     */
     public Material highlight() {
         return highlight;
     }
 
-    public boolean isCreateWorldGuardRegions() {
-        return createWorldGuardRegions;
+    /**
+     * Defines whether plot borders should be highlighted
+     * @return true if they should be highlighted
+     */
+    public boolean isHighlightBorder() {
+        return highlightBorder;
+    }
+
+    /**
+     * Defines whether region bounds should be highlighted
+     * @return true if they should be highlighted
+     */
+    public boolean isHighlightBounds() {
+        return highlightBounds;
     }
 
     @Override
@@ -43,17 +60,8 @@ public class GeneralSettings implements ConfigurationSerializable {
     public Map<String, Object> serialize() {
         return SerializationUtil.newBuilder()
                 .add("highlight", highlight)
-                .add("createWorldGuardRegions", createWorldGuardRegions)
                 .add("highlightBorder", highlightBorder)
                 .add("highlightBounds", highlightBounds)
                 .build();
-    }
-
-    public boolean isHighlightBorder() {
-        return highlightBorder;
-    }
-
-    public boolean isHighlightBounds() {
-        return highlightBounds;
     }
 }

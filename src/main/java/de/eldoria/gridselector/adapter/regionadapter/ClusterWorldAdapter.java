@@ -21,12 +21,12 @@ public class ClusterWorldAdapter implements RegionAdapter {
 
     @Override
     public boolean isApplicable(Location location) {
-        return !configuration.getClusterWorld(location.getWorld()).cluster().isEmpty();
+        return !configuration.cluster().world(location.getWorld()).cluster().isEmpty();
     }
 
     @Override
     public Optional<RegionResult> getRegion(Location location) {
-        return configuration.getClusterWorld(location.getWorld()).getCluster(location)
+        return configuration.cluster().world(location.getWorld()).getCluster(location)
                 .flatMap(cluster -> {
                     var optPlot = cluster.getRegion(BukkitAdapter.adapt(location));
                     return optPlot.map(plot -> new RegionResult(plot.id(),

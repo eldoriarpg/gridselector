@@ -8,10 +8,9 @@ package de.eldoria.gridselector.command;
 
 import de.eldoria.eldoutilities.commands.command.AdvancedCommand;
 import de.eldoria.eldoutilities.commands.command.CommandMeta;
-import de.eldoria.gridselector.adapter.regionadapter.RegionAdapter;
 import de.eldoria.gridselector.adapter.worldguard.IWorldGuardAdapter;
 import de.eldoria.gridselector.command.grid.Cluster;
-import de.eldoria.gridselector.command.grid.SaveSchematics;
+import de.eldoria.gridselector.command.grid.Export;
 import de.eldoria.gridselector.command.grid.Select;
 import de.eldoria.gridselector.config.Configuration;
 import de.eldoria.gridselector.listener.SelectionListener;
@@ -26,7 +25,7 @@ public class Grid extends AdvancedCommand {
         super(plugin, CommandMeta.builder("schematicbrushgrid")
                 .withSubCommand(new Cluster(plugin, messageBlocker, config, worldGuardAdapter))
                 .withSubCommand(new Select(plugin, selectionListener))
-                .withSubCommand(new SaveSchematics(plugin, schematicBrushReborn, gridSchematics))
+                .withSubCommand(new Export(plugin, schematicBrushReborn, gridSchematics))
                 .build());
     }
 }

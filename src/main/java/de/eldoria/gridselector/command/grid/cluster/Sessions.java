@@ -7,6 +7,7 @@
 package de.eldoria.gridselector.command.grid.cluster;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.util.Direction;
 import de.eldoria.eldoutilities.commands.command.util.CommandAssertions;
 import de.eldoria.eldoutilities.commands.exceptions.CommandException;
 import de.eldoria.eldoutilities.localization.MessageComposer;
@@ -35,7 +36,7 @@ public class Sessions {
 
     public GridCluster.Builder getOrCreateSession(Player player) throws CommandException {
         if (!sessions.containsKey(player.getUniqueId())) {
-            var direction = BukkitAdapter.adapt(player).getCardinalDirection();
+            var direction = Direction.findClosest(BukkitAdapter.adapt(player).getLocation().getDirection(), Direction.Flag.CARDINAL);
             CommandAssertions.isTrue(direction != null, "Invalid direction. Please look in the requested direction");
             var builder = GridCluster.builder(BukkitAdapter.adapt(player.getLocation()), direction);
             sessions.put(player.getUniqueId(), builder);
@@ -51,13 +52,13 @@ public class Sessions {
         composer.newLine()
                 .text("<%s><click:run_command:'/sbrg cluster draw'>[Create]</click>", Colors.ADD);
         composer.prependLines(20);
-        messageBlocker.ifEnabled(composer, mess -> mess.newLine().text("<click:run_command:'/sbrg grid cluster close'><%s>[x]</click>", Colors.REMOVE));
+        messageBlocker.ifEnabled(composer, mess -> mess.newLine().text("<click:run_command:'/sbrg cluster close'><%s>[x]</click>", Colors.REMOVE));
         messageBlocker.announce(player, "[x]");
         audience.player(player).sendMessage(miniMessage.deserialize(composer.build()));
     }
 
     public void close(Player player) {
-        sessions.remove(player);
+        sessions.remove(player.getUniqueId());
         messageBlocker.unblockPlayer(player);
     }
 }

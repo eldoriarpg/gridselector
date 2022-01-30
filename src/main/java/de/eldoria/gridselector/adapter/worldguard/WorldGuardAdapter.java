@@ -24,21 +24,21 @@ public class WorldGuardAdapter implements IWorldGuardAdapter {
 
     @Override
     public void register(GridCluster cluster, Player player) {
-        if (configuration.generalSettings().isCreateWorldGuardRegions() && worldGuard != null) {
+        if (configuration.general().isCreateWorldGuardRegions() && worldGuard != null) {
             var world = BukkitAdapter.adapt(player.getWorld());
-            var region = new ProtectedCuboidRegion(cluster.boundingBox().id(),
-                    cluster.boundingBox().min().toBlockVector3(world.getMinY()),
-                    cluster.boundingBox().max().toBlockVector3(world.getMaxY()));
+            var region = new ProtectedCuboidRegion(cluster.plot().id(),
+                    cluster.plot().min().toBlockVector3(world.getMinY()),
+                    cluster.plot().max().toBlockVector3(world.getMaxY()));
             region.getOwners().addPlayer(player.getUniqueId());
             worldGuard.getPlatform().getRegionContainer().get(world).addRegion(region);
         }
     }
 
     @Override
-    public void unregister(GridCluster cluster, Player player){
-        if (configuration.generalSettings().isCreateWorldGuardRegions() && worldGuard != null) {
+    public void unregister(GridCluster cluster, Player player) {
+        if (configuration.general().isCreateWorldGuardRegions() && worldGuard != null) {
             var world = BukkitAdapter.adapt(player.getWorld());
-            worldGuard.getPlatform().getRegionContainer().get(world).removeRegion(cluster.boundingBox().id());
+            worldGuard.getPlatform().getRegionContainer().get(world).removeRegion(cluster.plot().id());
         }
     }
 }

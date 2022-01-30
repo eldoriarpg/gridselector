@@ -11,10 +11,12 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.world.World;
 import de.eldoria.eldoutilities.serialization.SerializationUtil;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
+@SerializableAs("gridSelectorPlot")
 public class Plot implements ConfigurationSerializable {
     private final BlockVector2 min;
     private final BlockVector2 max;
@@ -102,9 +104,9 @@ public class Plot implements ConfigurationSerializable {
     }
 
     /**
-     * Get the plot as a cuboid region with y as 0
+     * Get the plot as a cuboid schematicRegion with y as 0
      *
-     * @return cuboid region
+     * @return cuboid schematicRegion
      */
     public CuboidRegion as2DRegion() {
         return as2DRegion(0);
@@ -127,7 +129,7 @@ public class Plot implements ConfigurationSerializable {
         if (this == o) return true;
         if (!(o instanceof Plot)) return false;
 
-        Plot plot = (Plot) o;
+        var plot = (Plot) o;
 
         if (!min.equals(plot.min)) return false;
         return max.equals(plot.max);

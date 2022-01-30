@@ -40,9 +40,8 @@ public class PlotWorldAdapter implements RegionAdapter {
                     }
                     var walls = p.getLargestRegion().clone();
                     walls.expand(BlockVector3.at(1, 0, 1));
-                    //TODO: Add plot world height if possible;
                     var minHeight = p.getLargestRegion().getMinimumY();
-                    if(area instanceof ClassicPlotWorld world){
+                    if (area instanceof ClassicPlotWorld world) {
                         minHeight = world.PLOT_HEIGHT;
                     }
                     return new RegionResult(p.getId().toString(), p.getLargestRegion(), walls, minHeight);

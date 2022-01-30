@@ -10,6 +10,7 @@ import de.eldoria.eldoutilities.serialization.SerializationUtil;
 import de.eldoria.gridselector.config.elements.cluster.ClusterWorld;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+@SerializableAs("gridSelectorClusterWorlds")
 public class ClusterWorlds implements ConfigurationSerializable {
     private final Map<UUID, ClusterWorld> clusterWorlds = new HashMap<>();
 
@@ -28,7 +30,7 @@ public class ClusterWorlds implements ConfigurationSerializable {
         var map = SerializationUtil.mapOf(objectMap);
         List<ClusterWorld> worlds = map.getValue("worlds");
         for (var world : worlds) {
-            clusterWorlds.put(world.UID(), world);
+            clusterWorlds.put(world.uid(), world);
         }
     }
 
@@ -40,7 +42,7 @@ public class ClusterWorlds implements ConfigurationSerializable {
                 .build();
     }
 
-    public ClusterWorld getClusterWorld(World world) {
+    public ClusterWorld world(World world) {
         return clusterWorlds.computeIfAbsent(world.getUID(), k -> new ClusterWorld(world));
     }
 }

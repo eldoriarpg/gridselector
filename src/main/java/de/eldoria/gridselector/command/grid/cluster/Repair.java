@@ -34,10 +34,10 @@ public class Repair extends AdvancedCommand implements IPlayerTabExecutor {
     public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
         Optional<GridCluster> cluster;
         if (args.isEmpty()) {
-            cluster = configuration.getClusterWorld(player.getWorld()).getCluster(player.getLocation());
+            cluster = configuration.cluster().world(player.getWorld()).getCluster(player.getLocation());
             CommandAssertions.isTrue(cluster.isPresent(), "You are not inside a cluster");
         } else {
-            cluster = configuration.getClusterWorld(player.getWorld()).getCluster(args.asInt(0));
+            cluster = configuration.cluster().world(player.getWorld()).getCluster(args.asInt(0));
             CommandAssertions.isTrue(cluster.isPresent(), "Unkown cluster id");
         }
 

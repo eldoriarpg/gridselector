@@ -71,21 +71,21 @@ public class SelectionBrush implements Brush {
 
         regions.put(result.identifier(), marker);
 
-        var data = configuration.generalSettings().highlight().createBlockData();
-        if (configuration.generalSettings().isHighlightBounds()) {
+        var data = configuration.highlight().highlight().createBlockData();
+        if (configuration.highlight().isHighlightBounds()) {
             for (var corner : marker.getCorners()) {
                 owner.sendBlockChange(corner.toLocation(owner.getWorld()), data);
             }
         }
 
-        if (configuration.generalSettings().isHighlightBorder()) {
+        if (configuration.highlight().isHighlightBorder()) {
             for (var borderBlock : marker.getBorderBlocks()) {
                 owner.sendBlockChange(borderBlock.toLocation(owner.getWorld()), data);
             }
         }
     }
 
-    public int reduceFloor(EditSession session, CuboidRegion region, int minHeight) {
+    private int reduceFloor(EditSession session, CuboidRegion region, int minHeight) {
         var min = region.getMinimumPoint();
         var max = region.getMaximumPoint();
         for (var y = minHeight; y <= max.getY(); y++) {
@@ -96,7 +96,7 @@ public class SelectionBrush implements Brush {
         return region.getMinimumY();
     }
 
-    public int reduceTop(EditSession session, CuboidRegion region) {
+    private int reduceTop(EditSession session, CuboidRegion region) {
         var min = region.getMinimumPoint();
         var max = region.getMaximumPoint();
 
@@ -152,10 +152,10 @@ public class SelectionBrush implements Brush {
     }
 
     public List<CuboidRegion> getRegions() {
-        return regions.values().stream().map(MarkerResult::region).collect(Collectors.toList());
+        return regions.values().stream().map(MarkerResult::schematicRegion).collect(Collectors.toList());
     }
 
-    public void clearMarker() {
+    private void clearMarker() {
         var world = owner.getWorld();
         for (var region : regions.values()) {
             resolveMarker(region, world);

@@ -20,6 +20,7 @@ import de.eldoria.gridselector.GridSelector;
 import de.eldoria.gridselector.adapter.worldguard.IWorldGuardAdapter;
 import de.eldoria.gridselector.config.Configuration;
 import de.eldoria.gridselector.config.elements.cluster.GridCluster;
+import de.eldoria.gridselector.util.Permissions;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +32,7 @@ public class Draw extends AdvancedCommand implements IPlayerTabExecutor {
 
     public Draw(Plugin plugin, Sessions sessions, Configuration configuration, IWorldGuardAdapter worldGuardAdapter) {
         super(plugin, CommandMeta.builder("draw")
+                .withPermission(Permissions.Cluster.CREATE)
                 .hidden()
                 .build());
         this.sessions = sessions;
@@ -38,27 +40,11 @@ public class Draw extends AdvancedCommand implements IPlayerTabExecutor {
         this.worldGuardAdapter = worldGuardAdapter;
     }
 
+    public static void draw(GridCluster cluster, Player player) throws CommandException {
+        var min = cluster.plot().min();
+        var max = cluster.plot().max();
 
-    @Override
-    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
-        var builder = sessions.getOrCreateSession(player);
-        sessions.close(player);
-
-        var cluster = builder.build();
-
-        configuration.getClusterWorld(player.getWorld()).register(cluster);
-        draw(cluster, player);
-        worldGuardAdapter.register(cluster, player);
-        configuration.save();
-    }
-
-    public static void draw(GridCluster cluster, Player player) {
-        var min = cluster.boundingBox().min();
-        var max = cluster.boundingBox().max();
-
-        var y = player.getWorld().getHighestBlockYAt(BukkitAdapter.adapt(player.getWorld(), min.toBlockVector3()));
-
-        cluster.updateMinHeight(y);
+        var y = cluster.minHeight();
 
         var actor = BukkitAdapter.adapt(player);
 
@@ -71,11 +57,29 @@ public class Draw extends AdvancedCommand implements IPlayerTabExecutor {
                 }
             }
         } catch (MaxChangedBlocksException e) {
-
+            throw CommandException.message("Grid exceeds maximum world edit size.");
         } finally {
             WorldEdit.getInstance().getSessionManager().get(actor).remember(session);
         }
 
         MessageSender.getPluginMessageSender(GridSelector.class).sendMessage(player, "Created grid. Changed " + session.size() + " blocks.");
+    }
+
+    @Override
+    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+        var builder = sessions.getOrCreateSession(player);
+
+        var cluster = builder.build();
+
+        var y = player.getWorld().getHighestBlockYAt(cluster.plot().min().getX(), cluster.plot().min().getZ());
+        cluster.updateMinHeight(y);
+
+
+        configuration.cluster().world(player.getWorld()).assertOverlap(cluster);
+        draw(cluster, player);
+        configuration.cluster().world(player.getWorld()).register(cluster);
+        worldGuardAdapter.register(cluster, player);
+        configuration.save();
+        sessions.close(player);
     }
 }

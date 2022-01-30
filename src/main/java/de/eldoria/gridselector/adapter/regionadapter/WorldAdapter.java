@@ -8,10 +8,7 @@ package de.eldoria.gridselector.adapter.regionadapter;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.Location;
-import de.eldoria.gridselector.adapter.regionadapter.RegionAdapter;
-import de.eldoria.gridselector.adapter.regionadapter.RegionResult;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +19,11 @@ public class WorldAdapter {
         this.adapters = adapters;
     }
 
+    /**
+     * Get a schematicRegion from the first schematicRegion where {@link RegionAdapter#isApplicable(org.bukkit.Location)} returns true.
+     * @param location location to check
+     * @return schematicRegion results if the application schematicRegion adapter returns a schematicRegion
+     */
     public Optional<RegionResult> getRegion(Location location) {
         var loc = BukkitAdapter.adapt(location);
         return adapters.stream()

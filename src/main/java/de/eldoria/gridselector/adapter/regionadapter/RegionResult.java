@@ -7,10 +7,6 @@
 package de.eldoria.gridselector.adapter.regionadapter;
 
 import com.sk89q.worldedit.regions.CuboidRegion;
-import org.bukkit.util.Vector;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public record RegionResult(String identifier, CuboidRegion region, CuboidRegion walls, int worldHeight) {
 
