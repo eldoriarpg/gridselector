@@ -24,7 +24,7 @@ import org.bukkit.plugin.Plugin;
 public class Cluster extends AdvancedCommand {
     public Cluster(Plugin plugin, IMessageBlockerService messageBlocker, Configuration configuration, IWorldGuardAdapter worldGuardAdapter) {
         super(plugin, CommandMeta.builder("cluster")
-                .withPermission(Permissions.Cluster.REMOVE, Permissions.Cluster.CREATE)
+                .withPermission(Permissions.Cluster.REMOVE, Permissions.Cluster.CREATE, Permissions.Cluster.REPAIR)
                 .buildSubCommands((cmds, builder) -> {
                     var sessions = new Sessions(plugin, messageBlocker);
                     var create = new Create(plugin, sessions);

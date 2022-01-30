@@ -31,6 +31,7 @@ public final class Permissions {
         private static final String CLUSTER = perm(BASE, "cluster");
         public static final String CREATE = perm(CLUSTER, "create");
         public static final String REMOVE = perm(CLUSTER, "remove");
+        public static final String REPAIR = perm(CLUSTER, "repair");
 
         private Cluster() {
             throw new UnsupportedOperationException("This is a utility class.");

@@ -18,12 +18,14 @@ import de.eldoria.gridselector.command.grid.cluster.modify.Offset;
 import de.eldoria.gridselector.command.grid.cluster.modify.OffsetMaterial;
 import de.eldoria.gridselector.command.grid.cluster.modify.Rows;
 import de.eldoria.gridselector.command.grid.cluster.modify.Size;
+import de.eldoria.gridselector.util.Permissions;
 import org.bukkit.plugin.Plugin;
 
 public class Modify extends AdvancedCommand {
     public Modify(Plugin plugin, Sessions sessions) {
         super(plugin, CommandMeta.builder("modify")
                 .hidden()
+                .withPermission(Permissions.Cluster.CREATE)
                 .withSubCommand(new Center(plugin, sessions))
                 .withSubCommand(new Direction(plugin, sessions))
                 .withSubCommand(new ExpandRight(plugin, sessions))

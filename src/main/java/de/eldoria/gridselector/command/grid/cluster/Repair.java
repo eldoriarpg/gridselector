@@ -14,6 +14,7 @@ import de.eldoria.eldoutilities.commands.exceptions.CommandException;
 import de.eldoria.eldoutilities.commands.executor.IPlayerTabExecutor;
 import de.eldoria.gridselector.config.Configuration;
 import de.eldoria.gridselector.config.elements.cluster.GridCluster;
+import de.eldoria.gridselector.util.Permissions;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +27,7 @@ public class Repair extends AdvancedCommand implements IPlayerTabExecutor {
     public Repair(Plugin plugin, Configuration configuration) {
         super(plugin, CommandMeta.builder("repair")
                 .addUnlocalizedArgument("id", false)
+                .withPermission(Permissions.Cluster.REPAIR)
                 .build());
         this.configuration = configuration;
     }
