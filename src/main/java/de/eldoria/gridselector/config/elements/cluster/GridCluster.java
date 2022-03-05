@@ -6,6 +6,8 @@
 
 package de.eldoria.gridselector.config.elements.cluster;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.math.Vector3;
@@ -17,6 +19,7 @@ import de.eldoria.eldoutilities.localization.MessageComposer;
 import de.eldoria.eldoutilities.serialization.SerializationUtil;
 import de.eldoria.eldoutilities.utils.EMath;
 import de.eldoria.eldoutilities.utils.EnumUtil;
+import de.eldoria.gridselector.GridSelector;
 import de.eldoria.gridselector.util.Colors;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -24,8 +27,13 @@ import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 @SerializableAs("gridSelectorGridCluster")
 public class GridCluster implements ConfigurationSerializable {
@@ -39,6 +47,7 @@ public class GridCluster implements ConfigurationSerializable {
     private Material borderMaterial = Material.RED_CONCRETE;
     private Material offsetMaterial = Material.LIGHT_GRAY_CONCRETE;
     private Material floorMaterial = Material.WHITE_CONCRETE;
+    private transient Cache<PlotKey, Plot> cache = CacheBuilder.newBuilder().expireAfterAccess(2, TimeUnit.MINUTES).build();
 
     public GridCluster(Map<String, Object> objectMap) {
         var map = SerializationUtil.mapOf(objectMap);
@@ -169,10 +178,8 @@ public class GridCluster implements ConfigurationSerializable {
         var xOffset = EMath.diff(min.getX(), vector.getX());
         var zOffset = EMath.diff(min.getZ(), vector.getZ());
 
-        var minOffset = BlockVector2.at(xOffset, zOffset);
-
-        var xIndex = minOffset.getX() % totalElementSize;
-        var zIndex = minOffset.getZ() % totalElementSize;
+        var xIndex = xOffset % totalElementSize;
+        var zIndex = zOffset % totalElementSize;
 
         if (xIndex >= elementSize + 2) {
             return Optional.empty();
@@ -182,8 +189,8 @@ public class GridCluster implements ConfigurationSerializable {
             return Optional.empty();
         }
 
-        var gridX = Math.floor(minOffset.getX() / totalElementSize);
-        var gridZ = Math.floor(minOffset.getZ() / totalElementSize);
+        var gridX = Math.floor(xOffset / totalElementSize);
+        var gridZ = Math.floor(zOffset / totalElementSize);
 
         return Optional.ofNullable(getRegion(min, (int) gridX, (int) gridZ));
     }
@@ -197,9 +204,16 @@ public class GridCluster implements ConfigurationSerializable {
      * @return plot region
      */
     public Plot getRegion(BlockVector2 base, int x, int z) {
-        var totalElementSize = elementSize + 2 + offset;
-        var min = BlockVector2.at(base.getX() + x * totalElementSize, base.getZ() + z * totalElementSize);
-        return Plot.of(min, min.add(BlockVector2.at(elementSize + 1, elementSize + 1)));
+        try {
+            return cache.get(new PlotKey(x, z), () -> {
+                var totalElementSize = elementSize + 2 + offset;
+                var min = BlockVector2.at(base.getX() + x * totalElementSize, base.getZ() + z * totalElementSize);
+                return Plot.of(min, min.add(BlockVector2.at(elementSize + 1, elementSize + 1)));
+            });
+        } catch (ExecutionException e) {
+            GridSelector.logger().log(Level.SEVERE, "Could not compute plot", e);
+        }
+        return null;
     }
 
     public boolean contains(BlockVector2 location) {
@@ -260,7 +274,18 @@ public class GridCluster implements ConfigurationSerializable {
         this.id = id;
     }
 
+    public List<Plot> getRegions() {
+        List<Plot> plots = new ArrayList<>();
+        for (var x = plot.min().getBlockX(); x < plot.max().getBlockX(); x += elementSize + 2 + offset) {
+            for (var z = plot.min().getBlockZ(); z < plot.max().getBlockZ(); z += elementSize + 2 + offset) {
+                getRegion(BlockVector2.at(x,z)).ifPresent(plots::add);
+            }
+        }
+        return plots;
+    }
+
     public static class Builder {
+
         private World world;
         private Location center;
         private Direction direction;
@@ -384,5 +409,9 @@ public class GridCluster implements ConfigurationSerializable {
         public void direction(Direction direction) {
             this.direction = direction;
         }
+
+    }
+
+    private record PlotKey(int x, int y) {
     }
 }

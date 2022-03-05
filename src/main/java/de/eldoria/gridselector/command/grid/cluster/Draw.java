@@ -6,6 +6,7 @@
 
 package de.eldoria.gridselector.command.grid.cluster;
 
+import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -16,6 +17,7 @@ import de.eldoria.eldoutilities.commands.command.util.Arguments;
 import de.eldoria.eldoutilities.commands.exceptions.CommandException;
 import de.eldoria.eldoutilities.commands.executor.IPlayerTabExecutor;
 import de.eldoria.eldoutilities.messages.MessageSender;
+import de.eldoria.eldoutilities.utils.EMath;
 import de.eldoria.gridselector.GridSelector;
 import de.eldoria.gridselector.adapter.worldguard.IWorldGuardAdapter;
 import de.eldoria.gridselector.config.Configuration;
@@ -40,7 +42,11 @@ public class Draw extends AdvancedCommand implements IPlayerTabExecutor {
         this.worldGuardAdapter = worldGuardAdapter;
     }
 
-    public static void draw(GridCluster cluster, Player player) throws CommandException {
+    public void draw(GridCluster cluster, Player player) {
+        drawAsync(cluster, player);
+    }
+
+    private void drawSync(GridCluster cluster, Player player) throws CommandException {
         var min = cluster.plot().min();
         var max = cluster.plot().max();
 
@@ -63,6 +69,40 @@ public class Draw extends AdvancedCommand implements IPlayerTabExecutor {
         }
 
         MessageSender.getPluginMessageSender(GridSelector.class).sendMessage(player, "Created grid. Changed " + session.size() + " blocks.");
+
+    }
+
+    private void drawAsync(GridCluster cluster, Player player) {
+        var y = cluster.minHeight();
+
+        var actor = BukkitAdapter.adapt(player);
+
+        plugin().getServer().getScheduler().runTaskAsynchronously(plugin(), () -> {
+            var session = WorldEdit.getInstance().newEditSessionBuilder().actor(actor).world(BukkitAdapter.adapt(player.getWorld())).build();
+            try {
+                drawRegions(cluster, session, y, player);
+                plugin().getLogger().info("Grid calculation done. Start drawing.");
+            } catch (MaxChangedBlocksException e) {
+                MessageSender.getPluginMessageSender(GridSelector.class).sendError(player, "Grid exceeds maximum world edit size.");
+            }
+            plugin().getServer().getScheduler().runTask(plugin(), () -> {
+                session.close();
+                WorldEdit.getInstance().getSessionManager().get(actor).remember(session);
+                MessageSender.getPluginMessageSender(GridSelector.class).sendMessage(player, "Created grid. Changed " + session.size() + " blocks.");
+                plugin().getLogger().info("Created grid. Changed " + session.size() + " blocks.");
+            });
+        });
+    }
+
+    private void drawRegions(GridCluster cluster, EditSession session, int y, Player player) throws MaxChangedBlocksException {
+        session.setBlocks(cluster.plot().as2DRegion(y), BukkitAdapter.adapt(cluster.offsetMaterial().createBlockData()));
+        var regions = cluster.getRegions();
+        plugin().getLogger().info( "Regions calculated.");
+        for (var plot : regions) {
+            session.setBlocks(plot.as2DRegion(y), BukkitAdapter.adapt(cluster.borderMaterial().createBlockData()));
+            session.setBlocks(plot.borderLessPlot().as2DRegion(y), BukkitAdapter.adapt(cluster.floorMaterial().createBlockData()));
+        }
+        plugin().getLogger().info( "Blocks calculated");
     }
 
     @Override
@@ -71,7 +111,7 @@ public class Draw extends AdvancedCommand implements IPlayerTabExecutor {
 
         var cluster = builder.build();
 
-        var y = player.getWorld().getHighestBlockYAt(cluster.plot().min().getX(), cluster.plot().min().getZ());
+        var y = player.getWorld().getHighestBlockYAt(player.getLocation().getBlockX(), player.getLocation().getBlockZ());
         cluster.updateMinHeight(y);
 
 

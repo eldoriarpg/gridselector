@@ -23,13 +23,15 @@ import java.util.Optional;
 
 public class Repair extends AdvancedCommand implements IPlayerTabExecutor {
     private final Configuration configuration;
+    private final Draw draw;
 
-    public Repair(Plugin plugin, Configuration configuration) {
+    public Repair(Plugin plugin, Configuration configuration, Draw draw) {
         super(plugin, CommandMeta.builder("repair")
                 .addUnlocalizedArgument("id", false)
                 .withPermission(Permissions.Cluster.REPAIR)
                 .build());
         this.configuration = configuration;
+        this.draw = draw;
     }
 
     @Override
@@ -43,7 +45,7 @@ public class Repair extends AdvancedCommand implements IPlayerTabExecutor {
             CommandAssertions.isTrue(cluster.isPresent(), "Unkown cluster id");
         }
 
-        Draw.draw(cluster.get(), player);
+        draw.draw(cluster.get(), player);
         configuration.save();
         messageSender().sendMessage(player, "Cluster redrawn.");
     }
