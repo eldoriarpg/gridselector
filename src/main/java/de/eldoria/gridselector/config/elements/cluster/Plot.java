@@ -7,6 +7,7 @@
 package de.eldoria.gridselector.config.elements.cluster;
 
 import com.sk89q.worldedit.math.BlockVector2;
+import com.sk89q.worldedit.math.Vector2;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.world.World;
 import de.eldoria.eldoutilities.serialization.SerializationUtil;
@@ -15,6 +16,7 @@ import org.bukkit.configuration.serialization.SerializableAs;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.function.Function;
 
 @SerializableAs("gridSelectorPlot")
 public class Plot implements ConfigurationSerializable {
@@ -61,6 +63,14 @@ public class Plot implements ConfigurationSerializable {
      */
     public Plot expand(int blocks) {
         return Plot.of(min.subtract(blocks, blocks), max.add(blocks, blocks));
+    }
+
+    public Plot move(int blocks) {
+        return Plot.of(min.add(blocks, blocks), max.add(blocks, blocks));
+    }
+
+    public Plot modify(Function<BlockVector2, BlockVector2> min, Function<BlockVector2, BlockVector2> max) {
+        return Plot.of(min.apply(this.min), max.apply(this.max));
     }
 
     /**
