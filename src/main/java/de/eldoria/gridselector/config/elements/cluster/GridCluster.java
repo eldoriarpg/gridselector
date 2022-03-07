@@ -24,6 +24,8 @@ import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -169,10 +171,8 @@ public class GridCluster implements ConfigurationSerializable {
         var xOffset = EMath.diff(min.getX(), vector.getX());
         var zOffset = EMath.diff(min.getZ(), vector.getZ());
 
-        var minOffset = BlockVector2.at(xOffset, zOffset);
-
-        var xIndex = minOffset.getX() % totalElementSize;
-        var zIndex = minOffset.getZ() % totalElementSize;
+        var xIndex = xOffset % totalElementSize;
+        var zIndex = zOffset % totalElementSize;
 
         if (xIndex >= elementSize + 2) {
             return Optional.empty();
@@ -182,8 +182,8 @@ public class GridCluster implements ConfigurationSerializable {
             return Optional.empty();
         }
 
-        var gridX = Math.floor(minOffset.getX() / totalElementSize);
-        var gridZ = Math.floor(minOffset.getZ() / totalElementSize);
+        var gridX = Math.floor(xOffset / totalElementSize);
+        var gridZ = Math.floor(zOffset / totalElementSize);
 
         return Optional.ofNullable(getRegion(min, (int) gridX, (int) gridZ));
     }
@@ -260,7 +260,18 @@ public class GridCluster implements ConfigurationSerializable {
         this.id = id;
     }
 
+    public List<Plot> getRegions() {
+        List<Plot> plots = new ArrayList<>();
+        for (var x = plot.min().getBlockX(); x < plot.max().getBlockX(); x += elementSize + 2 + offset) {
+            for (var z = plot.min().getBlockZ(); z < plot.max().getBlockZ(); z += elementSize + 2 + offset) {
+                getRegion(BlockVector2.at(x, z)).ifPresent(plots::add);
+            }
+        }
+        return plots;
+    }
+
     public static class Builder {
+
         private World world;
         private Location center;
         private Direction direction;
@@ -326,7 +337,7 @@ public class GridCluster implements ConfigurationSerializable {
             var first = BukkitAdapter.adapt(center).toVector().toBlockVector();
             var second = BukkitAdapter.adapt(new Location(world, center.toVector().add(offsetVec).withY(world.getMaxY()))).toVector().toBlockVector();
 
-            var boundings = Plot.of(floorVector(first), floorVector(second));
+            var boundings = Plot.of(floorVector(first), floorVector(second)).modify(min -> min, max -> max.subtract(1, 1));
 
             return new GridCluster(boundings, elementSize, offset, rows, columns, borderMaterial, offsetMaterial, floorMaterial);
         }
@@ -384,5 +395,9 @@ public class GridCluster implements ConfigurationSerializable {
         public void direction(Direction direction) {
             this.direction = direction;
         }
+
+    }
+
+    private record PlotKey(int x, int y) {
     }
 }

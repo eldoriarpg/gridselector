@@ -23,9 +23,13 @@ public class Grid extends AdvancedCommand {
     public Grid(Plugin plugin, SchematicBrushReborn schematicBrushReborn, SelectionListener selectionListener, Configuration config,
                 GridSchematics gridSchematics, IMessageBlockerService messageBlocker, IWorldGuardAdapter worldGuardAdapter) {
         super(plugin, CommandMeta.builder("schematicbrushgrid")
-                .withSubCommand(new Cluster(plugin, messageBlocker, config, worldGuardAdapter))
-                .withSubCommand(new Select(plugin, selectionListener))
-                .withSubCommand(new Export(plugin, schematicBrushReborn, gridSchematics))
+                .buildSubCommands((advancedCommands, commandMetaBuilder) -> {
+                    var cluster = new Cluster(plugin, messageBlocker, config, worldGuardAdapter);
+                    commandMetaBuilder.withDefaultCommand(cluster);
+                    advancedCommands.add(cluster);
+                    advancedCommands.add(new Select(plugin, selectionListener));
+                    advancedCommands.add(new Export(plugin, schematicBrushReborn, gridSchematics));
+                })
                 .build());
     }
 }

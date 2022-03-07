@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "de.eldoria"
-version = "1.1.0"
+version = "1.1.1"
 val shadebase = "de.eldoria." + rootProject.name + ".libs."
 
 repositories {
@@ -17,8 +17,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly("de.eldoria", "schematicbrushreborn-api", "2.1.0")
-    compileOnly("de.eldoria", "eldo-util", "1.13.1-DEV")
+    compileOnly("de.eldoria", "schematicbrushreborn-api", "2.1.2")
+    compileOnly("de.eldoria", "eldo-util", "1.13.3")
     compileOnly("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.6")
     compileOnly("com.plotsquared", "PlotSquared-Core", "6.4.0") // PlotSquared Core API

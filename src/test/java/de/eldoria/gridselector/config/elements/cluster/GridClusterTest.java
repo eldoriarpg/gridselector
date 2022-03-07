@@ -4,11 +4,9 @@
  *     Copyright (C) 2021 EldoriaRPG Team and Contributor
  */
 
-package de.eldoria.gridselector.config.elements;
+package de.eldoria.gridselector.config.elements.cluster;
 
 import com.sk89q.worldedit.math.BlockVector2;
-import de.eldoria.gridselector.config.elements.cluster.GridCluster;
-import de.eldoria.gridselector.config.elements.cluster.Plot;
 import org.bukkit.Material;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -210,5 +208,20 @@ class GridClusterTest {
         // Offset
         material = nCluster.getMaterial(BlockVector2.at(0, 0));
         Assertions.assertEquals(material, offset);
+    }
+
+    @Test
+    void getRegions() {
+        var regions = pCluster.getRegions();
+        Assertions.assertEquals(9, regions.size());
+        var elementSize = 20;
+        var offsetSize = 1;
+        var fullSize = elementSize + offsetSize + 2;
+        var large = new GridCluster(Plot.of(0, 0, fullSize * 30, fullSize * 30), elementSize, offsetSize, 30, 30, border, offset, floor);
+        regions = large.getRegions();
+        Assertions.assertEquals(30 * 30, regions.size());
+        large = new GridCluster(Plot.of(0, 0, fullSize * 200, fullSize * 200), elementSize, offsetSize, 200, 200, border, offset, floor);
+        regions = large.getRegions();
+        Assertions.assertEquals(200 * 200, regions.size());
     }
 }

@@ -28,10 +28,11 @@ public class Cluster extends AdvancedCommand {
                 .buildSubCommands((cmds, builder) -> {
                     var sessions = new Sessions(plugin, messageBlocker);
                     var create = new Create(plugin, sessions);
+                    var draw = new Draw(plugin, sessions, configuration, worldGuardAdapter);
                     cmds.add(create);
-                    cmds.add(new Draw(plugin, sessions, configuration, worldGuardAdapter));
+                    cmds.add(draw);
                     cmds.add(new Modify(plugin, sessions));
-                    cmds.add(new Repair(plugin, configuration));
+                    cmds.add(new Repair(plugin, configuration, draw));
                     cmds.add(new Remove(plugin, configuration, worldGuardAdapter));
                     cmds.add(new Modify(plugin, sessions));
                     cmds.add(new Close(plugin, sessions));
