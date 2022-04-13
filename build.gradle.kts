@@ -26,7 +26,7 @@ dependencies {
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.7")
     compileOnly("de.eldoria", "messageblocker", "1.0.3c-DEV")
     compileOnly("net.kyori", "adventure-platform-bukkit", "4.0.1")
-    compileOnly("net.kyori", "adventure-text-minimessage", "4.10.0-SNAPSHOT")
+    compileOnly("net.kyori", "adventure-text-minimessage", "4.10.1")
 
 
     testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.8.2")
