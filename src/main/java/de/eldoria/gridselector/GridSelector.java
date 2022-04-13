@@ -96,6 +96,7 @@ public class GridSelector extends EldoPlugin {
 
     @Override
     public List<Class<? extends ConfigurationSerializable>> getConfigSerialization() {
-        return List.of(GridCluster.class, Plot.class, ClusterWorld.class, ClusterWorlds.class, Highlight.class, General.class);
+        return List.of(GridCluster.class, Plot.class, ClusterWorld.class, ClusterWorlds.class, Highlight.class, General.class,
+                de.eldoria.gridselector.selector.Grid.class);
     }
 }

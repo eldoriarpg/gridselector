@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "de.eldoria"
-version = "1.1.1"
+version = "1.1.2"
 val shadebase = "de.eldoria." + rootProject.name + ".libs."
 
 repositories {
@@ -106,7 +106,7 @@ tasks {
             duplicatesStrategy = DuplicatesStrategy.INCLUDE
         }
     }
-        register<Copy>("copyToServer") {
+    register<Copy>("copyToServer") {
         val path = project.property("targetDir") ?: "";
         if (path.toString().isEmpty()) {
             println("targetDir is not set in gradle properties")
