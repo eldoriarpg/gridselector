@@ -21,7 +21,7 @@ dependencies {
     compileOnly("de.eldoria", "eldo-util", "1.13.5")
     compileOnly("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.10")
-    compileOnly("com.plotsquared", "PlotSquared-Core", "6.4.0") // PlotSquared Core API
+    compileOnly("com.plotsquared", "PlotSquared-Core", "6.6.2") // PlotSquared Core API
     compileOnly("com.plotsquared:PlotSquared-Bukkit:6.4.0") { isTransitive = false } // PlotSquared Bukkit API
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.7")
     compileOnly("de.eldoria", "messageblocker", "1.0.3c-DEV")
