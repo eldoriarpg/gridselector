@@ -20,7 +20,7 @@ dependencies {
     compileOnly("de.eldoria", "schematicbrushreborn-api", "2.1.4")
     compileOnly("de.eldoria", "eldo-util", "1.13.5")
     compileOnly("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
-    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.6")
+    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.10")
     compileOnly("com.plotsquared", "PlotSquared-Core", "6.4.0") // PlotSquared Core API
     compileOnly("com.plotsquared:PlotSquared-Bukkit:6.4.0") { isTransitive = false } // PlotSquared Bukkit API
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.7")
@@ -30,7 +30,7 @@ dependencies {
 
 
     testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.6.0")
-    testImplementation("com.sk89q.worldedit", "worldedit-bukkit", "7.2.6")
+    testImplementation("com.sk89q.worldedit", "worldedit-bukkit", "7.2.10")
     testImplementation("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
     testImplementation("de.eldoria", "eldo-util", "1.13.5")
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine")
