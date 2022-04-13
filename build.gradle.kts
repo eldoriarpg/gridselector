@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("de.eldoria", "schematicbrushreborn-api", "2.1.2")
+    compileOnly("de.eldoria", "schematicbrushreborn-api", "2.1.4")
     compileOnly("de.eldoria", "eldo-util", "1.13.5")
     compileOnly("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.6")
