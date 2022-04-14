@@ -73,7 +73,7 @@ tasks {
         options.encoding = "UTF-8"
     }
 
-    compileTestJava{
+    compileTestJava {
         options.encoding = "UTF-8"
     }
 
@@ -84,8 +84,8 @@ tasks {
         }
     }
 
-    shadowJar{
-        relocate("de.eldoria.eldoutilities",  "de.eldoria.schematicbrush.libs.eldoutilities")
+    shadowJar {
+        relocate("de.eldoria.eldoutilities", "de.eldoria.schematicbrush.libs.eldoutilities")
         relocate("de.eldoria.messageblocker", "de.eldoria.schematicbrush.libs.messageblocker")
         relocate("net.kyori", "de.eldoria.schematicbrush.libs.kyori")
         mergeServiceFiles()
@@ -108,8 +108,11 @@ tasks {
             println("targetDir is not set in gradle properties")
             return@register
         }
-            println("Copying jar to $path")
+        println("Copying jar to $path")
         from(shadowJar)
         destinationDir = File(path.toString())
+    }
+    build {
+        dependsOn(shadowJar)
     }
 }
