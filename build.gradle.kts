@@ -46,10 +46,7 @@ java {
 publishData {
     useEldoNexusRepos()
     publishComponent("java")
-    publishTask("jar")
     publishTask("shadowJar")
-    publishTask("sourcesJar")
-    publishTask("javadocJar")
 }
 
 publishing {
