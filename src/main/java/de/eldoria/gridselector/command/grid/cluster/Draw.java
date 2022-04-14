@@ -15,8 +15,6 @@ import de.eldoria.eldoutilities.commands.command.CommandMeta;
 import de.eldoria.eldoutilities.commands.command.util.Arguments;
 import de.eldoria.eldoutilities.commands.exceptions.CommandException;
 import de.eldoria.eldoutilities.commands.executor.IPlayerTabExecutor;
-import de.eldoria.eldoutilities.messages.MessageSender;
-import de.eldoria.gridselector.GridSelector;
 import de.eldoria.gridselector.adapter.worldguard.IWorldGuardAdapter;
 import de.eldoria.gridselector.config.Configuration;
 import de.eldoria.gridselector.config.elements.cluster.GridCluster;

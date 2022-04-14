@@ -66,18 +66,6 @@ public class GridSelector extends EldoPlugin {
             var plotSquared = PlotSquared.get();
             plotWorldAdapter = new PlotWorldAdapter(plotSquared);
             regionAdapters.add(plotWorldAdapter);
-        } else {
-            plotWorldAdapter = new RegionAdapter() {
-                @Override
-                public boolean isApplicable(Location location) {
-                    return false;
-                }
-
-                @Override
-                public Optional<RegionResult> getRegion(Location location) {
-                    return Optional.empty();
-                }
-            };
         }
 
         var worldAdapter = new WorldAdapter(regionAdapters);
