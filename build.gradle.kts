@@ -46,7 +46,6 @@ java {
 publishData {
     useEldoNexusRepos()
     publishComponent("java")
-    publishTask("shadowJar")
 }
 
 publishing {
