@@ -21,6 +21,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 public class SelectionBrush implements Brush {
     private final MessageSender messageSender;
     private final Player owner;
-    private final Map<String, MarkerResult> regions = new HashMap<>();
+    private final Map<String, MarkerResult> regions = new LinkedHashMap<>();
     private final WorldAdapter worldAdapter;
     private final Configuration configuration;
 
