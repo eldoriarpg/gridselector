@@ -22,7 +22,7 @@ dependencies {
     compileOnly("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.10")
     compileOnly("com.plotsquared", "PlotSquared-Core", "6.6.2") // PlotSquared Core API
-    compileOnly("com.plotsquared:PlotSquared-Bukkit:6.6.2") { isTransitive = false } // PlotSquared Bukkit API
+    compileOnly("com.plotsquared", "PlotSquared-Bukkit", "6.6.2") { isTransitive = false } // PlotSquared Bukkit API
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.7")
     compileOnly("de.eldoria", "messageblocker", "1.1.1")
     compileOnly("net.kyori", "adventure-platform-bukkit", "4.1.0")
@@ -90,12 +90,14 @@ tasks {
             events("passed", "skipped", "failed")
         }
     }
+
     shadowJar{
         relocate("de.eldoria.eldoutilities",  "de.eldoria.schematicbrush.libs.eldoutilities")
         relocate("de.eldoria.messageblocker", "de.eldoria.schematicbrush.libs.messageblocker")
         relocate("net.kyori", "de.eldoria.schematicbrush.libs.kyori")
         mergeServiceFiles()
     }
+
     processResources {
         from(sourceSets.main.get().resources.srcDirs) {
             filesMatching("plugin.yml") {
@@ -106,6 +108,7 @@ tasks {
             duplicatesStrategy = DuplicatesStrategy.INCLUDE
         }
     }
+
     register<Copy>("copyToServer") {
         val path = project.property("targetDir") ?: "";
         if (path.toString().isEmpty()) {

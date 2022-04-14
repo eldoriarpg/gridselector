@@ -13,7 +13,7 @@ import de.eldoria.eldoutilities.commands.exceptions.CommandException;
 import de.eldoria.eldoutilities.localization.MessageComposer;
 import de.eldoria.gridselector.config.elements.cluster.GridCluster;
 import de.eldoria.gridselector.util.Colors;
-import de.eldoria.messageblocker.blocker.IMessageBlockerService;
+import de.eldoria.messageblocker.blocker.MessageBlocker;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
@@ -26,10 +26,10 @@ import java.util.UUID;
 public class Sessions {
     private final MiniMessage miniMessage = MiniMessage.miniMessage();
     private final Map<UUID, GridCluster.Builder> sessions = new HashMap<>();
-    private final IMessageBlockerService messageBlocker;
+    private final MessageBlocker messageBlocker;
     private final BukkitAudiences audience;
 
-    public Sessions(Plugin plugin, IMessageBlockerService messageBlocker) {
+    public Sessions(Plugin plugin, MessageBlocker messageBlocker) {
         this.messageBlocker = messageBlocker;
         audience = BukkitAudiences.builder(plugin).build();
     }
