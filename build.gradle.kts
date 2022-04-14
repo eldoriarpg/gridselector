@@ -18,15 +18,11 @@ repositories {
 
 dependencies {
     compileOnly("de.eldoria", "schematicbrushreborn-api", "2.1.5")
-    compileOnly("de.eldoria", "eldo-util", "1.13.5")
     compileOnly("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.10")
     compileOnly("com.plotsquared", "PlotSquared-Core", "6.6.2") // PlotSquared Core API
     compileOnly("com.plotsquared", "PlotSquared-Bukkit", "6.6.2") { isTransitive = false } // PlotSquared Bukkit API
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.7")
-    compileOnly("de.eldoria", "messageblocker", "1.1.1")
-    compileOnly("net.kyori", "adventure-platform-bukkit", "4.1.0")
-    compileOnly("net.kyori", "adventure-text-minimessage", "4.10.1")
 
 
     testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.8.2")
@@ -50,6 +46,13 @@ java {
 publishData {
     useEldoNexusRepos()
     publishComponent("java")
+<<<<<<< HEAD
+=======
+    publishTask("jar")
+    publishTask("shadowJar")
+    publishTask("sourcesJar")
+    publishTask("javadocJar")
+>>>>>>> 3a2ba3b (Bump version to 1.1.3)
 }
 
 publishing {
