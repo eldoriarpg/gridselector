@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("de.eldoria", "schematicbrushreborn-api", "2.1.7")
+    compileOnly("de.eldoria", "schematicbrushreborn-api", "2.1.8")
     compileOnly("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.10")
     compileOnly("com.plotsquared", "PlotSquared-Core", "6.7.0") // PlotSquared Core API
