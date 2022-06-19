@@ -28,7 +28,7 @@ dependencies {
     testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.8.2")
     testImplementation("com.sk89q.worldedit", "worldedit-bukkit", "7.2.10")
     testImplementation("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
-    testImplementation("de.eldoria", "eldo-util", "1.13.5")
+    testImplementation("de.eldoria", "eldo-util", "1.13.9")
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine")
 }
 
