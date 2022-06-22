@@ -1,7 +1,7 @@
 plugins {
     id("org.cadixdev.licenser") version "0.6.1"
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("de.chojo.publishdata") version "1.0.4"
+    id("de.chojo.publishdata") version "1.0.5"
     java
     `maven-publish`
 }
