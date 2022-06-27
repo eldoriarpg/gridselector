@@ -14,7 +14,6 @@ import de.eldoria.eldoutilities.plugin.EldoPlugin;
 import de.eldoria.gridselector.adapter.regionadapter.ClusterWorldAdapter;
 import de.eldoria.gridselector.adapter.regionadapter.PlotWorldAdapter;
 import de.eldoria.gridselector.adapter.regionadapter.RegionAdapter;
-import de.eldoria.gridselector.adapter.regionadapter.RegionResult;
 import de.eldoria.gridselector.adapter.regionadapter.WorldAdapter;
 import de.eldoria.gridselector.adapter.worldguard.IWorldGuardAdapter;
 import de.eldoria.gridselector.adapter.worldguard.WorldGuardAdapter;
@@ -31,13 +30,10 @@ import de.eldoria.gridselector.schematics.GridSchematics;
 import de.eldoria.gridselector.selector.GridProvider;
 import de.eldoria.messageblocker.MessageBlockerAPI;
 import de.eldoria.schematicbrush.SchematicBrushReborn;
-import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 public class GridSelector extends EldoPlugin {
 
@@ -45,7 +41,7 @@ public class GridSelector extends EldoPlugin {
     public void onPluginEnable() throws Throwable {
         var configuration = new Configuration(this);
 
-        var sbr = (SchematicBrushReborn) Objects.requireNonNull(getPluginManager().getPlugin("SchematicBrushReborn"));
+        var sbr = SchematicBrushReborn.instance();
 
         var messageSender = MessageSender.create(this, "§3[GS]");
         var messageBlocker = MessageBlockerAPI.builder(this).addWhitelisted("[GS]").build();
