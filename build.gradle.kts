@@ -1,13 +1,13 @@
 plugins {
     id("org.cadixdev.licenser") version "0.6.1"
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("de.chojo.publishdata") version "1.0.4"
+    id("de.chojo.publishdata") version "1.0.6"
     java
     `maven-publish`
 }
 
 group = "de.eldoria"
-version = "1.1.3"
+version = "1.1.4"
 val shadebase = "de.eldoria." + rootProject.name + ".libs."
 
 repositories {
@@ -17,18 +17,18 @@ repositories {
 }
 
 dependencies {
-    compileOnly("de.eldoria", "schematicbrushreborn-api", "2.1.5")
+    compileOnly("de.eldoria", "schematicbrushreborn-api", "2.2.0")
     compileOnly("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.10")
-    compileOnly("com.plotsquared", "PlotSquared-Core", "6.6.2") // PlotSquared Core API
-    compileOnly("com.plotsquared", "PlotSquared-Bukkit", "6.6.2") { isTransitive = false } // PlotSquared Bukkit API
+    compileOnly("com.plotsquared", "PlotSquared-Core", "6.8.1") // PlotSquared Core API
+    compileOnly("com.plotsquared", "PlotSquared-Bukkit", "6.9.1") { isTransitive = false } // PlotSquared Bukkit API
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.7")
 
 
     testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.8.2")
     testImplementation("com.sk89q.worldedit", "worldedit-bukkit", "7.2.10")
     testImplementation("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
-    testImplementation("de.eldoria", "eldo-util", "1.13.5")
+    testImplementation("de.eldoria", "eldo-util", "1.13.9")
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine")
 }
 
@@ -73,7 +73,7 @@ tasks {
         options.encoding = "UTF-8"
     }
 
-    compileTestJava{
+    compileTestJava {
         options.encoding = "UTF-8"
     }
 
@@ -84,8 +84,8 @@ tasks {
         }
     }
 
-    shadowJar{
-        relocate("de.eldoria.eldoutilities",  "de.eldoria.schematicbrush.libs.eldoutilities")
+    shadowJar {
+        relocate("de.eldoria.eldoutilities", "de.eldoria.schematicbrush.libs.eldoutilities")
         relocate("de.eldoria.messageblocker", "de.eldoria.schematicbrush.libs.messageblocker")
         relocate("net.kyori", "de.eldoria.schematicbrush.libs.kyori")
         mergeServiceFiles()
@@ -108,8 +108,12 @@ tasks {
             println("targetDir is not set in gradle properties")
             return@register
         }
-            println("Copying jar to $path")
+        println("Copying jar to $path")
         from(shadowJar)
         destinationDir = File(path.toString())
+    }
+
+    build {
+        dependsOn(shadowJar)
     }
 }

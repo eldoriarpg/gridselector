@@ -27,7 +27,7 @@ public class Grid implements Selector {
 
     @Override
     public Set<Schematic> select(Player player, SchematicRegistry registry) {
-        return registry.getCache(GridSchematics.KEY).getSchematicsByName(player, "");
+        return registry.get(GridSchematics.KEY).getSchematicsByName(player, "");
     }
 
     @Override
