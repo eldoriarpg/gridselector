@@ -61,6 +61,7 @@ public class Export extends AdvancedCommand implements IPlayerTabExecutor {
         for (var schematic : schematics) {
             try {
                 var target = basePath.resolve(args.asString(0) + "_" + schematic.getFile().getName());
+                Files.createDirectories(target.getParent());
                 if (target.toFile().exists() && !args.flags().has("f")) {
                     messageSender().sendError(player, "Name already in use.");
                     return;
