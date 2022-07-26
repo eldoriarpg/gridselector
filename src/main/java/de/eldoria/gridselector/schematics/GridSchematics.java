@@ -47,7 +47,7 @@ public class GridSchematics implements SchematicCache {
     }
 
     public void saveRegions(Player player, List<CuboidRegion> regions) {
-        var playerDirectory = getNextDirectory(player);
+        var playerDirectory = getDirectory(player, getNextDirectoryId(player));
         var num = 0;
         for (var region : regions) {
             var clipboard = new BlockArrayClipboard(region);
@@ -67,14 +67,6 @@ public class GridSchematics implements SchematicCache {
             }
             num++;
         }
-    }
-
-    private Path getNextDirectory(Player player) {
-        return getDirectory(player, getNextDirectoryId(player));
-    }
-
-    private Path getDirectory(Player player) {
-        return getDirectory(player, getDirectoryId(player));
     }
 
     private Path getDirectory(Player player, int id) {
@@ -122,7 +114,7 @@ public class GridSchematics implements SchematicCache {
 
     @Override
     public Set<Schematic> getSchematicsByName(Player player, String name) {
-        try (var stream = Files.walk(getDirectory(player))) {
+        try (var stream = Files.walk(getDirectory(player, getDirectoryId(player)))) {
             return stream.filter(Files::isRegularFile)
                     .map(f -> Schematic.of(f.toFile()))
                     .collect(Collectors.toSet());
