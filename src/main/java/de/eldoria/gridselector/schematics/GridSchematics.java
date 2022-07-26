@@ -28,8 +28,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -37,14 +40,14 @@ public class GridSchematics implements SchematicCache {
     public static final Nameable KEY = Nameable.of("grid");
     private final Plugin plugin;
     private final WorldEdit worldEdit = WorldEdit.getInstance();
+    private final Map<UUID, Integer> directoryIds = new HashMap<>();
 
     public GridSchematics(Plugin plugin) {
         this.plugin = plugin;
     }
 
     public void saveRegions(Player player, List<CuboidRegion> regions) {
-        clearPlayerDirectory(player);
-        var playerDirectory = getPlayerDirectory(player);
+        var playerDirectory = getNextDirectory(player);
         var num = 0;
         for (var region : regions) {
             var clipboard = new BlockArrayClipboard(region);
@@ -66,8 +69,20 @@ public class GridSchematics implements SchematicCache {
         }
     }
 
-    private Path getPlayerDirectory(Player player) {
-        var schematics = plugin.getDataFolder().toPath().resolve(Path.of("schematics", player.getUniqueId().toString()));
+    private Path getNextDirectory(Player player) {
+        return getDirectory(player, getNextDirectoryId(player));
+    }
+
+    private Path getDirectory(Player player) {
+        return getDirectory(player, getDirectoryId(player));
+    }
+
+    private Path getDirectory(Player player, int id) {
+        return getDirectory(player.getUniqueId(), id);
+    }
+
+    private Path getDirectory(UUID uuid, int id) {
+        var schematics = plugin.getDataFolder().toPath().resolve(Path.of("schematics", uuid.toString(), String.valueOf(id)));
         try {
             Files.createDirectories(schematics);
         } catch (IOException e) {
@@ -76,22 +91,28 @@ public class GridSchematics implements SchematicCache {
         return schematics;
     }
 
-    private void clearPlayerDirectory(Player player) {
-        try (var stream = Files.walk(getPlayerDirectory(player))) {
+    @Override
+    public void init() {
+        // Clear the schematic directory on startup
+        clearSchematics();
+    }
+
+    @Override
+    public void shutdown() {
+        // Clear the schematic directory on shutdown
+        clearSchematics();
+    }
+
+    private void clearSchematics() {
+        try (var stream = Files.walk(plugin.getDataFolder().toPath().resolve(Path.of("schematics")))) {
             stream.sorted(Comparator.reverseOrder())
                     .map(Path::toFile)
                     .forEach(File::delete);
         } catch (FileNotFoundException e) {
-            // directory does not exist. everything is fine
+            // ignore
         } catch (IOException e) {
             plugin.getLogger().log(Level.SEVERE, "Cloud not clear player directory", e);
-
         }
-    }
-
-    @Override
-    public void init() {
-
     }
 
     @Override
@@ -101,7 +122,7 @@ public class GridSchematics implements SchematicCache {
 
     @Override
     public Set<Schematic> getSchematicsByName(Player player, String name) {
-        try (var stream = Files.walk(getPlayerDirectory(player))) {
+        try (var stream = Files.walk(getDirectory(player))) {
             return stream.filter(Files::isRegularFile)
                     .map(f -> Schematic.of(f.toFile()))
                     .collect(Collectors.toSet());
@@ -134,5 +155,14 @@ public class GridSchematics implements SchematicCache {
     @Override
     public int directoryCount() {
         return 0;
+    }
+
+
+    private int getDirectoryId(Player uuid) {
+        return directoryIds.computeIfAbsent(uuid.getUniqueId(), k -> 0);
+    }
+
+    private int getNextDirectoryId(Player uuid) {
+        return directoryIds.compute(uuid.getUniqueId(), (k, v) -> v == null ? 0 : v + 1);
     }
 }
