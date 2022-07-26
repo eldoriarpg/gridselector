@@ -1,13 +1,13 @@
 plugins {
     id("org.cadixdev.licenser") version "0.6.1"
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("de.chojo.publishdata") version "1.0.6"
+    id("de.chojo.publishdata") version "1.0.8"
     java
     `maven-publish`
 }
 
 group = "de.eldoria"
-version = "1.1.4"
+version = "1.1.5"
 val shadebase = "de.eldoria." + rootProject.name + ".libs."
 
 repositories {
@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("de.eldoria", "schematicbrushreborn-api", "2.2.0")
+    compileOnly("de.eldoria", "schematicbrushreborn-api", "2.2.2")
     compileOnly("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.10")
     compileOnly("com.plotsquared", "PlotSquared-Core", "6.8.1") // PlotSquared Core API
