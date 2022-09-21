@@ -25,7 +25,7 @@ dependencies {
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.7")
 
 
-    testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.9.0")
+    testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.9.1")
     testImplementation("com.sk89q.worldedit", "worldedit-bukkit", "7.2.12")
     testImplementation("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
     testImplementation("de.eldoria", "eldo-util", "1.13.9")
