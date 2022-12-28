@@ -23,7 +23,14 @@ dependencies {
     compileOnly("com.plotsquared", "PlotSquared-Core", "6.8.1") // PlotSquared Core API
     compileOnly("com.plotsquared", "PlotSquared-Bukkit", "6.10.4") { isTransitive = false } // PlotSquared Bukkit API
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.7")
-
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.4.10") {
+        exclude("com.intellectualsites.paster")
+        exclude("org.yaml")
+    }
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.4.10") {
+        isTransitive = false
+        exclude("org.yaml")
+    }
 
     testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.9.1")
     testImplementation("com.sk89q.worldedit", "worldedit-bukkit", "7.2.12")
