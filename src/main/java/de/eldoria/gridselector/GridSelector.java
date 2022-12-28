@@ -37,9 +37,11 @@ import java.util.List;
 
 public class GridSelector extends EldoPlugin {
 
+    private Configuration configuration;
+
     @Override
     public void onPluginEnable() throws Throwable {
-        var configuration = new Configuration(this);
+        configuration = new Configuration(this);
 
         var sbr = SchematicBrushReborn.instance();
 
@@ -75,7 +77,11 @@ public class GridSelector extends EldoPlugin {
             worldGuardAdapter = new WorldGuardAdapter(configuration);
         }
 
-        registerCommand(new Grid(this, sbr, selectionListener, configuration, gridSchematics, messageBlocker, worldGuardAdapter));
+        registerCommand(new Grid(this, selectionListener, configuration, gridSchematics, messageBlocker, worldGuardAdapter));
+    }
+
+    public Configuration configuration() {
+        return configuration;
     }
 
     @Override

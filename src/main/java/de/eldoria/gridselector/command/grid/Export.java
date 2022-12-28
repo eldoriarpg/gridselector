@@ -12,6 +12,7 @@ import de.eldoria.eldoutilities.commands.command.util.Arguments;
 import de.eldoria.eldoutilities.commands.command.util.CommandAssertions;
 import de.eldoria.eldoutilities.commands.exceptions.CommandException;
 import de.eldoria.eldoutilities.commands.executor.IPlayerTabExecutor;
+import de.eldoria.gridselector.GridSelector;
 import de.eldoria.gridselector.schematics.GridSchematics;
 import de.eldoria.gridselector.util.Permissions;
 import de.eldoria.schematicbrush.SchematicBrushReborn;
@@ -26,15 +27,15 @@ import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 
 public class Export extends AdvancedCommand implements IPlayerTabExecutor {
-    private final SchematicBrushReborn schematicBrushReborn;
+    private GridSelector plugin;
     private final GridSchematics gridSchematics;
 
-    public Export(Plugin plugin, SchematicBrushReborn schematicBrushReborn, GridSchematics gridSchematics) {
+    public Export(GridSelector plugin, GridSchematics gridSchematics) {
         super(plugin, CommandMeta.builder("export")
                 .addArgument("name", true)
                 .withPermission(Permissions.Save.EXPORT)
                 .build());
-        this.schematicBrushReborn = schematicBrushReborn;
+        this.plugin = plugin;
         this.gridSchematics = gridSchematics;
     }
 
@@ -42,7 +43,7 @@ public class Export extends AdvancedCommand implements IPlayerTabExecutor {
     public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
         var schematics = gridSchematics.getSchematicsByName(player, null);
 
-        var basePath = schematicBrushReborn.getDataFolder().toPath().resolve(Path.of("schematics"));
+        var basePath = plugin.configuration().general().schematicPath();
 
         if (!args.flags().has("g")) {
             basePath = basePath.resolve(Path.of(player.getUniqueId().toString()));
