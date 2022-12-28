@@ -15,9 +15,7 @@ import de.eldoria.eldoutilities.commands.executor.IPlayerTabExecutor;
 import de.eldoria.gridselector.GridSelector;
 import de.eldoria.gridselector.schematics.GridSchematics;
 import de.eldoria.gridselector.util.Permissions;
-import de.eldoria.schematicbrush.SchematicBrushReborn;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -43,12 +41,12 @@ public class Export extends AdvancedCommand implements IPlayerTabExecutor {
     public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
         var schematics = gridSchematics.getSchematicsByName(player, null);
 
-        var basePath = plugin.configuration().general().schematicPath();
-
+        Path basePath;
         if (!args.flags().has("g")) {
-            basePath = basePath.resolve(Path.of(player.getUniqueId().toString()));
+            basePath = plugin.configuration().general().schematicPath().resolve(Path.of(player.getUniqueId().toString()));
         } else {
             CommandAssertions.permission(player, false, Permissions.Save.GLOBAL);
+            basePath = plugin.configuration().general().schematicPath();
         }
 
         try {
@@ -58,22 +56,23 @@ public class Export extends AdvancedCommand implements IPlayerTabExecutor {
             messageSender().sendError(player, "Failed to save schematics. See console for further information.");
             return;
         }
-
-        for (var schematic : schematics) {
-            try {
-                var target = basePath.resolve(args.asString(0) + "_" + schematic.getFile().getName());
-                Files.createDirectories(target.getParent());
-                if (target.toFile().exists() && !args.flags().has("f")) {
-                    messageSender().sendError(player, "Name already in use.");
+        plugin.getScheduler().runTaskAsynchronously(plugin, () -> {
+            for (var schematic : schematics) {
+                try {
+                    var target = basePath.resolve(args.asString(0) + "_" + schematic.getFile().getName());
+                    Files.createDirectories(target.getParent());
+                    if (target.toFile().exists() && !args.flags().has("f")) {
+                        messageSender().sendError(player, "Name already in use.");
+                        return;
+                    }
+                    Files.copy(schematic.getFile().toPath(), target, StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    plugin().getLogger().log(Level.WARNING, "Could not save schematic", e);
+                    messageSender().sendError(player, "Failed to save schematics. See console for further information.");
                     return;
                 }
-                Files.copy(schematic.getFile().toPath(), target, StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException e) {
-                plugin().getLogger().log(Level.WARNING, "Could not save schematic", e);
-                messageSender().sendError(player, "Failed to save schematics. See console for further information.");
-                return;
             }
-        }
-        messageSender().sendMessage(player, "Saved " + schematics.size() + " schematics.");
+            messageSender().sendMessage(player, "Saved " + schematics.size() + " schematics.");
+        });
     }
 }
