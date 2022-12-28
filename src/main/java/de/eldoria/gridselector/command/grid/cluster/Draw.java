@@ -10,6 +10,7 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.regions.Region;
 import de.eldoria.eldoutilities.commands.command.AdvancedCommand;
 import de.eldoria.eldoutilities.commands.command.CommandMeta;
 import de.eldoria.eldoutilities.commands.command.util.Arguments;
@@ -56,10 +57,10 @@ public class Draw extends AdvancedCommand implements IPlayerTabExecutor {
     }
 
     private void drawRegions(GridCluster cluster, EditSession session, int y, Player player) throws MaxChangedBlocksException {
-        session.setBlocks(cluster.plot().as2DRegion(y), BukkitAdapter.adapt(cluster.offsetMaterial().createBlockData()));
+        session.setBlocks((Region) cluster.plot().as2DRegion(y), BukkitAdapter.adapt(cluster.offsetMaterial().createBlockData()));
         for (var plot : cluster.getRegions()) {
-            session.setBlocks(plot.as2DRegion(y), BukkitAdapter.adapt(cluster.borderMaterial().createBlockData()));
-            session.setBlocks(plot.borderLessPlot().as2DRegion(y), BukkitAdapter.adapt(cluster.floorMaterial().createBlockData()));
+            session.setBlocks((Region) plot.as2DRegion(y), BukkitAdapter.adapt(cluster.borderMaterial().createBlockData()));
+            session.setBlocks((Region) plot.borderLessPlot().as2DRegion(y), BukkitAdapter.adapt(cluster.floorMaterial().createBlockData()));
         }
     }
 
