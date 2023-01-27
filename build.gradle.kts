@@ -1,13 +1,13 @@
 plugins {
     id("org.cadixdev.licenser") version "0.6.1"
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("de.chojo.publishdata") version "1.0.8"
+    id("de.chojo.publishdata") version "1.0.9"
     java
     `maven-publish`
 }
 
 group = "de.eldoria"
-version = "1.1.5"
+version = "1.2.0"
 val shadebase = "de.eldoria." + rootProject.name + ".libs."
 
 repositories {
@@ -17,18 +17,25 @@ repositories {
 }
 
 dependencies {
-    compileOnly("de.eldoria", "schematicbrushreborn-api", "2.2.2")
+    compileOnly("de.eldoria", "schematicbrushreborn-api", "2.3.1")
     compileOnly("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
-    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.10")
+    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.13")
     compileOnly("com.plotsquared", "PlotSquared-Core", "6.8.1") // PlotSquared Core API
-    compileOnly("com.plotsquared", "PlotSquared-Bukkit", "6.9.1") { isTransitive = false } // PlotSquared Bukkit API
+    compileOnly("com.plotsquared", "PlotSquared-Bukkit", "6.10.9") { isTransitive = false } // PlotSquared Bukkit API
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.7")
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.5.1") {
+        exclude("com.intellectualsites.paster")
+        exclude("org.yaml")
+    }
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.5.1") {
+        isTransitive = false
+        exclude("org.yaml")
+    }
 
-
-    testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.8.2")
-    testImplementation("com.sk89q.worldedit", "worldedit-bukkit", "7.2.10")
+    testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.9.2")
+    testImplementation("com.sk89q.worldedit", "worldedit-bukkit", "7.2.13")
     testImplementation("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
-    testImplementation("de.eldoria", "eldo-util", "1.13.9")
+    testImplementation("de.eldoria", "eldo-util", "1.14.0")
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine")
 }
 
@@ -89,7 +96,7 @@ tasks {
         relocate("de.eldoria.messageblocker", "de.eldoria.schematicbrush.libs.messageblocker")
         relocate("net.kyori", "de.eldoria.schematicbrush.libs.kyori")
         mergeServiceFiles()
-        archiveClassifier.set("")
+        archiveClassifier.set("all")
         archiveBaseName.set("GridSelector")
     }
 
