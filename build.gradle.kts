@@ -23,7 +23,7 @@ dependencies {
     compileOnly("com.plotsquared", "PlotSquared-Core", "6.8.1") // PlotSquared Core API
     compileOnly("com.plotsquared", "PlotSquared-Bukkit", "6.10.9") { isTransitive = false } // PlotSquared Bukkit API
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.7")
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.5.1") {
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.5.2") {
         exclude("com.intellectualsites.paster")
         exclude("org.yaml")
     }
