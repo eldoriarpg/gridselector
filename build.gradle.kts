@@ -20,7 +20,12 @@ dependencies {
     compileOnly("de.eldoria", "schematicbrushreborn-api", "2.4.0")
     compileOnly("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.13")
-    compileOnly("com.plotsquared", "PlotSquared-Core", "6.11.0") // PlotSquared Core API
+    // PlotSquared Core API
+    compileOnly("com.plotsquared", "PlotSquared-Core", "6.11.0") {
+        exclude("com.intellectualsites.paster", "Paster")
+        exclude("org.apache.logging.log4j", "log4j-api")
+        exclude("com.intellectualsites.informative-annotations","informative-annotations")
+    }
     compileOnly("com.plotsquared", "PlotSquared-Bukkit", "6.11.0") { isTransitive = false } // PlotSquared Bukkit API
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.7")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.5.2") {
@@ -104,7 +109,7 @@ tasks {
         from(sourceSets.main.get().resources.srcDirs) {
             filesMatching("plugin.yml") {
                 expand(
-                    "version" to publishData.getVersion(true)
+                        "version" to publishData.getVersion(true)
                 )
             }
             duplicatesStrategy = DuplicatesStrategy.INCLUDE

@@ -3,6 +3,12 @@
   "dependencyDashboard": true,
   "labels": ["dependencies"],
   "extends": ["config:base"],
+    "packageRules": [
+    {
+      "groupName": "plotsquared",
+      "matchPackagePrefixes": ["com.plotsquared"]
+    }
+  ],
   "ignoreDeps": ["spigot-api"],
   "reviewers": ["RainbowDashLabs"],
   "prConcurrentLimit": 3,
