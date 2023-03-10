@@ -56,6 +56,7 @@ java {
 }
 
 publishData {
+    addBuildData()
     useEldoNexusRepos()
     publishComponent("java")
 }
