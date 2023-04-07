@@ -12,6 +12,8 @@ import de.eldoria.eldoutilities.config.template.PluginBaseConfiguration;
 import de.eldoria.eldoutilities.localization.ILocalizer;
 import de.eldoria.eldoutilities.messages.MessageSender;
 import de.eldoria.eldoutilities.plugin.EldoPlugin;
+import de.eldoria.eldoutilities.updater.lynaupdater.LynaUpdateChecker;
+import de.eldoria.eldoutilities.updater.lynaupdater.LynaUpdateData;
 import de.eldoria.gridselector.adapter.regionadapter.ClusterWorldAdapter;
 import de.eldoria.gridselector.adapter.regionadapter.PlotWorldAdapter;
 import de.eldoria.gridselector.adapter.regionadapter.RegionAdapter;
@@ -91,6 +93,10 @@ public class GridSelector extends EldoPlugin {
 
         if (getPluginManager().isPluginEnabled("WorldGuard")) {
             worldGuardAdapter = new WorldGuardAdapter(configuration);
+        }
+
+        if (configuration.main().checkUpdates()) {
+            LynaUpdateChecker.lyna(LynaUpdateData.builder(this, 8).build()).start();
         }
 
         registerCommand(new Grid(this, selectionListener, configuration, gridSchematics, messageBlocker, worldGuardAdapter));

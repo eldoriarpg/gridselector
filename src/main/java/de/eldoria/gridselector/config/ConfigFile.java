@@ -6,12 +6,12 @@
 
 package de.eldoria.gridselector.config;
 
-import de.eldoria.gridselector.config.elements.ClusterWorlds;
 import de.eldoria.gridselector.config.elements.General;
 import de.eldoria.gridselector.config.elements.Highlight;
 
-@SuppressWarnings("FieldMayBeFinal")
+@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
 public class ConfigFile {
+    private boolean checkUpdates = true;
     private General general = new General();
     private Highlight highlight = new Highlight();
 
@@ -29,5 +29,9 @@ public class ConfigFile {
 
     public void highlight(Highlight highlight) {
         this.highlight = highlight;
+    }
+
+    public boolean checkUpdates() {
+        return checkUpdates;
     }
 }
