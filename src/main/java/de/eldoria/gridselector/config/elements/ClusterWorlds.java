@@ -50,8 +50,4 @@ public class ClusterWorlds implements ConfigurationSerializable {
     public Map<UUID, ClusterWorld> clusterWorlds() {
         return clusterWorlds;
     }
-
-    public void clusterWorlds(Map<UUID, ClusterWorld> clusterWorlds) {
-        this.clusterWorlds = clusterWorlds;
-    }
 }

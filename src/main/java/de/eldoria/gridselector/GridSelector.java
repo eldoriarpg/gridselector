@@ -53,7 +53,7 @@ public class GridSelector extends EldoPlugin {
             getLogger().log(Level.INFO, "Migrating configuration to jackson.");
             configuration.main().general(legacyConfiguration.general());
             configuration.main().highlight(legacyConfiguration.highlight());
-            configuration.cluster().clusterWorlds(legacyConfiguration.cluster().clusterWorlds());
+            configuration.replace(JacksonConfiguration.CLUSTER_WORLDS, legacyConfiguration.cluster());
             base.version(1);
             base.lastInstalledVersion(this);
             configuration.save();

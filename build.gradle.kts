@@ -40,12 +40,6 @@ dependencies {
         exclude("org.yaml")
     }
 
-    bukkitLibrary("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.2")
-    bukkitLibrary("com.fasterxml.jackson.core:jackson-core:2.14.2")
-    bukkitLibrary("com.fasterxml.jackson.core:jackson-databind:2.14.2")
-    bukkitLibrary("net.kyori:adventure-platform-bukkit:4.3.0")
-    bukkitLibrary("net.kyori:adventure-text-minimessage:4.13.0")
-
     testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.9.2")
     testImplementation("com.sk89q.worldedit", "worldedit-bukkit", "7.2.14")
     testImplementation("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
@@ -109,7 +103,6 @@ tasks {
     shadowJar {
         relocate("de.eldoria.eldoutilities", "de.eldoria.schematicbrush.libs.eldoutilities")
         relocate("de.eldoria.messageblocker", "de.eldoria.schematicbrush.libs.messageblocker")
-        relocate("net.kyori", "de.eldoria.schematicbrush.libs.kyori")
         mergeServiceFiles()
         archiveClassifier.set("all")
         archiveBaseName.set("GridSelector")
