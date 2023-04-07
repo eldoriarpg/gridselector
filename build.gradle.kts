@@ -1,7 +1,10 @@
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription.Permission.Default
+
 plugins {
     id("org.cadixdev.licenser") version "0.6.1"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("de.chojo.publishdata") version "1.2.4"
+    id("net.minecrell.plugin-yml.bukkit") version "0.5.3"
     java
     `maven-publish`
 }
@@ -17,14 +20,14 @@ repositories {
 }
 
 dependencies {
-    compileOnly("de.eldoria", "schematicbrushreborn-api", "2.4.3")
+    compileOnly("de.eldoria", "schematicbrushreborn-api", "2.5.0-DEV")
     compileOnly("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.14")
     // PlotSquared Core API
     compileOnly("com.plotsquared", "PlotSquared-Core", "6.11.1") {
         exclude("com.intellectualsites.paster", "Paster")
         exclude("org.apache.logging.log4j", "log4j-api")
-        exclude("com.intellectualsites.informative-annotations","informative-annotations")
+        exclude("com.intellectualsites.informative-annotations", "informative-annotations")
     }
     compileOnly("com.plotsquared", "PlotSquared-Bukkit", "6.11.1") { isTransitive = false } // PlotSquared Bukkit API
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.7")
@@ -36,6 +39,12 @@ dependencies {
         isTransitive = false
         exclude("org.yaml")
     }
+
+    bukkitLibrary("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.2")
+    bukkitLibrary("com.fasterxml.jackson.core:jackson-core:2.14.2")
+    bukkitLibrary("com.fasterxml.jackson.core:jackson-databind:2.14.2")
+    bukkitLibrary("net.kyori:adventure-platform-bukkit:4.3.0")
+    bukkitLibrary("net.kyori:adventure-text-minimessage:4.13.0")
 
     testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.9.2")
     testImplementation("com.sk89q.worldedit", "worldedit-bukkit", "7.2.14")
@@ -130,5 +139,40 @@ tasks {
 
     build {
         dependsOn(shadowJar)
+    }
+}
+
+bukkit {
+    name = "GridSelector"
+    main = "de.eldoria.gridselector.GridSelector"
+    apiVersion = "1.16"
+    version = publishData.getVersion(true)
+    authors = listOf("RainbowDashLabs")
+    depend = listOf("SchematicBrushReborn")
+    softDepend = listOf("PlotSquared", "WorldGuard")
+
+    commands {
+        register("schematicbrushgrid") {
+            aliases = listOf("sbrg")
+            permission = "gridselector.use"
+        }
+    }
+
+    permissions {
+        register("gridselector.export") {
+            default = Default.FALSE
+        }
+        register("gridselector.export.global") {
+            default = Default.FALSE
+        }
+        register("gridselector.cluster.create") {
+            default = Default.FALSE
+        }
+        register("gridselector.cluster.remove") {
+            default = Default.FALSE
+        }
+        register("gridselector.cluster.repair") {
+            default = Default.FALSE
+        }
     }
 }
