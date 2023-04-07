@@ -25,9 +25,12 @@ import java.util.UUID;
 
 @SerializableAs("gridSelectorClusterWorld")
 public class ClusterWorld implements ConfigurationSerializable {
-    private final UUID uid;
-    private final List<GridCluster> cluster;
+    private UUID uid;
+    private List<GridCluster> cluster;
     private int id = 1;
+
+    public ClusterWorld() {
+    }
 
     public ClusterWorld(World world) {
         this.uid = world.getUID();

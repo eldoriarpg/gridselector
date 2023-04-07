@@ -8,6 +8,7 @@ package de.eldoria.gridselector;
 
 
 import com.plotsquared.core.PlotSquared;
+import de.eldoria.eldoutilities.config.template.PluginBaseConfiguration;
 import de.eldoria.eldoutilities.localization.ILocalizer;
 import de.eldoria.eldoutilities.messages.MessageSender;
 import de.eldoria.eldoutilities.plugin.EldoPlugin;
@@ -19,6 +20,8 @@ import de.eldoria.gridselector.adapter.worldguard.IWorldGuardAdapter;
 import de.eldoria.gridselector.adapter.worldguard.WorldGuardAdapter;
 import de.eldoria.gridselector.command.Grid;
 import de.eldoria.gridselector.config.Configuration;
+import de.eldoria.gridselector.config.JacksonConfiguration;
+import de.eldoria.gridselector.config.LegacyConfiguration;
 import de.eldoria.gridselector.config.elements.ClusterWorlds;
 import de.eldoria.gridselector.config.elements.General;
 import de.eldoria.gridselector.config.elements.Highlight;
@@ -34,14 +37,27 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 public class GridSelector extends EldoPlugin {
 
-    private Configuration configuration;
+    private JacksonConfiguration configuration;
 
     @Override
     public void onPluginEnable() throws Throwable {
-        configuration = new Configuration(this);
+
+        configuration = new JacksonConfiguration(this);
+        PluginBaseConfiguration base = configuration.secondary(PluginBaseConfiguration.KEY);
+        if (base.version() == 0) {
+            var legacyConfiguration = new LegacyConfiguration(this);
+            getLogger().log(Level.INFO, "Migrating configuration to jackson.");
+            configuration.main().general(legacyConfiguration.general());
+            configuration.main().highlight(legacyConfiguration.highlight());
+            configuration.replace(JacksonConfiguration.CLUSTER_WORLDS, legacyConfiguration.cluster());
+            base.version(1);
+            base.lastInstalledVersion(this);
+            configuration.save();
+        }
 
         var sbr = SchematicBrushReborn.instance();
 

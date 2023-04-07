@@ -19,9 +19,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+@SuppressWarnings("ALL")
 @SerializableAs("gridSelectorClusterWorlds")
 public class ClusterWorlds implements ConfigurationSerializable {
-    private final Map<UUID, ClusterWorld> clusterWorlds = new HashMap<>();
+    private Map<UUID, ClusterWorld> clusterWorlds = new HashMap<>();
 
     public ClusterWorlds() {
     }
@@ -44,5 +45,9 @@ public class ClusterWorlds implements ConfigurationSerializable {
 
     public ClusterWorld world(World world) {
         return clusterWorlds.computeIfAbsent(world.getUID(), k -> new ClusterWorld(world));
+    }
+
+    public Map<UUID, ClusterWorld> clusterWorlds() {
+        return clusterWorlds;
     }
 }
