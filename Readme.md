@@ -1,7 +1,7 @@
 [![Wakatime_Badge](https://wakatime.com/badge/github/eldoriarpg/gridselector.svg)][wakatime]
 
-[![Publish](https://img.shields.io/github/workflow/status/eldoriarpg/gridselector/Publish%20to%20Nexus?style=for-the-badge&label=Publish)][publish]
-[![Build](https://img.shields.io/github/workflow/status/eldoriarpg/gridselector/Verify%20state?style=for-the-badge&label=Build)][verify]
+[![Publish](https://img.shields.io/github/actions/workflow/status/eldoriarpg/gridselector/publish_to_nexus.yml?style=for-the-badge&label=Publish)][publish]
+[![Build](https://img.shields.io/github/actions/workflow/status/eldoriarpg/gridselector/verify.yml?style=for-the-badge&label=Build)][verify]
 
 [![Releases](https://img.shields.io/nexus/maven-releases/de.eldoria/gridselector?label=Release&logo=Release&server=https%3A%2F%2Feldonexus.de&style=for-the-badge)][release]
 [![Development](https://img.shields.io/nexus/maven-dev/de.eldoria/gridselector?label=DEV&logo=Release&server=https%3A%2F%2Feldonexus.de&style=for-the-badge)][development]
