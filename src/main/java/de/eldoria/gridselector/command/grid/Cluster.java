@@ -17,6 +17,7 @@ import de.eldoria.gridselector.command.grid.cluster.Remove;
 import de.eldoria.gridselector.command.grid.cluster.Repair;
 import de.eldoria.gridselector.command.grid.cluster.Sessions;
 import de.eldoria.gridselector.config.Configuration;
+import de.eldoria.gridselector.config.LegacyConfiguration;
 import de.eldoria.gridselector.util.Permissions;
 import de.eldoria.messageblocker.blocker.MessageBlocker;
 import org.bukkit.plugin.Plugin;

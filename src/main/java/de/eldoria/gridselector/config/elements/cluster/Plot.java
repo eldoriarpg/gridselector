@@ -20,8 +20,11 @@ import java.util.function.Function;
 
 @SerializableAs("gridSelectorPlot")
 public class Plot implements ConfigurationSerializable {
-    private final BlockVector2 min;
-    private final BlockVector2 max;
+    private BlockVector2 min;
+    private BlockVector2 max;
+
+    public Plot() {
+    }
 
     public Plot(Map<String, Object> objectMap) {
         var map = SerializationUtil.mapOf(objectMap);
