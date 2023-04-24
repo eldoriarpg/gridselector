@@ -35,7 +35,7 @@ dependencies {
         exclude("com.intellectualsites.paster")
         exclude("org.yaml")
     }
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.6.0") {
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.6.1") {
         isTransitive = false
         exclude("org.yaml")
     }
