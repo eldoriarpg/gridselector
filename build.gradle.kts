@@ -30,7 +30,7 @@ dependencies {
         exclude("com.intellectualsites.informative-annotations", "informative-annotations")
     }
     compileOnly("com.plotsquared", "PlotSquared-Bukkit", "6.11.1") { isTransitive = false } // PlotSquared Bukkit API
-    compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.7")
+    compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.8")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.6.4") {
         exclude("com.intellectualsites.paster")
         exclude("org.yaml")
