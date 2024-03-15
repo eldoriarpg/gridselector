@@ -31,11 +31,11 @@ dependencies {
     }
     compileOnly("com.plotsquared", "PlotSquared-Bukkit", "6.11.1") { isTransitive = false } // PlotSquared Bukkit API
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.9")
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.9.0") {
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.9.1") {
         exclude("com.intellectualsites.paster")
         exclude("org.yaml")
     }
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.9.0") {
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.9.1") {
         isTransitive = false
         exclude("org.yaml")
     }
