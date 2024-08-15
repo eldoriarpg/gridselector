@@ -13,7 +13,6 @@ publishData {
     addBuildData()
     useEldoNexusRepos()
     publishComponent("java")
-    publishTask("shadowJar")
 }
 
     publishing {
