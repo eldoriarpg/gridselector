@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "de.eldoria.gridselector"
-version = "1.3.0"
+version = "1.3.1"
 
 allprojects {
     apply {
