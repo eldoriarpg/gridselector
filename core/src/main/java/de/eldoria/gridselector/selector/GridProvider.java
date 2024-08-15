@@ -19,7 +19,7 @@ import java.util.List;
 
 public class GridProvider extends SelectorProvider {
     public GridProvider(SchematicRegistry registry) {
-        super(Grid.class, "Grid", registry);
+        super(Grid.class, "Grid","component.provider.selector.gridselector.name","component.provider.selector.gridselector.description", registry);
     }
 
     @Override
@@ -35,11 +35,6 @@ public class GridProvider extends SelectorProvider {
     @Override
     public Selector defaultSetting() {
         return new Grid();
-    }
-
-    @Override
-    public String description() {
-        return "Use the schematics you have selected with GridSelector previously.";
     }
 
     @Override

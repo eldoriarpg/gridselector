@@ -45,13 +45,14 @@ tasks {
     }
 
     register<Copy>("copyToServer") {
-        val path = project.property("targetDir") ?: "";
+        val path = rootProject.property("targetDir") ?: "";
         if (path.toString().isEmpty()) {
             println("targetDir is not set in gradle properties")
             return@register
         }
         println("Copying jar to $path")
         from(shadowJar)
-        destinationDir = File(path.toString())
+        into(path.toString())
+        rename{"gridselector.jar"}
     }
 }

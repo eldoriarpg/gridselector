@@ -49,6 +49,7 @@ import java.util.logging.Level;
 public class GridSelector extends EldoPlugin {
 
     private JacksonConfiguration configuration;
+    private Localizer iLocalizer;
 
     public GridSelector() {
         this.configuration = new JacksonConfiguration(this);
@@ -77,10 +78,10 @@ public class GridSelector extends EldoPlugin {
 
         var sbr = SchematicBrushReborn.instance();
 
-        var iLocalizer = Localizer.builder(this, "en_US")
-                .setIncludedLocales("en_US")
+        iLocalizer = Localizer.builder(this, "en_US")
+                .setIncludedLocales("de_DE")
+                .setUserLocale(p -> sbr.config().general().language())
                 .build();
-        ILocalizer.getPluginLocalizer(SchematicBrushReborn.class).registerChild(iLocalizer);
         var messageSender = MessageSender.builder(this)
                 .prefix("<gold>[GS]")
                 .localizer(iLocalizer)
@@ -120,6 +121,12 @@ public class GridSelector extends EldoPlugin {
         }
 
         registerCommand(new Grid(this, selectionListener, configuration, gridSchematics, messageBlocker, worldGuardAdapter));
+    }
+
+    @Override
+    public void onPostStart() throws Throwable {
+
+        ILocalizer.getPluginLocalizer(SchematicBrushReborn.getInstance()).registerChild(iLocalizer);
     }
 
     public Configuration configuration() {
