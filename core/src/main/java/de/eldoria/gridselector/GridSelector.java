@@ -10,6 +10,7 @@ package de.eldoria.gridselector;
 import com.plotsquared.core.PlotSquared;
 import de.eldoria.eldoutilities.config.template.PluginBaseConfiguration;
 import de.eldoria.eldoutilities.localization.ILocalizer;
+import de.eldoria.eldoutilities.localization.Localizer;
 import de.eldoria.eldoutilities.messages.MessageSender;
 import de.eldoria.eldoutilities.plugin.EldoPlugin;
 import de.eldoria.eldoutilities.updater.lynaupdater.LynaUpdateChecker;
@@ -36,7 +37,11 @@ import de.eldoria.gridselector.selector.GridProvider;
 import de.eldoria.messageblocker.MessageBlockerAPI;
 import de.eldoria.schematicbrush.SchematicBrushReborn;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.java.JavaPluginLoader;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -44,6 +49,16 @@ import java.util.logging.Level;
 public class GridSelector extends EldoPlugin {
 
     private JacksonConfiguration configuration;
+    private Localizer iLocalizer;
+
+    public GridSelector() {
+        this.configuration = new JacksonConfiguration(this);
+    }
+
+    public GridSelector(@NotNull JavaPluginLoader loader, @NotNull PluginDescriptionFile description, @NotNull File dataFolder, @NotNull File file) {
+        super(loader, description, dataFolder, file);
+        this.configuration = new JacksonConfiguration(this);
+    }
 
     @Override
     public void onPluginEnable() throws Throwable {
@@ -63,13 +78,19 @@ public class GridSelector extends EldoPlugin {
 
         var sbr = SchematicBrushReborn.instance();
 
-        var messageSender = MessageSender.create(this, "§3[GS]");
+        iLocalizer = Localizer.builder(this, "en_US")
+                .setIncludedLocales("de_DE")
+                .setUserLocale(p -> sbr.config().general().language())
+                .build();
+        var messageSender = MessageSender.builder(this)
+                .prefix("<gold>[GS]")
+                .localizer(iLocalizer)
+                .register();
+
         var messageBlocker = MessageBlockerAPI.builder(this).addWhitelisted("[GS]").build();
 
         var gridSchematics = new GridSchematics(this);
 
-        var iLocalizer = ILocalizer.create(this, "en_US");
-        iLocalizer.setLocale("en_US");
         sbr.brushSettingsRegistry().registerSelector(new GridProvider(sbr.schematics()));
         sbr.schematics().register(GridSchematics.KEY, gridSchematics);
 
@@ -102,8 +123,19 @@ public class GridSelector extends EldoPlugin {
         registerCommand(new Grid(this, selectionListener, configuration, gridSchematics, messageBlocker, worldGuardAdapter));
     }
 
+    @Override
+    public void onPostStart() throws Throwable {
+
+        ILocalizer.getPluginLocalizer(SchematicBrushReborn.getInstance()).registerChild(iLocalizer);
+    }
+
     public Configuration configuration() {
         return configuration;
+    }
+
+    @Override
+    public Level getLogLevel() {
+        return configuration.secondary(PluginBaseConfiguration.KEY).logLevel();
     }
 
     @Override

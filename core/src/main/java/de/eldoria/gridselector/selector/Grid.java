@@ -36,6 +36,11 @@ public class Grid implements Selector {
     }
 
     @Override
+    public String localizedName() {
+        return "component.selector.gridselector.name";
+    }
+
+    @Override
     public String descriptor() {
         return "";
     }
