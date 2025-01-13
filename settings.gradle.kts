@@ -22,6 +22,7 @@ dependencyResolutionManagement {
             plugin("licenser", "org.cadixdev.licenser").version("0.6.1")
             plugin("shadow", "io.github.goooler.shadow").version("8.1.8")
             plugin("pluginyml", "net.minecrell.plugin-yml.bukkit").version("0.6.0")
+            plugin("runserver", "xyz.jpenilla.run-paper").version("2.3.1")
         }
     }
 }

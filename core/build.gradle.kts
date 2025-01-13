@@ -6,9 +6,9 @@ plugins {
 }
 
 dependencies {
-    compileOnly("de.eldoria", "schematicbrushreborn-api", "2.7.1")
+    compileOnly("de.eldoria", "schematicbrushreborn-api", "2.7.3")
     compileOnly("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
-    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.3.6")
+    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.3.9")
     // PlotSquared Core API
     compileOnly("com.plotsquared", "PlotSquared-Core", "6.11.1") {
         exclude("com.intellectualsites.paster", "Paster")
@@ -16,20 +16,20 @@ dependencies {
         exclude("com.intellectualsites.informative-annotations", "informative-annotations")
     }
     compileOnly("com.plotsquared", "PlotSquared-Bukkit", "6.11.1") { isTransitive = false } // PlotSquared Bukkit API
-    compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.10")
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.11.1") {
+    compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.12")
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.12.3") {
         exclude("com.intellectualsites.paster")
         exclude("org.yaml")
     }
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.11.1") {
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.12.3") {
         isTransitive = false
         exclude("org.yaml")
     }
 
-    testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.11.0")
-    testImplementation("com.sk89q.worldedit", "worldedit-bukkit", "7.3.6")
+    testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.11.4")
+    testImplementation("com.sk89q.worldedit", "worldedit-bukkit", "7.3.9")
     testImplementation("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
-    testImplementation("de.eldoria", "eldo-util", "1.14.4")
+    testImplementation("de.eldoria", "schematicbrushreborn-api", "2.7.3")
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine")
 }
 
