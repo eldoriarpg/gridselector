@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "de.eldoria.gridselector"
-version = "1.3.1"
+version = "1.3.2"
 
 allprojects {
     apply {
@@ -45,6 +45,7 @@ allprojects {
             }
         }
     }
+
 }
 
 license {

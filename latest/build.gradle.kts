@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.publishdata)
     alias(libs.plugins.shadow)
     `maven-publish`
+    alias(libs.plugins.runserver)
 }
 
 dependencies {
@@ -38,6 +39,8 @@ tasks {
     shadowJar {
         val shadebase = "de.eldoria.schematicbrush.libs."
         relocate("de.eldoria.messageblocker", shadebase + "messageblocker")
+        relocate("com.jackson", shadebase + "jackson")
+        relocate("de.eldoria.eldoutilities", shadebase + "utilities")
     }
 
     build {
@@ -55,4 +58,15 @@ tasks {
         into(path.toString())
         rename{"gridselector.jar"}
     }
+
+            runServer {
+        minecraftVersion("1.21.1")
+        downloadPlugins {
+            url("https://ci.athion.net/job/FastAsyncWorldEdit/lastSuccessfulBuild/artifact/artifacts/FastAsyncWorldEdit-Paper-2.12.4-SNAPSHOT-1013.jar")
+            url("https://download.luckperms.net/1569/bukkit/loader/LuckPerms-Bukkit-5.4.152.jar")
+        }
+
+      jvmArgs("-Dcom.mojang.eula.agree=true")
+    }
+
 }
