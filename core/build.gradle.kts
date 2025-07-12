@@ -8,7 +8,7 @@ plugins {
 dependencies {
     compileOnly("de.eldoria", "schematicbrushreborn-api", "2.7.3")
     compileOnly("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
-    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.3.9")
+    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.3.15")
     // PlotSquared Core API
     compileOnly("com.plotsquared", "PlotSquared-Core", "6.11.1") {
         exclude("com.intellectualsites.paster", "Paster")
@@ -27,7 +27,7 @@ dependencies {
     }
 
     testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.11.4")
-    testImplementation("com.sk89q.worldedit", "worldedit-bukkit", "7.3.9")
+    testImplementation("com.sk89q.worldedit", "worldedit-bukkit", "7.3.15")
     testImplementation("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
     testImplementation("de.eldoria", "schematicbrushreborn-api", "2.7.3")
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine")
