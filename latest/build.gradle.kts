@@ -40,7 +40,7 @@ tasks {
         val shadebase = "de.eldoria.schematicbrush.libs."
         relocate("de.eldoria.messageblocker", shadebase + "messageblocker")
         relocate("com.jackson", shadebase + "jackson")
-        relocate("de.eldoria.eldoutilities", shadebase + "utilities")
+        relocate("de.eldoria.utilities", shadebase + "utilities")
     }
 
     build {
