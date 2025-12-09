@@ -1,6 +1,5 @@
 rootProject.name = "gridselector"
 include("core")
-include("legacy")
 include("latest")
 
 pluginManagement {
