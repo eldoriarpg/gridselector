@@ -10,12 +10,12 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.3.9")
     // PlotSquared Core API
-    compileOnly("com.plotsquared", "PlotSquared-Core", "6.11.1") {
+    compileOnly("com.plotsquared", "PlotSquared-Core", "6.11.2") {
         exclude("com.intellectualsites.paster", "Paster")
         exclude("org.apache.logging.log4j", "log4j-api")
         exclude("com.intellectualsites.informative-annotations", "informative-annotations")
     }
-    compileOnly("com.plotsquared", "PlotSquared-Bukkit", "6.11.1") { isTransitive = false } // PlotSquared Bukkit API
+    compileOnly("com.plotsquared", "PlotSquared-Bukkit", "6.11.2") { isTransitive = false } // PlotSquared Bukkit API
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.12")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.13.0") {
         exclude("com.intellectualsites.paster")
