@@ -11,11 +11,10 @@ import com.sk89q.worldedit.util.Direction;
 import de.eldoria.eldoutilities.commands.command.util.CommandAssertions;
 import de.eldoria.eldoutilities.commands.exceptions.CommandException;
 import de.eldoria.eldoutilities.localization.MessageComposer;
+import de.eldoria.eldoutilities.messages.MessageSender;
 import de.eldoria.gridselector.config.elements.cluster.GridCluster;
 import de.eldoria.gridselector.util.Colors;
 import de.eldoria.messageblocker.blocker.MessageBlocker;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -24,14 +23,13 @@ import java.util.Map;
 import java.util.UUID;
 
 public class Sessions {
-    private final MiniMessage miniMessage = MiniMessage.miniMessage();
     private final Map<UUID, GridCluster.Builder> sessions = new HashMap<>();
     private final MessageBlocker messageBlocker;
-    private final BukkitAudiences audience;
+    private final MessageSender messageSender;
 
     public Sessions(Plugin plugin, MessageBlocker messageBlocker) {
         this.messageBlocker = messageBlocker;
-        audience = BukkitAudiences.builder(plugin).build();
+        this.messageSender = MessageSender.getPluginMessageSender(plugin);
     }
 
     public GridCluster.Builder getOrCreateSession(Player player) throws CommandException {
@@ -48,13 +46,13 @@ public class Sessions {
         messageBlocker.blockPlayer(player);
         var session = getOrCreateSession(player);
         var composer = MessageComposer.create()
-                .text(session.asComponent());
+                                      .text(session.asComponent());
         composer.newLine()
                 .text("<%s><click:run_command:'/sbrg cluster draw'>[Create]</click>", Colors.ADD);
         composer.prependLines(20);
         messageBlocker.ifEnabled(composer, mess -> mess.newLine().text("<click:run_command:'/sbrg cluster close'><%s>[x]</click>", Colors.REMOVE));
         messageBlocker.announce(player, "[x]");
-        audience.player(player).sendMessage(miniMessage.deserialize(composer.build()));
+        messageSender.sendMessage(player, composer.build());
     }
 
     public void close(Player player) {
