@@ -88,7 +88,7 @@ public class SelectionBrush implements Brush {
     private int reduceFloor(EditSession session, CuboidRegion region, int minHeight) {
         var min = region.getMinimumPoint();
         var max = region.getMaximumPoint();
-        for (var y = minHeight; y <= max.getY(); y++) {
+        for (var y = minHeight; y <= max.y(); y++) {
             if (checkFlat(session, y, min, max, mat -> mat == Material.AIR)) {
                 return y;
             }
@@ -100,7 +100,7 @@ public class SelectionBrush implements Brush {
         var min = region.getMinimumPoint();
         var max = region.getMaximumPoint();
 
-        for (var y = max.getY(); y >= min.getY(); y--) {
+        for (var y = max.y(); y >= min.y(); y--) {
             if (checkFlat(session, y, min, max, mat -> mat != Material.AIR)) {
                 return y;
             }
@@ -109,8 +109,8 @@ public class SelectionBrush implements Brush {
     }
 
     private boolean checkFlat(EditSession session, int y, BlockVector3 min, BlockVector3 max, Predicate<Material> check) {
-        for (var x = min.getX(); x < max.getX(); x++) {
-            for (var z = min.getZ(); z < max.getZ(); z++) {
+        for (var x = min.x(); x < max.x(); x++) {
+            for (var z = min.z(); z < max.z(); z++) {
                 var material = session.getBlock(BlockVector3.at(x, y, z)).getBlockType();
                 if (check.test(BukkitAdapter.adapt(material)))
                     return true;
@@ -122,9 +122,9 @@ public class SelectionBrush implements Brush {
     private int reduceEastWestSide(EditSession session, int yMin, int yMax, CuboidRegion region, boolean east) {
         var min = region.getMinimumPoint();
         var max = region.getMaximumPoint();
-        for (var x = (east ? min : max).getX(); east ? x <= max.getX() : x >= min.getX(); x += east ? 1 : -1) {
+        for (var x = (east ? min : max).x(); east ? x <= max.x() : x >= min.x(); x += east ? 1 : -1) {
             for (var y = yMin; y <= yMax; y++) {
-                for (var z = min.getZ(); z < max.getZ(); z++) {
+                for (var z = min.z(); z < max.z(); z++) {
                     var material = session.getBlock(BlockVector3.at(x, y, z)).getBlockType();
                     if (BukkitAdapter.adapt(material) != Material.AIR) {
                         return x;
@@ -132,15 +132,15 @@ public class SelectionBrush implements Brush {
                 }
             }
         }
-        return (east ? min : max).getX();
+        return (east ? min : max).x();
     }
 
     private int reduceSouthNorthSide(EditSession session, int yMin, int yMax, CuboidRegion region, boolean south) {
         var min = region.getMinimumPoint();
         var max = region.getMaximumPoint();
-        for (var z = (south ? min : max).getZ(); south ? z <= max.getZ() : z >= min.getZ(); z += south ? 1 : -1) {
+        for (var z = (south ? min : max).z(); south ? z <= max.z() : z >= min.z(); z += south ? 1 : -1) {
             for (var y = yMin; y <= yMax; y++) {
-                for (var x = min.getX(); x < max.getX(); x++) {
+                for (var x = min.x(); x < max.x(); x++) {
                     var material = session.getBlock(BlockVector3.at(x, y, z)).getBlockType();
                     if (BukkitAdapter.adapt(material) != Material.AIR) {
                         return z;
@@ -148,7 +148,7 @@ public class SelectionBrush implements Brush {
                 }
             }
         }
-        return (south ? min : max).getZ();
+        return (south ? min : max).z();
     }
 
     public List<CuboidRegion> getRegions() {

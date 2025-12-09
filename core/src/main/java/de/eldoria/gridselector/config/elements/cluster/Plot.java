@@ -33,8 +33,8 @@ public class Plot implements ConfigurationSerializable {
     }
 
     private Plot(BlockVector2 min, BlockVector2 max) {
-        this.min = BlockVector2.at(Math.min(min.getBlockX(), max.getBlockX()), Math.min(min.getBlockZ(), max.getBlockZ()));
-        this.max = BlockVector2.at(Math.max(min.getBlockX(), max.getBlockX()), Math.max(min.getBlockZ(), max.getBlockZ()));
+        this.min = BlockVector2.at(Math.min(min.x(), max.x()), Math.min(min.z(), max.z()));
+        this.max = BlockVector2.at(Math.max(min.x(), max.x()), Math.max(min.z(), max.z()));
     }
 
     public static Plot of(int minX, int minZ, int maxX, int maxZ) {
@@ -92,8 +92,8 @@ public class Plot implements ConfigurationSerializable {
      * @return true if the vector is part of the plot.
      */
     public boolean contains(BlockVector2 vector2) {
-        return min.getBlockX() <= vector2.getBlockX() && vector2.getBlockX() <= max.getBlockX()
-               && min.getBlockZ() <= vector2.getBlockZ() && vector2.getBlockZ() <= max.getBlockZ();
+        return min.x() <= vector2.x() && vector2.x() <= max.x()
+               && min.z() <= vector2.z() && vector2.z() <= max.z();
     }
 
     public BlockVector2 min() {
@@ -111,8 +111,8 @@ public class Plot implements ConfigurationSerializable {
      * @return true if they overlap
      */
     public boolean overlaps(Plot plot) {
-        return min.getBlockX() < plot.max().getBlockX() && max.getBlockX() > plot.min().getBlockX()
-               && min.getBlockZ() < plot.max().getBlockZ() && max.getBlockZ() > plot.min().getBlockZ();
+        return min.x() < plot.max().x() && max.x() > plot.min().x()
+               && min.z() < plot.max().z() && max.z() > plot.min().z();
 
     }
 

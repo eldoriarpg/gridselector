@@ -80,17 +80,17 @@ public class GridCluster implements ConfigurationSerializable {
     @NotNull
     public Map<String, Object> serialize() {
         return SerializationUtil.newBuilder()
-                .add("id", id)
-                .add("minHeight", minHeight)
-                .add("plot", plot)
-                .add("elementSize", elementSize)
-                .add("offset", offset)
-                .add("rows", rows)
-                .add("columns", columns)
-                .add("borderMaterial", borderMaterial)
-                .add("offsetMaterial", offsetMaterial)
-                .add("floorMaterial", floorMaterial)
-                .build();
+                                .add("id", id)
+                                .add("minHeight", minHeight)
+                                .add("plot", plot)
+                                .add("elementSize", elementSize)
+                                .add("offset", offset)
+                                .add("rows", rows)
+                                .add("columns", columns)
+                                .add("borderMaterial", borderMaterial)
+                                .add("offsetMaterial", offsetMaterial)
+                                .add("floorMaterial", floorMaterial)
+                                .build();
     }
 
     /**
@@ -168,8 +168,8 @@ public class GridCluster implements ConfigurationSerializable {
         var totalElementSize = elementSize + 2 + offset;
         var min = plot.min();
 
-        var xOffset = EMath.diff(min.getX(), vector.getX());
-        var zOffset = EMath.diff(min.getZ(), vector.getZ());
+        var xOffset = EMath.diff(min.x(), vector.x());
+        var zOffset = EMath.diff(min.z(), vector.z());
 
         var xIndex = xOffset % totalElementSize;
         var zIndex = zOffset % totalElementSize;
@@ -182,8 +182,8 @@ public class GridCluster implements ConfigurationSerializable {
             return Optional.empty();
         }
 
-        var gridX = Math.floor(xOffset / totalElementSize);
-        var gridZ = Math.floor(zOffset / totalElementSize);
+        var gridX = Math.floor(xOffset / (float) totalElementSize);
+        var gridZ = Math.floor(zOffset / (float) totalElementSize);
 
         return Optional.ofNullable(getRegion(min, (int) gridX, (int) gridZ));
     }
@@ -198,7 +198,7 @@ public class GridCluster implements ConfigurationSerializable {
      */
     public Plot getRegion(BlockVector2 base, int x, int z) {
         var totalElementSize = elementSize + 2 + offset;
-        var min = BlockVector2.at(base.getX() + x * totalElementSize, base.getZ() + z * totalElementSize);
+        var min = BlockVector2.at(base.x() + x * totalElementSize, base.z() + z * totalElementSize);
         return Plot.of(min, min.add(BlockVector2.at(elementSize + 1, elementSize + 1)));
     }
 
@@ -262,8 +262,8 @@ public class GridCluster implements ConfigurationSerializable {
 
     public List<Plot> getRegions() {
         List<Plot> plots = new ArrayList<>();
-        for (var x = plot.min().getBlockX(); x < plot.max().getBlockX(); x += elementSize + 2 + offset) {
-            for (var z = plot.min().getBlockZ(); z < plot.max().getBlockZ(); z += elementSize + 2 + offset) {
+        for (var x = plot.min().x(); x < plot.max().x(); x += elementSize + 2 + offset) {
+            for (var z = plot.min().z(); z < plot.max().z(); z += elementSize + 2 + offset) {
                 getRegion(BlockVector2.at(x, z)).ifPresent(plots::add);
             }
         }
@@ -348,38 +348,38 @@ public class GridCluster implements ConfigurationSerializable {
 
         public String asComponent() {
             var message = MessageComposer.create()
-                    .text("<%s>Cluster Settings", Colors.HEADING).newLine()
-                    .text("<%s>Location: <%s>%s|%s", Colors.NAME, Colors.VALUE, center.getBlockX(), center.getBlockZ())
-                    .space()
-                    .text("<%s><click:run_command:'/sbrg cluster modify center'>[change]</click>", Colors.CHANGE)
-                    .newLine()
-                    .text("<%s>Direction: <%s>%s", Colors.NAME, Colors.VALUE, direction.name()).space()
-                    .text("<%s><click:run_command:'/sbrg cluster modify direction'>[change]</click>", Colors.CHANGE)
-                    .newLine()
-                    .text("<%s>Expand: <%s>%s", Colors.NAME, Colors.VALUE, expandRight ? "right" : "left").space()
-                    .text("<%s><click:run_command:'/sbrg cluster modify expandRight'>[change]</click>", Colors.CHANGE)
-                    .newLine()
-                    .text("<%s>Size: <%s>%s", Colors.NAME, Colors.VALUE, elementSize).space()
-                    .text("<%s><click:suggest_command:'/sbrg cluster modify size '>[change]</click>", Colors.CHANGE)
-                    .newLine()
-                    .text("<%s>Rows: <%s>%s", Colors.NAME, Colors.VALUE, rows).space()
-                    .text("<%s><click:suggest_command:'/sbrg cluster modify rows '>[change]</click>", Colors.CHANGE)
-                    .newLine()
-                    .text("<%s>Columns: <%s>%s", Colors.NAME, Colors.VALUE, columns).space()
-                    .text("<%s><click:suggest_command:'/sbrg cluster modify columns '>[change]</click>", Colors.CHANGE)
-                    .newLine()
-                    .text("<%s>Offset: <%s>%s", Colors.NAME, Colors.VALUE, offset).space()
-                    .text("<%s><click:suggest_command:'/sbrg cluster modify offset '>[change]</click>", Colors.CHANGE)
-                    .newLine()
-                    .text("<%s>Floor Material: <%s>%s", Colors.NAME, Colors.VALUE, floorMaterial).space()
-                    .text("<%s><click:suggest_command:'/sbrg cluster modify floorMaterial '>[change]</click>", Colors.CHANGE)
-                    .newLine()
-                    .text("<%s>Border Material: <%s>%s", Colors.NAME, Colors.VALUE, borderMaterial).space()
-                    .text("<%s><click:suggest_command:'/sbrg cluster modify borderMaterial '>[change]</click>", Colors.CHANGE)
-                    .newLine()
-                    .text("<%s>Offset Material: <%s>%s", Colors.NAME, Colors.VALUE, offsetMaterial).space()
-                    .text("<%s><click:suggest_command:'/sbrg cluster modify offsetMaterial '>[change]</click>", Colors.CHANGE)
-                    .build();
+                                         .text("<%s>Cluster Settings", Colors.HEADING).newLine()
+                                         .text("<%s>Location: <%s>%s|%s", Colors.NAME, Colors.VALUE, center.getBlockX(), center.getBlockZ())
+                                         .space()
+                                         .text("<%s><click:run_command:'/sbrg cluster modify center'>[change]</click>", Colors.CHANGE)
+                                         .newLine()
+                                         .text("<%s>Direction: <%s>%s", Colors.NAME, Colors.VALUE, direction.name()).space()
+                                         .text("<%s><click:run_command:'/sbrg cluster modify direction'>[change]</click>", Colors.CHANGE)
+                                         .newLine()
+                                         .text("<%s>Expand: <%s>%s", Colors.NAME, Colors.VALUE, expandRight ? "right" : "left").space()
+                                         .text("<%s><click:run_command:'/sbrg cluster modify expandRight'>[change]</click>", Colors.CHANGE)
+                                         .newLine()
+                                         .text("<%s>Size: <%s>%s", Colors.NAME, Colors.VALUE, elementSize).space()
+                                         .text("<%s><click:suggest_command:'/sbrg cluster modify size '>[change]</click>", Colors.CHANGE)
+                                         .newLine()
+                                         .text("<%s>Rows: <%s>%s", Colors.NAME, Colors.VALUE, rows).space()
+                                         .text("<%s><click:suggest_command:'/sbrg cluster modify rows '>[change]</click>", Colors.CHANGE)
+                                         .newLine()
+                                         .text("<%s>Columns: <%s>%s", Colors.NAME, Colors.VALUE, columns).space()
+                                         .text("<%s><click:suggest_command:'/sbrg cluster modify columns '>[change]</click>", Colors.CHANGE)
+                                         .newLine()
+                                         .text("<%s>Offset: <%s>%s", Colors.NAME, Colors.VALUE, offset).space()
+                                         .text("<%s><click:suggest_command:'/sbrg cluster modify offset '>[change]</click>", Colors.CHANGE)
+                                         .newLine()
+                                         .text("<%s>Floor Material: <%s>%s", Colors.NAME, Colors.VALUE, floorMaterial).space()
+                                         .text("<%s><click:suggest_command:'/sbrg cluster modify floorMaterial '>[change]</click>", Colors.CHANGE)
+                                         .newLine()
+                                         .text("<%s>Border Material: <%s>%s", Colors.NAME, Colors.VALUE, borderMaterial).space()
+                                         .text("<%s><click:suggest_command:'/sbrg cluster modify borderMaterial '>[change]</click>", Colors.CHANGE)
+                                         .newLine()
+                                         .text("<%s>Offset Material: <%s>%s", Colors.NAME, Colors.VALUE, offsetMaterial).space()
+                                         .text("<%s><click:suggest_command:'/sbrg cluster modify offsetMaterial '>[change]</click>", Colors.CHANGE)
+                                         .build();
             return message;
         }
 

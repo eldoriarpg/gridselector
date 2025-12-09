@@ -39,9 +39,9 @@ public record MarkerResult(String identifier, CuboidRegion schematicRegion, Cubo
         List<Vector> result = new ArrayList<>();
         var max = schematicRegion.getMaximumPoint();
         var min = schematicRegion.getMinimumPoint();
-        for (var x : new int[]{min.getX() - 1, max.getX() + 1}) {
-            for (var y : new int[]{min.getY() - 1, max.getY() + 1}) {
-                for (var z : new int[]{min.getZ() - 1, max.getZ() + 1}) {
+        for (var x : new int[]{min.x() - 1, max.x() + 1}) {
+            for (var y : new int[]{min.y() - 1, max.y() + 1}) {
+                for (var z : new int[]{min.z() - 1, max.z() + 1}) {
                     result.add(new Vector(x, y, z));
                 }
             }
@@ -71,14 +71,14 @@ public record MarkerResult(String identifier, CuboidRegion schematicRegion, Cubo
 
         Set<Vector> blocks = new HashSet<>();
 
-        for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
-            blocks.add(new Vector(x, minHeight, min.getBlockZ()));
-            blocks.add(new Vector(x, minHeight, max.getBlockZ()));
+        for (int x = min.x(); x <= max.x(); x++) {
+            blocks.add(new Vector(x, minHeight, min.z()));
+            blocks.add(new Vector(x, minHeight, max.z()));
         }
 
-        for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
-            blocks.add(new Vector(min.getBlockX(), minHeight, z));
-            blocks.add(new Vector(max.getBlockX(), minHeight, z));
+        for (int z = min.z(); z <= max.z(); z++) {
+            blocks.add(new Vector(min.x(), minHeight, z));
+            blocks.add(new Vector(max.x(), minHeight, z));
         }
         return blocks;
     }
