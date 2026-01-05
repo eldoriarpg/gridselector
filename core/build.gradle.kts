@@ -6,8 +6,8 @@ plugins {
 }
 
 dependencies {
-    compileOnly("de.eldoria", "schematicbrushreborn-api", "2.7.8")
     compileOnly("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
+    compileOnly("de.eldoria", "schematicbrushreborn-api", "2.7.10")
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.3.9")
     // PlotSquared Core API
     compileOnly("com.plotsquared", "PlotSquared-Core", "6.11.1") {

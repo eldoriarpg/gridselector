@@ -121,9 +121,10 @@ public class GridSchematics implements SchematicCache {
     }
 
     @Override
-    public void init() {
+    public CompletableFuture<Void> init() {
         // Clear the schematic directory on startup
         clearSchematics();
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override
@@ -145,8 +146,8 @@ public class GridSchematics implements SchematicCache {
     }
 
     @Override
-    public void reload() {
-
+    public CompletableFuture<Void> reload() {
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override
@@ -184,6 +185,11 @@ public class GridSchematics implements SchematicCache {
     @Override
     public int directoryCount() {
         return 0;
+    }
+
+    @Override
+    public boolean isReady() {
+        return true;
     }
 
 
