@@ -26,7 +26,7 @@ dependencies {
         exclude("org.yaml")
     }
 
-    testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.11.4")
+    testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.14.4")
     testImplementation("com.sk89q.worldedit", "worldedit-bukkit", "7.3.9")
     testImplementation("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
     testImplementation("de.eldoria", "schematicbrushreborn-api", "2.7.3")
