@@ -13,8 +13,6 @@ import de.eldoria.eldoutilities.localization.ILocalizer;
 import de.eldoria.eldoutilities.localization.Localizer;
 import de.eldoria.eldoutilities.messages.MessageSender;
 import de.eldoria.eldoutilities.plugin.EldoPlugin;
-import de.eldoria.eldoutilities.updater.lynaupdater.LynaUpdateChecker;
-import de.eldoria.eldoutilities.updater.lynaupdater.LynaUpdateData;
 import de.eldoria.gridselector.adapter.regionadapter.ClusterWorldAdapter;
 import de.eldoria.gridselector.adapter.regionadapter.PlotWorldAdapter;
 import de.eldoria.gridselector.adapter.regionadapter.RegionAdapter;
@@ -27,6 +25,7 @@ import de.eldoria.gridselector.config.JacksonConfiguration;
 import de.eldoria.gridselector.listener.SelectionListener;
 import de.eldoria.gridselector.schematics.GridSchematics;
 import de.eldoria.gridselector.selector.GridProvider;
+import de.eldoria.gridselector.updates.Updates;
 import de.eldoria.schematicbrush.SchematicBrushReborn;
 
 import java.io.IOException;
@@ -39,6 +38,7 @@ public class GridSelector extends EldoPlugin {
 
     private JacksonConfiguration configuration;
     private Localizer iLocalizer;
+    private Updates updates;
 
     public GridSelector() {
         this.configuration = new JacksonConfiguration(this);
@@ -96,11 +96,15 @@ public class GridSelector extends EldoPlugin {
             worldGuardAdapter = new WorldGuardAdapter(configuration);
         }
 
-        if (configuration.main().checkUpdates()) {
-            LynaUpdateChecker.lyna(LynaUpdateData.builder(this, 8).build()).start();
-        }
+        updates = new Updates(this, configuration);
+        updates.apply();
 
         registerCommand(new Grid(this, selectionListener, configuration, gridSchematics, worldGuardAdapter));
+    }
+
+    @Override
+    public void onPluginDisable() throws Throwable {
+        if (updates != null) updates.stop();
     }
 
     @Override

@@ -1,4 +1,5 @@
 import net.minecrell.pluginyml.bukkit.BukkitPluginDescription.Permission.Default.FALSE
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription.Permission.Default.OP
 
 plugins {
     java
@@ -72,7 +73,9 @@ dependencies {
 publishData {
     eldoNexus(dev = false)
     component = "shadow"
-    buildData()
+    buildData {
+        put("lynaProduct", "8")
+    }
 }
 
 val shadebase = "de.eldoria.schematicbrush.libs."
@@ -155,6 +158,10 @@ bukkit {
         }
         register("gridselector.cluster.repair") {
             default = FALSE
+        }
+        register("gridselector.updates") {
+            description = "Hear about new versions on join and download them"
+            default = OP
         }
     }
 }

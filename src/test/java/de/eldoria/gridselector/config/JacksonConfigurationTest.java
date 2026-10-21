@@ -62,6 +62,39 @@ class JacksonConfigurationTest {
         Assertions.assertEquals(Material.WHITE_CONCRETE, cluster.floorMaterial());
     }
 
+    @Test
+    void takesTheOldUpdateSwitchAsNotice() throws IOException {
+        Files.writeString(dataFolder.resolve("config.yml"), "checkUpdates: false\n");
+
+        var updates = configurations().main().updates();
+
+        Assertions.assertFalse(updates.notice());
+        Assertions.assertFalse(updates.autoUpdate());
+        Assertions.assertTrue(updates.askForAutoUpdate());
+    }
+
+    @Test
+    void dropsTheOldUpdateSwitchOnSave() throws IOException {
+        Files.writeString(dataFolder.resolve("config.yml"), "checkUpdates: false\n");
+        var written = configurations();
+        written.main();
+        written.save();
+
+        var config = Files.readString(dataFolder.resolve("config.yml"));
+
+        Assertions.assertFalse(config.contains("checkUpdates"));
+        Assertions.assertFalse(configurations().main().updates().notice());
+    }
+
+    @Test
+    void noticesUpdatesByDefault() {
+        var updates = configurations().main().updates();
+
+        Assertions.assertTrue(updates.notice());
+        Assertions.assertFalse(updates.autoUpdate());
+        Assertions.assertTrue(updates.askForAutoUpdate());
+    }
+
     private Configurations<ConfigFile> configurations() {
         return new Configurations<>(dataFolder, Key.builder(Path.of("config.yml"), ConfigFile::new).build(),
                 List.of(new YamlDataFormat()), getClass().getClassLoader(), null);
