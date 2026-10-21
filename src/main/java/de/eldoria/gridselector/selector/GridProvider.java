@@ -19,7 +19,7 @@ import java.util.List;
 
 public class GridProvider extends SelectorProvider {
     public GridProvider(SchematicRegistry registry) {
-        super(Grid.class, "Grid","component.provider.selector.gridselector.name","component.provider.selector.gridselector.description", registry);
+        super("Grid","component.provider.selector.gridselector.name","component.provider.selector.gridselector.description", registry);
     }
 
     @Override

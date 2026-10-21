@@ -18,7 +18,6 @@ import com.sk89q.worldedit.regions.Region;
 import de.eldoria.schematicbrush.brush.config.util.Nameable;
 import de.eldoria.schematicbrush.schematics.Schematic;
 import de.eldoria.schematicbrush.schematics.SchematicCache;
-import de.eldoria.schematicbrush.util.FAWE;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -51,14 +50,6 @@ public class GridSchematics implements SchematicCache {
     }
 
     public CompletableFuture<Void> saveRegions(Player player, List<CuboidRegion> regions) {
-        if (FAWE.isFawe()) {
-            return saveAsync(player, regions);
-        }
-        return saveSync(player, regions);
-    }
-
-    private CompletableFuture<Void> saveAsync(Player player, List<CuboidRegion> regions) {
-        // FAWE
         var playerDirectory = getDirectory(player, getNextDirectoryId(player));
         return CompletableFuture.runAsync(() -> {
             var num = 0;
@@ -69,31 +60,14 @@ public class GridSchematics implements SchematicCache {
         });
     }
 
-    private CompletableFuture<Void> saveSync(Player player, List<CuboidRegion> regions) {
-        // NON FAWE
-        var playerDirectory = getDirectory(player, getNextDirectoryId(player));
-        var num = 0;
-        for (var region : regions) {
-            saveSchematic(player, playerDirectory, num, region);
-            num++;
-        }
-        return CompletableFuture.completedFuture(null);
-    }
-
     private void saveSchematic(Player player, Path playerDirectory, int num, Region region) {
         var clipboard = new BlockArrayClipboard(region);
         try (var session = worldEdit.newEditSession(BukkitAdapter.adapt(player.getWorld()))) {
             var copy = new ForwardExtentCopy(session, region, clipboard, region.getMinimumPoint());
             Operations.complete(copy);
             var schemFile = playerDirectory.resolve(Path.of(num + ".schem")).toFile();
-            if (FAWE.isFawe()) {
-                try (var writer = BuiltInClipboardFormat.FAST.getWriter(new FileOutputStream(schemFile))) {
-                    writer.write(clipboard);
-                }
-            } else {
-                try (var writer = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getWriter(new FileOutputStream(schemFile))) {
-                    writer.write(clipboard);
-                }
+            try (var writer = BuiltInClipboardFormat.FAST_V3.getWriter(new FileOutputStream(schemFile))) {
+                writer.write(clipboard);
             }
         } catch (WorldEditException e) {
             plugin.getLogger().log(Level.SEVERE, "Could not save player schematic.", e);

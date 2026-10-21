@@ -14,7 +14,6 @@ import de.eldoria.eldoutilities.localization.MessageComposer;
 import de.eldoria.eldoutilities.messages.MessageSender;
 import de.eldoria.gridselector.config.elements.cluster.GridCluster;
 import de.eldoria.gridselector.util.Colors;
-import de.eldoria.messageblocker.blocker.MessageBlocker;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -24,11 +23,9 @@ import java.util.UUID;
 
 public class Sessions {
     private final Map<UUID, GridCluster.Builder> sessions = new HashMap<>();
-    private final MessageBlocker messageBlocker;
     private final MessageSender messageSender;
 
-    public Sessions(Plugin plugin, MessageBlocker messageBlocker) {
-        this.messageBlocker = messageBlocker;
+    public Sessions(Plugin plugin) {
         this.messageSender = MessageSender.getPluginMessageSender(plugin);
     }
 
@@ -43,20 +40,18 @@ public class Sessions {
     }
 
     public void showBuilder(Player player) throws CommandException {
-        messageBlocker.blockPlayer(player);
         var session = getOrCreateSession(player);
         var composer = MessageComposer.create()
                                       .text(session.asComponent());
         composer.newLine()
-                .text("<%s><click:run_command:'/sbrg cluster draw'>[Create]</click>", Colors.ADD);
+                .text("<%s><click:run_command:'/sbrg cluster draw'>[Create]</click>", Colors.ADD)
+                .space()
+                .text("<click:run_command:'/sbrg cluster close'><%s>[x]</click>", Colors.REMOVE);
         composer.prependLines(20);
-        messageBlocker.ifEnabled(composer, mess -> mess.newLine().text("<click:run_command:'/sbrg cluster close'><%s>[x]</click>", Colors.REMOVE));
-        messageBlocker.announce(player, "[x]");
         messageSender.sendMessage(player, composer.build());
     }
 
     public void close(Player player) {
         sessions.remove(player.getUniqueId());
-        messageBlocker.unblockPlayer(player);
     }
 }

@@ -9,22 +9,16 @@ package de.eldoria.gridselector.config.elements.cluster;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import de.eldoria.eldoutilities.commands.command.util.CommandAssertions;
 import de.eldoria.eldoutilities.commands.exceptions.CommandException;
-import de.eldoria.eldoutilities.serialization.SerializationUtil;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.SerializableAs;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-@SerializableAs("gridSelectorClusterWorld")
-public class ClusterWorld implements ConfigurationSerializable {
+public class ClusterWorld {
     private UUID uid;
     private List<GridCluster> cluster;
     private int id = 1;
@@ -35,13 +29,6 @@ public class ClusterWorld implements ConfigurationSerializable {
     public ClusterWorld(World world) {
         this.uid = world.getUID();
         cluster = new ArrayList<>();
-    }
-
-    public ClusterWorld(Map<String, Object> objectMap) {
-        var map = SerializationUtil.mapOf(objectMap);
-        uid = UUID.fromString(map.getValue("UID"));
-        cluster = map.getValue("cluster");
-        id = map.getValue("id");
     }
 
     /**
@@ -86,16 +73,6 @@ public class ClusterWorld implements ConfigurationSerializable {
      */
     public boolean unregister(GridCluster cluster) {
         return unregister(cluster.id());
-    }
-
-    @Override
-    @NotNull
-    public Map<String, Object> serialize() {
-        return SerializationUtil.newBuilder()
-                .add("UID", uid.toString())
-                .add("id", id)
-                .add("cluster", cluster)
-                .build();
     }
 
     /**

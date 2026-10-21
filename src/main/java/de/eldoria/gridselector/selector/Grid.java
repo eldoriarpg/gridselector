@@ -6,21 +6,16 @@
 
 package de.eldoria.gridselector.selector;
 
-import de.eldoria.eldoutilities.serialization.SerializationUtil;
+import de.eldoria.eldoutilities.localization.ILocalizer;
 import de.eldoria.gridselector.schematics.GridSchematics;
 import de.eldoria.schematicbrush.brush.config.selector.Selector;
 import de.eldoria.schematicbrush.schematics.Schematic;
 import de.eldoria.schematicbrush.schematics.SchematicRegistry;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
 import java.util.Set;
 
 public class Grid implements Selector {
-
-    public Grid(Map<String, Object> objectMap) {
-    }
 
     public Grid() {
     }
@@ -37,17 +32,11 @@ public class Grid implements Selector {
 
     @Override
     public String localizedName() {
-        return "component.selector.gridselector.name";
+        return ILocalizer.escape("component.selector.gridselector.name");
     }
 
     @Override
     public String descriptor() {
         return "";
-    }
-
-    @NotNull
-    @Override
-    public Map<String, Object> serialize() {
-        return SerializationUtil.newBuilder().build();
     }
 }

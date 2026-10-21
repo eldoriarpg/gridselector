@@ -10,26 +10,14 @@ import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.math.Vector2;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.world.World;
-import de.eldoria.eldoutilities.serialization.SerializationUtil;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.SerializableAs;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
 import java.util.function.Function;
 
-@SerializableAs("gridSelectorPlot")
-public class Plot implements ConfigurationSerializable {
+public class Plot {
     private BlockVector2 min;
     private BlockVector2 max;
 
     public Plot() {
-    }
-
-    public Plot(Map<String, Object> objectMap) {
-        var map = SerializationUtil.mapOf(objectMap);
-        min = fromParserString(map.getValue("min"));
-        max = fromParserString(map.getValue("max"));
     }
 
     private Plot(BlockVector2 min, BlockVector2 max) {
@@ -43,19 +31,6 @@ public class Plot implements ConfigurationSerializable {
 
     public static Plot of(BlockVector2 min, BlockVector2 max) {
         return new Plot(min, max);
-    }
-
-    private BlockVector2 fromParserString(String val) {
-        return BlockVector2.at(Integer.parseInt(val.split(",")[0]), Integer.parseInt(val.split(",")[1]));
-    }
-
-    @Override
-    @NotNull
-    public Map<String, Object> serialize() {
-        return SerializationUtil.newBuilder()
-                .add("min", min.toParserString())
-                .add("max", max.toParserString())
-                .build();
     }
 
     /**

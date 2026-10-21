@@ -18,15 +18,14 @@ import de.eldoria.gridselector.command.grid.cluster.Repair;
 import de.eldoria.gridselector.command.grid.cluster.Sessions;
 import de.eldoria.gridselector.config.Configuration;
 import de.eldoria.gridselector.util.Permissions;
-import de.eldoria.messageblocker.blocker.MessageBlocker;
 import org.bukkit.plugin.Plugin;
 
 public class Cluster extends AdvancedCommand {
-    public Cluster(Plugin plugin, MessageBlocker messageBlocker, Configuration configuration, IWorldGuardAdapter worldGuardAdapter) {
+    public Cluster(Plugin plugin, Configuration configuration, IWorldGuardAdapter worldGuardAdapter) {
         super(plugin, CommandMeta.builder("cluster")
                 .withPermission(Permissions.Cluster.REMOVE, Permissions.Cluster.CREATE, Permissions.Cluster.REPAIR)
                 .buildSubCommands((cmds, builder) -> {
-                    var sessions = new Sessions(plugin, messageBlocker);
+                    var sessions = new Sessions(plugin);
                     var create = new Create(plugin, sessions);
                     var draw = new Draw(plugin, sessions, configuration, worldGuardAdapter);
                     cmds.add(create);

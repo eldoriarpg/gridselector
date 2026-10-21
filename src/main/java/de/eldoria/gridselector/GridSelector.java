@@ -24,24 +24,13 @@ import de.eldoria.gridselector.adapter.worldguard.WorldGuardAdapter;
 import de.eldoria.gridselector.command.Grid;
 import de.eldoria.gridselector.config.Configuration;
 import de.eldoria.gridselector.config.JacksonConfiguration;
-import de.eldoria.gridselector.config.LegacyConfiguration;
-import de.eldoria.gridselector.config.elements.ClusterWorlds;
-import de.eldoria.gridselector.config.elements.General;
-import de.eldoria.gridselector.config.elements.Highlight;
-import de.eldoria.gridselector.config.elements.cluster.ClusterWorld;
-import de.eldoria.gridselector.config.elements.cluster.GridCluster;
-import de.eldoria.gridselector.config.elements.cluster.Plot;
 import de.eldoria.gridselector.listener.SelectionListener;
 import de.eldoria.gridselector.schematics.GridSchematics;
 import de.eldoria.gridselector.selector.GridProvider;
-import de.eldoria.messageblocker.MessageBlockerAPI;
 import de.eldoria.schematicbrush.SchematicBrushReborn;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.java.JavaPluginLoader;
-import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -55,22 +44,15 @@ public class GridSelector extends EldoPlugin {
         this.configuration = new JacksonConfiguration(this);
     }
 
-    public GridSelector(@NotNull JavaPluginLoader loader, @NotNull PluginDescriptionFile description, @NotNull File dataFolder, @NotNull File file) {
-        super(loader, description, dataFolder, file);
-        this.configuration = new JacksonConfiguration(this);
-    }
-
     @Override
     public void onPluginEnable() throws Throwable {
 
         configuration = new JacksonConfiguration(this);
         PluginBaseConfiguration base = configuration.secondary(PluginBaseConfiguration.KEY);
         if (base.version() == 0) {
-            var legacyConfiguration = new LegacyConfiguration(this);
-            getLogger().log(Level.INFO, "Migrating configuration to jackson.");
-            configuration.main().general(legacyConfiguration.general());
-            configuration.main().highlight(legacyConfiguration.highlight());
-            configuration.replace(JacksonConfiguration.CLUSTER_WORLDS, legacyConfiguration.cluster());
+            if (isPreJacksonInstall()) {
+                throw new IllegalStateException("The configuration was written by a version older than 1.3.0. Update to the latest 1.3 release first, start the server once, then update to this version.");
+            }
             base.version(1);
             base.lastInstalledVersion(this);
             configuration.save();
@@ -86,8 +68,6 @@ public class GridSelector extends EldoPlugin {
                 .prefix("<gold>[GS]")
                 .localizer(iLocalizer)
                 .register();
-
-        var messageBlocker = MessageBlockerAPI.builder(this).addWhitelisted("[GS]").build();
 
         var gridSchematics = new GridSchematics(this);
 
@@ -120,13 +100,25 @@ public class GridSelector extends EldoPlugin {
             LynaUpdateChecker.lyna(LynaUpdateData.builder(this, 8).build()).start();
         }
 
-        registerCommand(new Grid(this, selectionListener, configuration, gridSchematics, messageBlocker, worldGuardAdapter));
+        registerCommand(new Grid(this, selectionListener, configuration, gridSchematics, worldGuardAdapter));
     }
 
     @Override
     public void onPostStart() throws Throwable {
 
-        ILocalizer.getPluginLocalizer(SchematicBrushReborn.getInstance()).registerChild(iLocalizer);
+        ILocalizer.getPluginLocalizer(SchematicBrushReborn.instance()).registerChild(iLocalizer);
+    }
+
+    /**
+     * Checks whether the data folder still holds a configuration in the Bukkit serialization format used before the
+     * switch to Jackson.
+     *
+     * @return true if the main configuration contains Bukkit serialization markers
+     * @throws IOException if the configuration file can not be read
+     */
+    private boolean isPreJacksonInstall() throws IOException {
+        var config = getDataFolder().toPath().resolve("config.yml");
+        return Files.exists(config) && Files.readString(config).contains("==:");
     }
 
     public Configuration configuration() {
@@ -136,11 +128,5 @@ public class GridSelector extends EldoPlugin {
     @Override
     public Level getLogLevel() {
         return configuration.secondary(PluginBaseConfiguration.KEY).logLevel();
-    }
-
-    @Override
-    public List<Class<? extends ConfigurationSerializable>> getConfigSerialization() {
-        return List.of(GridCluster.class, Plot.class, ClusterWorld.class, ClusterWorlds.class, Highlight.class, General.class,
-                de.eldoria.gridselector.selector.Grid.class);
     }
 }

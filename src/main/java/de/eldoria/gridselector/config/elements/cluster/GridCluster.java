@@ -14,23 +14,16 @@ import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BlockState;
 import de.eldoria.eldoutilities.localization.MessageComposer;
-import de.eldoria.eldoutilities.serialization.SerializationUtil;
 import de.eldoria.eldoutilities.utils.EMath;
-import de.eldoria.eldoutilities.utils.EnumUtil;
 import de.eldoria.gridselector.util.Colors;
 import org.bukkit.Material;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-@SerializableAs("gridSelectorGridCluster")
-public class GridCluster implements ConfigurationSerializable {
+public class GridCluster {
     private int id = -1;
     private int minHeight = 0;
     private Plot plot;
@@ -41,20 +34,6 @@ public class GridCluster implements ConfigurationSerializable {
     private Material borderMaterial = Material.RED_CONCRETE;
     private Material offsetMaterial = Material.LIGHT_GRAY_CONCRETE;
     private Material floorMaterial = Material.WHITE_CONCRETE;
-
-    public GridCluster(Map<String, Object> objectMap) {
-        var map = SerializationUtil.mapOf(objectMap);
-        id = map.getValue("id");
-        minHeight = map.getValue("minHeight");
-        plot = map.getValue("plot");
-        elementSize = map.getValue("elementSize");
-        offset = map.getValue("offset");
-        rows = map.getValue("rows");
-        columns = map.getValue("columns");
-        borderMaterial = map.getValue("borderMaterial", e -> EnumUtil.parse(e, Material.class).orElse(borderMaterial));
-        offsetMaterial = map.getValue("offsetMaterial", e -> EnumUtil.parse(e, Material.class).orElse(offsetMaterial));
-        floorMaterial = map.getValue("floorMaterial", e -> EnumUtil.parse(e, Material.class).orElse(floorMaterial));
-    }
 
     public GridCluster() {
     }
@@ -74,23 +53,6 @@ public class GridCluster implements ConfigurationSerializable {
 
     public static Builder builder(Location center, Direction direction) {
         return new Builder(center, direction);
-    }
-
-    @Override
-    @NotNull
-    public Map<String, Object> serialize() {
-        return SerializationUtil.newBuilder()
-                                .add("id", id)
-                                .add("minHeight", minHeight)
-                                .add("plot", plot)
-                                .add("elementSize", elementSize)
-                                .add("offset", offset)
-                                .add("rows", rows)
-                                .add("columns", columns)
-                                .add("borderMaterial", borderMaterial)
-                                .add("offsetMaterial", offsetMaterial)
-                                .add("floorMaterial", floorMaterial)
-                                .build();
     }
 
     /**

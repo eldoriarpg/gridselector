@@ -1,0 +1,21 @@
+clusterWorlds:
+  "46be765d-9464-4335-9a08-d2377c5e187f":
+    uid: "46be765d-9464-4335-9a08-d2377c5e187f"
+    cluster:
+    - id: 1
+      minHeight: 63
+      plot:
+        min:
+          x: 74
+          z: -27
+        max:
+          x: 92
+          z: -9
+      elementSize: 7
+      offset: 1
+      rows: 2
+      columns: 2
+      borderMaterial: "RED_CONCRETE"
+      offsetMaterial: "LIGHT_GRAY_CONCRETE"
+      floorMaterial: "WHITE_CONCRETE"
+    id: 2

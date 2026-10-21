@@ -16,14 +16,13 @@ import de.eldoria.gridselector.command.grid.Select;
 import de.eldoria.gridselector.config.JacksonConfiguration;
 import de.eldoria.gridselector.listener.SelectionListener;
 import de.eldoria.gridselector.schematics.GridSchematics;
-import de.eldoria.messageblocker.blocker.MessageBlocker;
 
 public class Grid extends AdvancedCommand {
     public Grid(GridSelector plugin, SelectionListener selectionListener, JacksonConfiguration config,
-                GridSchematics gridSchematics, MessageBlocker messageBlocker, IWorldGuardAdapter worldGuardAdapter) {
+                GridSchematics gridSchematics, IWorldGuardAdapter worldGuardAdapter) {
         super(plugin, CommandMeta.builder("schematicbrushgrid")
                 .buildSubCommands((advancedCommands, commandMetaBuilder) -> {
-                    var cluster = new Cluster(plugin, messageBlocker, config, worldGuardAdapter);
+                    var cluster = new Cluster(plugin, config, worldGuardAdapter);
                     commandMetaBuilder.withDefaultCommand(cluster);
                     advancedCommands.add(cluster);
                     advancedCommands.add(new Select(plugin, selectionListener));
