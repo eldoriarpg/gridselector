@@ -1,0 +1,57 @@
+/*
+ *     SPDX-License-Identifier: AGPL-3.0-only
+ *
+ *     Copyright (C) 2021 EldoriaRPG Team and Contributor
+ */
+
+package de.eldoria.gridselector.command.grid.cluster;
+
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.util.Direction;
+import de.eldoria.eldoutilities.commands.command.util.CommandAssertions;
+import de.eldoria.eldoutilities.commands.exceptions.CommandException;
+import de.eldoria.eldoutilities.localization.MessageComposer;
+import de.eldoria.eldoutilities.messages.MessageSender;
+import de.eldoria.gridselector.config.elements.cluster.GridCluster;
+import de.eldoria.gridselector.util.Colors;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+public class Sessions {
+    private final Map<UUID, GridCluster.Builder> sessions = new HashMap<>();
+    private final MessageSender messageSender;
+
+    public Sessions(Plugin plugin) {
+        this.messageSender = MessageSender.getPluginMessageSender(plugin);
+    }
+
+    public GridCluster.Builder getOrCreateSession(Player player) throws CommandException {
+        if (!sessions.containsKey(player.getUniqueId())) {
+            var direction = Direction.findClosest(BukkitAdapter.adapt(player).getLocation().getDirection(), Direction.Flag.CARDINAL);
+            CommandAssertions.isTrue(direction != null, "Invalid direction. Please look in the requested direction");
+            var builder = GridCluster.builder(BukkitAdapter.adapt(player.getLocation()), direction);
+            sessions.put(player.getUniqueId(), builder);
+        }
+        return sessions.get(player.getUniqueId());
+    }
+
+    public void showBuilder(Player player) throws CommandException {
+        var session = getOrCreateSession(player);
+        var composer = MessageComposer.create()
+                                      .text(session.asComponent());
+        composer.newLine()
+                .text("<%s><click:run_command:'/sbrg cluster draw'>[Create]</click>", Colors.ADD)
+                .space()
+                .text("<click:run_command:'/sbrg cluster close'><%s>[x]</click>", Colors.REMOVE);
+        composer.prependLines(20);
+        messageSender.sendMessage(player, composer.build());
+    }
+
+    public void close(Player player) {
+        sessions.remove(player.getUniqueId());
+    }
+}
