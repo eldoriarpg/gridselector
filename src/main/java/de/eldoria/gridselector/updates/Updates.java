@@ -28,12 +28,6 @@ public final class Updates {
      */
     public static final String PERMISSION = "gridselector.updates";
 
-    /**
-     * Lyna's product id of GridSelector.
-     */
-    static final int PRODUCT = 8;
-
-    static final String DOWNLOAD = "https://github.com/eldoriarpg/gridselector/releases/latest";
     private final Plugin plugin;
     private final JacksonConfiguration configuration;
     private @Nullable Updater<LynaUpdateResponse, LynaUpdateData> updater;
@@ -75,13 +69,12 @@ public final class Updates {
     }
 
     private LynaUpdateData data(UpdateSettings settings) {
-        return LynaUpdateData.builder(plugin, PRODUCT)
+        return LynaUpdateData.builder(plugin)
                 .notifyPermission(PERMISSION)
                 .notifyUpdate(settings.notice())
                 .autoUpdate(settings.autoUpdate())
                 .askForAutoUpdate(settings.askForAutoUpdate())
                 .autoUpdateHook(this::decided)
-                .updateUrl(DOWNLOAD)
                 .build();
     }
 

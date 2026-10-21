@@ -73,7 +73,9 @@ dependencies {
 publishData {
     eldoNexus(dev = false)
     component = "shadow"
-    buildData()
+    buildData {
+        put("lynaProduct", "8")
+    }
 }
 
 val shadebase = "de.eldoria.schematicbrush.libs."
