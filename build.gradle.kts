@@ -1,4 +1,5 @@
 import net.minecrell.pluginyml.bukkit.BukkitPluginDescription.Permission.Default.FALSE
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription.Permission.Default.OP
 
 plugins {
     java
@@ -155,6 +156,10 @@ bukkit {
         }
         register("gridselector.cluster.repair") {
             default = FALSE
+        }
+        register("gridselector.updates") {
+            description = "Hear about new versions on join and download them"
+            default = OP
         }
     }
 }
