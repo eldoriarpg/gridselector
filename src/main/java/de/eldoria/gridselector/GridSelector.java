@@ -55,8 +55,8 @@ public class GridSelector extends EldoPlugin {
             }
             base.version(1);
             base.lastInstalledVersion(this);
-            configuration.save();
         }
+        writeConfigs(configuration);
 
         var sbr = SchematicBrushReborn.instance();
 
@@ -132,5 +132,16 @@ public class GridSelector extends EldoPlugin {
     @Override
     public Level getLogLevel() {
         return configuration.secondary(PluginBaseConfiguration.KEY).logLevel();
+    }
+
+    /**
+     * Writes the configuration files back, so keys added by this version appear in existing files. Only loaded files
+     * are saved, so the main configuration is loaded first.
+     *
+     * @param configuration configuration of the plugin
+     */
+    private static void writeConfigs(JacksonConfiguration configuration) {
+        configuration.main();
+        configuration.save();
     }
 }
