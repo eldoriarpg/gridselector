@@ -18,7 +18,7 @@ eldoutil-jackson = { module = "de.eldoria.util:jackson-configuration", version.r
 eldoutil-updater = { module = "de.eldoria.util:updater", version.ref = "utilities" }
 ocular = "dev.chojo:ocular:2.3.1"
 
-schematicbrushreborn-api = "de.eldoria:schematicbrushreborn-api:3.0.0-SNAPSHOT"
+schematicbrushreborn-api = "de.eldoria:schematicbrushreborn-api:3.0.1"
 jetbrains-annotations = "org.jetbrains:annotations:26.1.0"
 
 paper = { module = "io.papermc.paper:paper-api", version.ref = "paper" }
