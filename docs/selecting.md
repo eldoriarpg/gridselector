@@ -33,8 +33,9 @@ that was bound to it before. Binding it needs `gridselector.select`. Using it ne
 
 ### Save the selection
 
-**Left click into the air** to save all selected plots. You see "Selections saved. Use the grid Selector to use
-them." The markers go away and you can start a new selection.
+**Left click into the air** to save all selected plots. The markers go away and you can start a new selection.
+Once the schematics are written, you see "Selections saved. Use the grid Selector to use them." If they could not be
+written, you see "Could not save the selection." and the console has the details.
 
 - The click has to go into the air. Left clicking a block does not save.
 - If nothing is selected, you get "You dont have any regions selected".
@@ -120,7 +121,6 @@ UUID belongs to you, so only your selectors find the files inside it.
 If you change `schematicPath` in the [configuration](./configuration.md#general), make sure Schematic Brush Reborn
 reads that folder too. See [Configuration](/schematic-brush-reborn/configuration).
 
-:::warning
-Without `-f`, the export stops at the first file that already exists, with the message "Name already in use."
-Files before it may already be copied. Pick a new name or add `-f`.
-:::
+Without `-f`, nothing is exported if any of the files already exists. You get the message "Name already in use."
+Pick a new name or add `-f`. If you have not saved a selection yet, you get "You have no saved selection to
+export."
