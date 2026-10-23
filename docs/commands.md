@@ -16,6 +16,7 @@ All commands can only be used by players, not from the console.
 | `/sbrg cluster create` | `gridselector.cluster.create` | Open the cluster builder. |
 | `/sbrg cluster repair [id]` | `gridselector.cluster.repair` | Paint a cluster again. |
 | `/sbrg cluster remove [id]` | `gridselector.cluster.remove` | Forget a cluster. |
+| `/sbrg cluster list` | any `gridselector.cluster` permission | List the clusters of your world with their IDs. |
 
 `/sbrg` and `/sbrg cluster` on their own open the cluster builder, like `/sbrg cluster create`.
 
@@ -42,8 +43,10 @@ See [Export](./selecting.md#export) for where the files go.
 | `/sbrg cluster repair <id>` | Paint the cluster with this ID in your world again. |
 | `/sbrg cluster remove` | Remove the cluster you stand in. The blocks stay. |
 | `/sbrg cluster remove <id>` | Remove the cluster with this ID in your world. The blocks stay. |
+| `/sbrg cluster list` | List the clusters of your world: ID, corners, rows × columns and size. |
 
-See [Cluster IDs](./grid-clusters.md#cluster-ids) for how to find an ID.
+See [Cluster IDs](./grid-clusters.md#cluster-ids) for how to find an ID. `repair` and `remove` tab complete the IDs
+of your world.
 
 ### Commands the builder uses
 

@@ -83,7 +83,7 @@ dropped.
 ## clusterWorlds.yml
 
 This file holds every [grid cluster](./grid-clusters.md), grouped by the UUID of its world. You do not need to edit
-it. It is useful to look up the ID of a cluster.
+it. To look up the ID of a cluster, use [`/sbrg cluster list`](./grid-clusters.md#cluster-ids).
 
 ```yaml
 clusterWorlds:

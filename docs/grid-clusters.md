@@ -146,10 +146,15 @@ with WorldEdit if you want it gone.
 
 Each cluster gets a number when it is created. The numbers start at 1 in each world and go up.
 
-There is no command that lists clusters. You find the ID of a cluster in two places:
+You see the ID when you create the cluster. Later, `/sbrg cluster list` shows every cluster of your world with its ID,
+corners, rows, columns and size:
 
-- in the "Cluster overlaps with cluster" message,
-- in `plugins/GridSelector/clusterWorlds.yml`, see [Configuration](./configuration.md#clusterworldsyml).
+```text
+Clusters in this world
+1: 74|-27 to 92|-9, 2 × 2 plots of size 7
+```
+
+`/sbrg cluster repair` and `/sbrg cluster remove` also tab complete the IDs of your world.
 
 Most of the time you do not need it. Just stand inside the cluster and leave out the ID.
 

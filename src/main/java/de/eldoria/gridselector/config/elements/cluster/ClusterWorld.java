@@ -98,6 +98,16 @@ public class ClusterWorld {
     }
 
     /**
+     * The IDs of the clusters that start with the text, for tab completion.
+     *
+     * @param prefix the text typed so far
+     * @return matching cluster IDs
+     */
+    public List<String> matchingIds(String prefix) {
+        return cluster.stream().map(c -> String.valueOf(c.id())).filter(id -> id.startsWith(prefix)).toList();
+    }
+
+    /**
      * Immutable list of all clusters
      *
      * @return immutable cluster list

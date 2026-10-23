@@ -18,7 +18,9 @@ import de.eldoria.gridselector.util.Permissions;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Optional;
 
 public class Repair extends AdvancedCommand implements IPlayerTabExecutor {
@@ -42,11 +44,16 @@ public class Repair extends AdvancedCommand implements IPlayerTabExecutor {
             CommandAssertions.isTrue(cluster.isPresent(), "You are not inside a cluster");
         } else {
             cluster = configuration.cluster().world(player.getWorld()).getCluster(args.asInt(0));
-            CommandAssertions.isTrue(cluster.isPresent(), "Unkown cluster id");
+            CommandAssertions.isTrue(cluster.isPresent(), "Unknown cluster id");
         }
 
         if (draw.draw(cluster.get(), player.getWorld(), player)) {
             messageSender().sendMessage(player, "Cluster redrawn.");
         }
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+        return configuration.cluster().world(player.getWorld()).matchingIds(args.asString(0));
     }
 }

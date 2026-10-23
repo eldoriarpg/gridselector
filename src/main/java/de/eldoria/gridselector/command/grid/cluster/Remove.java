@@ -45,7 +45,7 @@ public class Remove extends AdvancedCommand implements IPlayerTabExecutor {
             CommandAssertions.isTrue(cluster.isPresent(), "You are not inside a cluster");
         } else {
             cluster = configuration.cluster().world(player.getWorld()).getCluster(args.asInt(0));
-            CommandAssertions.isTrue(cluster.isPresent(), "Unkown cluster id");
+            CommandAssertions.isTrue(cluster.isPresent(), "Unknown cluster id");
         }
 
         worldGuardAdapter.unregister(cluster.get(), player.getWorld());
@@ -57,6 +57,6 @@ public class Remove extends AdvancedCommand implements IPlayerTabExecutor {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
-        return IPlayerTabExecutor.super.onTabComplete(player, alias, args);
+        return configuration.cluster().world(player.getWorld()).matchingIds(args.asString(0));
     }
 }
