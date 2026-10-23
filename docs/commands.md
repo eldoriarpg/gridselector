@@ -19,10 +19,6 @@ All commands can only be used by players, not from the console.
 
 `/sbrg` and `/sbrg cluster` on their own open the cluster builder, like `/sbrg cluster create`.
 
-:::note
-The base command itself needs `gridselector.use`. Give it to everyone who should run any `/sbrg` command.
-:::
-
 ### export
 
 ```text
@@ -76,19 +72,16 @@ The settings are explained on [Grid clusters](./grid-clusters.md#settings).
 
 | Permission | Default | What it allows |
 |---|---|---|
-| `gridselector.use` | operators | Using the `/sbrg` command at all. |
 | `gridselector.select` | operators | `/sbrg select`, and the Grid selector in brushes. |
-| `gridselector.export` | nobody | `/sbrg export`, into your own folder. |
-| `gridselector.export.global` | nobody | `/sbrg export -g`, into the shared folder. Needs `gridselector.export` too. |
-| `gridselector.cluster.create` | nobody | Laying out new clusters with the builder. |
-| `gridselector.cluster.repair` | nobody | `/sbrg cluster repair` |
-| `gridselector.cluster.remove` | nobody | `/sbrg cluster remove` |
+| `gridselector.export` | operators | `/sbrg export`, into your own folder. |
+| `gridselector.export.global` | operators | `/sbrg export -g`, into the shared folder. Needs `gridselector.export` too. |
+| `gridselector.cluster.create` | operators | Laying out new clusters with the builder. |
+| `gridselector.cluster.repair` | operators | `/sbrg cluster repair` |
+| `gridselector.cluster.remove` | operators | `/sbrg cluster remove` |
 | `gridselector.updates` | operators | Hearing about new versions on join and downloading them. |
-
-"Nobody" means that operators do not have the permission either. Grant it with your permission plugin.
 
 Grid Selector also relies on Schematic Brush Reborn's permissions. Using the selection tool and the brushes needs
 `schematicbrush.brush.use`. See the [permission reference](/schematic-brush-reborn/reference/permissions).
 
-A good start for builders is `gridselector.use`, `gridselector.select` and `gridselector.export`, together with the
+A good start for builders is `gridselector.select` and `gridselector.export`, together with the
 builder permissions of Schematic Brush Reborn.
