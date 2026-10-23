@@ -100,7 +100,6 @@ tasks {
     }
 
     test {
-        dependsOn(spotlessCheck)
         useJUnitPlatform()
         testLogging {
             events("passed", "skipped", "failed")
