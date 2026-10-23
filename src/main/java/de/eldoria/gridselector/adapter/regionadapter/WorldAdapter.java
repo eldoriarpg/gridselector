@@ -26,9 +26,6 @@ public class WorldAdapter {
      */
     public Optional<RegionResult> getRegion(Location location) {
         var loc = BukkitAdapter.adapt(location);
-        return adapters.stream()
-                .filter(a -> a.isApplicable(loc))
-                .findFirst()
-                .flatMap(adaper -> adaper.getRegion(loc));
+        return adapters.stream().filter(a -> a.isApplicable(loc)).findFirst().flatMap(adaper -> adaper.getRegion(loc));
     }
 }

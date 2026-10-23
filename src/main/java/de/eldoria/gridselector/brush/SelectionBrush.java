@@ -33,7 +33,8 @@ public class SelectionBrush implements Brush {
     private final WorldAdapter worldAdapter;
     private final Configuration configuration;
 
-    public SelectionBrush(MessageSender messageSender, Player owner, WorldAdapter worldAdapter, Configuration configuration) {
+    public SelectionBrush(
+            MessageSender messageSender, Player owner, WorldAdapter worldAdapter, Configuration configuration) {
         this.messageSender = messageSender;
         this.owner = owner;
         this.worldAdapter = worldAdapter;
@@ -41,8 +42,10 @@ public class SelectionBrush implements Brush {
     }
 
     @Override
-    public void build(EditSession editSession, BlockVector3 position, Pattern pattern, double size) throws MaxChangedBlocksException {
-        var optRegion = worldAdapter.getRegion(new com.sk89q.worldedit.util.Location(editSession.getWorld(), position.toVector3()));
+    public void build(EditSession editSession, BlockVector3 position, Pattern pattern, double size)
+            throws MaxChangedBlocksException {
+        var optRegion = worldAdapter.getRegion(
+                new com.sk89q.worldedit.util.Location(editSession.getWorld(), position.toVector3()));
         if (optRegion.isEmpty()) {
             messageSender.sendError(owner, "No grid or plot present.");
             return;
@@ -67,11 +70,9 @@ public class SelectionBrush implements Brush {
         var zMin = reduceSouthNorthSide(editSession, yMin, yMax, region, true);
         var zMax = reduceSouthNorthSide(editSession, yMin, yMax, region, false);
 
-        var schemRegion = new CuboidRegion(editSession.getWorld(),
-                BlockVector3.at(xMin, yMin, zMin),
-                BlockVector3.at(xMax, yMax, zMax));
+        var schemRegion = new CuboidRegion(
+                editSession.getWorld(), BlockVector3.at(xMin, yMin, zMin), BlockVector3.at(xMax, yMax, zMax));
         var marker = new MarkerResult(result.identifier(), schemRegion, region, yMin);
-
 
         regions.put(result.identifier(), marker);
 
@@ -115,12 +116,12 @@ public class SelectionBrush implements Brush {
         return region.getMaximumY();
     }
 
-    private boolean checkFlat(EditSession session, int y, BlockVector3 min, BlockVector3 max, Predicate<Material> check) {
+    private boolean checkFlat(
+            EditSession session, int y, BlockVector3 min, BlockVector3 max, Predicate<Material> check) {
         for (var x = min.x(); x <= max.x(); x++) {
             for (var z = min.z(); z <= max.z(); z++) {
                 var material = session.getBlock(BlockVector3.at(x, y, z)).getBlockType();
-                if (check.test(BukkitAdapter.adapt(material)))
-                    return true;
+                if (check.test(BukkitAdapter.adapt(material))) return true;
             }
         }
         return false;
@@ -178,7 +179,6 @@ public class SelectionBrush implements Brush {
             var loc = borderBlock.toLocation(owner.getWorld());
             owner.sendBlockChange(loc, world.getBlockAt(loc).getBlockData());
         }
-
     }
 
     public void clearRegions() {

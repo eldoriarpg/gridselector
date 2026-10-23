@@ -20,15 +20,18 @@ public class Close extends AdvancedCommand implements IPlayerTabExecutor {
     private final Sessions sessions;
 
     public Close(Plugin plugin, Sessions sessions) {
-        super(plugin, CommandMeta.builder("close")
-                .withPermission(Permissions.Cluster.CREATE)
-                .hidden()
-                .build());
+        super(
+                plugin,
+                CommandMeta.builder("close")
+                        .withPermission(Permissions.Cluster.CREATE)
+                        .hidden()
+                        .build());
         this.sessions = sessions;
     }
 
     @Override
-    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args)
+            throws CommandException {
         sessions.close(player);
     }
 }

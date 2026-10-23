@@ -25,21 +25,25 @@ public class Rows extends AdvancedCommand implements IPlayerTabExecutor {
     private final Sessions sessions;
 
     public Rows(Plugin plugin, Sessions sessions) {
-        super(plugin, CommandMeta.builder("rows")
-                .addUnlocalizedArgument("amount", true)
-                .build());
+        super(
+                plugin,
+                CommandMeta.builder("rows")
+                        .addUnlocalizedArgument("amount", true)
+                        .build());
         this.sessions = sessions;
     }
 
     @Override
-    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args)
+            throws CommandException {
         CommandAssertions.min(args.asInt(0), 1);
         sessions.getOrCreateSession(player).rows(args.asInt(0));
         sessions.showBuilder(player);
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+    public @Nullable List<String> onTabComplete(@NotNull Player player, @NotNull String alias, @NotNull Arguments args)
+            throws CommandException {
         return Completion.completeMinInt(args.asString(0), 1);
     }
 }

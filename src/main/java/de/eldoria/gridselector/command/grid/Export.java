@@ -31,10 +31,12 @@ public class Export extends AdvancedCommand implements IPlayerTabExecutor {
     private final GridSchematics gridSchematics;
 
     public Export(GridSelector plugin, GridSchematics gridSchematics) {
-        super(plugin, CommandMeta.builder("export")
-                .addArgument("name", true)
-                .withPermission(Permissions.Save.EXPORT)
-                .build());
+        super(
+                plugin,
+                CommandMeta.builder("export")
+                        .addArgument("name", true)
+                        .withPermission(Permissions.Save.EXPORT)
+                        .build());
         this.plugin = plugin;
         this.gridSchematics = gridSchematics;
     }
@@ -43,13 +45,17 @@ public class Export extends AdvancedCommand implements IPlayerTabExecutor {
      * Copies the player's newest saved selection. Without {@code -f} nothing is copied if any target file exists.
      */
     @Override
-    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args)
+            throws CommandException {
         var schematics = gridSchematics.getSchematicsByName(player, null);
         CommandAssertions.isFalse(schematics.isEmpty(), "You have no saved selection to export.");
 
         Path basePath;
         if (!args.flags().has("g")) {
-            basePath = plugin.configuration().general().schematicPath().resolve(Path.of(player.getUniqueId().toString()));
+            basePath = plugin.configuration()
+                    .general()
+                    .schematicPath()
+                    .resolve(Path.of(player.getUniqueId().toString()));
         } else {
             CommandAssertions.permission(player, false, Permissions.Save.GLOBAL);
             basePath = plugin.configuration().general().schematicPath();
@@ -67,7 +73,8 @@ public class Export extends AdvancedCommand implements IPlayerTabExecutor {
         var overwrite = args.flags().has("f");
         Map<Path, Path> targets = schematics.stream()
                 .map(schematic -> schematic.getFile().toPath())
-                .collect(Collectors.toMap(source -> source, source -> basePath.resolve(name + "_" + source.getFileName())));
+                .collect(Collectors.toMap(
+                        source -> source, source -> basePath.resolve(name + "_" + source.getFileName())));
 
         plugin.getScheduler().runTaskAsynchronously(plugin, () -> {
             if (!overwrite && targets.values().stream().anyMatch(Files::exists)) {

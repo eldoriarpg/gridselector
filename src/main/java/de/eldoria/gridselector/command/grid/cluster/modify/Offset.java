@@ -25,21 +25,25 @@ public class Offset extends AdvancedCommand implements IPlayerTabExecutor {
     private final Sessions sessions;
 
     public Offset(Plugin plugin, Sessions sessions) {
-        super(plugin, CommandMeta.builder("offset")
-                .addUnlocalizedArgument("amount", true)
-                .build());
+        super(
+                plugin,
+                CommandMeta.builder("offset")
+                        .addUnlocalizedArgument("amount", true)
+                        .build());
         this.sessions = sessions;
     }
 
     @Override
-    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args)
+            throws CommandException {
         CommandAssertions.min(args.asInt(0), 0);
         sessions.getOrCreateSession(player).offset(args.asInt(0));
         sessions.showBuilder(player);
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+    public @Nullable List<String> onTabComplete(@NotNull Player player, @NotNull String alias, @NotNull Arguments args)
+            throws CommandException {
         return Completion.completeMinInt(args.asString(0), 0);
     }
 }

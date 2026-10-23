@@ -35,7 +35,10 @@ class JacksonConfigurationTest {
             Files.copy(in, dataFolder.resolve("clusterWorlds.yml"));
         }
 
-        var clusterWorld = configurations().secondary(JacksonConfiguration.CLUSTER_WORLDS).clusterWorlds().get(WORLD);
+        var clusterWorld = configurations()
+                .secondary(JacksonConfiguration.CLUSTER_WORLDS)
+                .clusterWorlds()
+                .get(WORLD);
 
         Assertions.assertNotNull(clusterWorld);
         Assertions.assertEquals(WORLD, clusterWorld.uid());
@@ -55,8 +58,12 @@ class JacksonConfigurationTest {
         written.secondary(JacksonConfiguration.CLUSTER_WORLDS);
         written.save();
 
-        var cluster = configurations().secondary(JacksonConfiguration.CLUSTER_WORLDS).clusterWorlds().get(WORLD)
-                                      .getCluster(1).orElseThrow();
+        var cluster = configurations()
+                .secondary(JacksonConfiguration.CLUSTER_WORLDS)
+                .clusterWorlds()
+                .get(WORLD)
+                .getCluster(1)
+                .orElseThrow();
 
         Assertions.assertEquals(Plot.of(74, -27, 92, -9), cluster.plot());
         Assertions.assertEquals(Material.WHITE_CONCRETE, cluster.floorMaterial());
@@ -96,7 +103,11 @@ class JacksonConfigurationTest {
     }
 
     private Configurations<ConfigFile> configurations() {
-        return new Configurations<>(dataFolder, Key.builder(Path.of("config.yml"), ConfigFile::new).build(),
-                List.of(new YamlDataFormat()), getClass().getClassLoader(), null);
+        return new Configurations<>(
+                dataFolder,
+                Key.builder(Path.of("config.yml"), ConfigFile::new).build(),
+                List.of(new YamlDataFormat()),
+                getClass().getClassLoader(),
+                null);
     }
 }

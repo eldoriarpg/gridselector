@@ -32,10 +32,12 @@ public class Draw extends AdvancedCommand implements IPlayerTabExecutor {
     private final WorldEdit worldEdit;
 
     public Draw(Plugin plugin, Sessions sessions, Configuration configuration, IWorldGuardAdapter worldGuardAdapter) {
-        super(plugin, CommandMeta.builder("draw")
-                .withPermission(Permissions.Cluster.CREATE)
-                .hidden()
-                .build());
+        super(
+                plugin,
+                CommandMeta.builder("draw")
+                        .withPermission(Permissions.Cluster.CREATE)
+                        .hidden()
+                        .build());
         this.sessions = sessions;
         this.configuration = configuration;
         this.worldGuardAdapter = worldGuardAdapter;
@@ -52,7 +54,11 @@ public class Draw extends AdvancedCommand implements IPlayerTabExecutor {
      */
     public boolean draw(GridCluster cluster, World world, Player player) {
         var actor = BukkitAdapter.adapt(player);
-        var session = worldEdit.newEditSessionBuilder().actor(actor).world(BukkitAdapter.adapt(world)).build();
+        var session = worldEdit
+                .newEditSessionBuilder()
+                .actor(actor)
+                .world(BukkitAdapter.adapt(world))
+                .build();
         var painted = true;
         try (session) {
             drawRegions(cluster, session, cluster.minHeight());
@@ -61,7 +67,10 @@ public class Draw extends AdvancedCommand implements IPlayerTabExecutor {
         }
         worldEdit.getSessionManager().get(actor).remember(session);
         if (!painted) {
-            messageSender().sendError(player, "Grid exceeds maximum world edit size. Use //undo to revert the partly painted grid.");
+            messageSender()
+                    .sendError(
+                            player,
+                            "Grid exceeds maximum world edit size. Use //undo to revert the partly painted grid.");
             return false;
         }
         messageSender().sendMessage(player, "Painted grid. Changed " + session.size() + " blocks.");
@@ -69,10 +78,16 @@ public class Draw extends AdvancedCommand implements IPlayerTabExecutor {
     }
 
     private void drawRegions(GridCluster cluster, EditSession session, int y) throws MaxChangedBlocksException {
-        session.setBlocks((Region) cluster.plot().as2DRegion(y), BukkitAdapter.adapt(cluster.offsetMaterial().createBlockData()));
+        session.setBlocks(
+                (Region) cluster.plot().as2DRegion(y),
+                BukkitAdapter.adapt(cluster.offsetMaterial().createBlockData()));
         for (var plot : cluster.getRegions()) {
-            session.setBlocks((Region) plot.as2DRegion(y), BukkitAdapter.adapt(cluster.borderMaterial().createBlockData()));
-            session.setBlocks((Region) plot.borderLessPlot().as2DRegion(y), BukkitAdapter.adapt(cluster.floorMaterial().createBlockData()));
+            session.setBlocks(
+                    (Region) plot.as2DRegion(y),
+                    BukkitAdapter.adapt(cluster.borderMaterial().createBlockData()));
+            session.setBlocks(
+                    (Region) plot.borderLessPlot().as2DRegion(y),
+                    BukkitAdapter.adapt(cluster.floorMaterial().createBlockData()));
         }
     }
 
@@ -81,7 +96,8 @@ public class Draw extends AdvancedCommand implements IPlayerTabExecutor {
      * start. The cluster is only registered once it is fully painted.
      */
     @Override
-    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args)
+            throws CommandException {
         var builder = sessions.getOrCreateSession(player);
         var world = BukkitAdapter.adapt(builder.world());
         var start = builder.center();

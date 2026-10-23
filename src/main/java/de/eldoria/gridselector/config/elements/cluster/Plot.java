@@ -7,7 +7,6 @@
 package de.eldoria.gridselector.config.elements.cluster;
 
 import com.sk89q.worldedit.math.BlockVector2;
-import com.sk89q.worldedit.math.Vector2;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.world.World;
 
@@ -17,8 +16,7 @@ public class Plot {
     private BlockVector2 min;
     private BlockVector2 max;
 
-    public Plot() {
-    }
+    public Plot() {}
 
     private Plot(BlockVector2 min, BlockVector2 max) {
         this.min = BlockVector2.at(Math.min(min.x(), max.x()), Math.min(min.z(), max.z()));
@@ -67,8 +65,7 @@ public class Plot {
      * @return true if the vector is part of the plot.
      */
     public boolean contains(BlockVector2 vector2) {
-        return min.x() <= vector2.x() && vector2.x() <= max.x()
-               && min.z() <= vector2.z() && vector2.z() <= max.z();
+        return min.x() <= vector2.x() && vector2.x() <= max.x() && min.z() <= vector2.z() && vector2.z() <= max.z();
     }
 
     public BlockVector2 min() {
@@ -87,8 +84,10 @@ public class Plot {
      * @return true if they overlap
      */
     public boolean overlaps(Plot plot) {
-        return min.x() <= plot.max().x() && max.x() >= plot.min().x()
-               && min.z() <= plot.max().z() && max.z() >= plot.min().z();
+        return min.x() <= plot.max().x()
+                && max.x() >= plot.min().x()
+                && min.z() <= plot.max().z()
+                && max.z() >= plot.min().z();
     }
 
     /**
@@ -106,10 +105,7 @@ public class Plot {
 
     @Override
     public String toString() {
-        return "Plot{" +
-               "min=" + min +
-               ", max=" + max +
-               '}';
+        return "Plot{" + "min=" + min + ", max=" + max + '}';
     }
 
     @Override

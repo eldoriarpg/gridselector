@@ -27,7 +27,8 @@ public class WorldGuardAdapter implements IWorldGuardAdapter {
     public void register(GridCluster cluster, World world, Player owner) {
         if (configuration.general().isCreateWorldGuardRegions() && worldGuard != null) {
             var weWorld = BukkitAdapter.adapt(world);
-            var region = new ProtectedCuboidRegion(cluster.plot().id(),
+            var region = new ProtectedCuboidRegion(
+                    cluster.plot().id(),
                     cluster.plot().min().toBlockVector3(weWorld.getMinY()),
                     cluster.plot().max().toBlockVector3(weWorld.getMaxY()));
             region.getOwners().addPlayer(owner.getUniqueId());

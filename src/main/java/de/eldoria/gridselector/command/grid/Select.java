@@ -21,15 +21,15 @@ public class Select extends AdvancedCommand implements IPlayerTabExecutor {
     private final SelectionListener selectionListener;
 
     public Select(Plugin plugin, SelectionListener selectionListener) {
-        super(plugin, CommandMeta
-                .builder("select")
-                .withPermission(Permissions.USE)
-                .build());
+        super(
+                plugin,
+                CommandMeta.builder("select").withPermission(Permissions.USE).build());
         this.selectionListener = selectionListener;
     }
 
     @Override
-    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args)
+            throws CommandException {
         selectionListener.register(player);
     }
 }

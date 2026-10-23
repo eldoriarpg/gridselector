@@ -60,14 +60,15 @@ public class GridSchematics implements SchematicCache {
     public CompletableFuture<Void> saveRegions(Player player, List<CuboidRegion> regions) {
         var playerDirectory = getDirectory(player, getNextDirectoryId(player));
         return CompletableFuture.runAsync(() -> {
-            var num = 0;
-            for (var region : regions) {
-                saveSchematic(player, playerDirectory, num, region);
-                num++;
-            }
-        }).whenComplete((result, error) -> {
-            if (error != null) plugin.getLogger().log(Level.SEVERE, "Could not save player schematic.", error);
-        });
+                    var num = 0;
+                    for (var region : regions) {
+                        saveSchematic(player, playerDirectory, num, region);
+                        num++;
+                    }
+                })
+                .whenComplete((result, error) -> {
+                    if (error != null) plugin.getLogger().log(Level.SEVERE, "Could not save player schematic.", error);
+                });
     }
 
     private void saveSchematic(Player player, Path playerDirectory, int num, Region region) {
@@ -89,8 +90,8 @@ public class GridSchematics implements SchematicCache {
     }
 
     private Path getDirectory(UUID uuid, int id) {
-        var schematics = plugin.getDataFolder().toPath()
-                               .resolve(Path.of("schematics", uuid.toString(), String.valueOf(id)));
+        var schematics =
+                plugin.getDataFolder().toPath().resolve(Path.of("schematics", uuid.toString(), String.valueOf(id)));
         try {
             Files.createDirectories(schematics);
         } catch (IOException e) {
@@ -114,9 +115,7 @@ public class GridSchematics implements SchematicCache {
 
     private void clearSchematics() {
         try (var stream = Files.walk(plugin.getDataFolder().toPath().resolve(Path.of("schematics")))) {
-            stream.sorted(Comparator.reverseOrder())
-                  .map(Path::toFile)
-                  .forEach(File::delete);
+            stream.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
         } catch (NoSuchFileException | FileNotFoundException e) {
             // ignore
         } catch (IOException e) {
@@ -133,8 +132,8 @@ public class GridSchematics implements SchematicCache {
     public Set<Schematic> getSchematicsByName(Player player, String name) {
         try (var stream = Files.walk(getDirectory(player, getDirectoryId(player)))) {
             return stream.filter(Files::isRegularFile)
-                         .map(f -> Schematic.of(f.toFile()))
-                         .collect(Collectors.toSet());
+                    .map(f -> Schematic.of(f.toFile()))
+                    .collect(Collectors.toSet());
         } catch (IOException e) {
             plugin.getLogger().log(Level.SEVERE, "Could not load player schematics");
         }
@@ -170,7 +169,6 @@ public class GridSchematics implements SchematicCache {
     public boolean isReady() {
         return true;
     }
-
 
     private int getDirectoryId(Player uuid) {
         return directoryIds.computeIfAbsent(uuid.getUniqueId(), k -> 0);

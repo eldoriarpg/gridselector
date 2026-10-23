@@ -18,16 +18,22 @@ import de.eldoria.gridselector.listener.SelectionListener;
 import de.eldoria.gridselector.schematics.GridSchematics;
 
 public class Grid extends AdvancedCommand {
-    public Grid(GridSelector plugin, SelectionListener selectionListener, JacksonConfiguration config,
-                GridSchematics gridSchematics, IWorldGuardAdapter worldGuardAdapter) {
-        super(plugin, CommandMeta.builder("schematicbrushgrid")
-                .buildSubCommands((advancedCommands, commandMetaBuilder) -> {
-                    var cluster = new Cluster(plugin, config, worldGuardAdapter);
-                    commandMetaBuilder.withDefaultCommand(cluster);
-                    advancedCommands.add(cluster);
-                    advancedCommands.add(new Select(plugin, selectionListener));
-                    advancedCommands.add(new Export(plugin, gridSchematics));
-                })
-                .build());
+    public Grid(
+            GridSelector plugin,
+            SelectionListener selectionListener,
+            JacksonConfiguration config,
+            GridSchematics gridSchematics,
+            IWorldGuardAdapter worldGuardAdapter) {
+        super(
+                plugin,
+                CommandMeta.builder("schematicbrushgrid")
+                        .buildSubCommands((advancedCommands, commandMetaBuilder) -> {
+                            var cluster = new Cluster(plugin, config, worldGuardAdapter);
+                            commandMetaBuilder.withDefaultCommand(cluster);
+                            advancedCommands.add(cluster);
+                            advancedCommands.add(new Select(plugin, selectionListener));
+                            advancedCommands.add(new Export(plugin, gridSchematics));
+                        })
+                        .build());
     }
 }

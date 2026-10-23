@@ -5,6 +5,7 @@ paper = "1.21.11-R0.1-SNAPSHOT"
 fawe = "2.16.1"
 plotsquared = "7.6.0"
 junit = "6.1.3"
+palantir = "2.102.0"
 
 [libraries]
 jackson-bom = { module = "tools.jackson:jackson-bom", version.ref = "jackson" }

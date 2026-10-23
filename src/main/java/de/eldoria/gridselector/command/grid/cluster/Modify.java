@@ -23,19 +23,21 @@ import org.bukkit.plugin.Plugin;
 
 public class Modify extends AdvancedCommand {
     public Modify(Plugin plugin, Sessions sessions) {
-        super(plugin, CommandMeta.builder("modify")
-                .hidden()
-                .withPermission(Permissions.Cluster.CREATE)
-                .withSubCommand(new Center(plugin, sessions))
-                .withSubCommand(new Direction(plugin, sessions))
-                .withSubCommand(new ExpandRight(plugin, sessions))
-                .withSubCommand(new Size(plugin, sessions))
-                .withSubCommand(new Rows(plugin, sessions))
-                .withSubCommand(new Columns(plugin, sessions))
-                .withSubCommand(new Offset(plugin, sessions))
-                .withSubCommand(new FloorMaterial(plugin, sessions))
-                .withSubCommand(new BorderMaterial(plugin, sessions))
-                .withSubCommand(new OffsetMaterial(plugin, sessions))
-                .build());
+        super(
+                plugin,
+                CommandMeta.builder("modify")
+                        .hidden()
+                        .withPermission(Permissions.Cluster.CREATE)
+                        .withSubCommand(new Center(plugin, sessions))
+                        .withSubCommand(new Direction(plugin, sessions))
+                        .withSubCommand(new ExpandRight(plugin, sessions))
+                        .withSubCommand(new Size(plugin, sessions))
+                        .withSubCommand(new Rows(plugin, sessions))
+                        .withSubCommand(new Columns(plugin, sessions))
+                        .withSubCommand(new Offset(plugin, sessions))
+                        .withSubCommand(new FloorMaterial(plugin, sessions))
+                        .withSubCommand(new BorderMaterial(plugin, sessions))
+                        .withSubCommand(new OffsetMaterial(plugin, sessions))
+                        .build());
     }
 }

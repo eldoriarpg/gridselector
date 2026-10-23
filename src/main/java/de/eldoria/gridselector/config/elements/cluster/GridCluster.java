@@ -33,12 +33,17 @@ public class GridCluster {
     private Material offsetMaterial = Material.LIGHT_GRAY_CONCRETE;
     private Material floorMaterial = Material.WHITE_CONCRETE;
 
-    public GridCluster() {
-    }
+    public GridCluster() {}
 
-
-    public GridCluster(Plot boundings, int elementSize, int offset, int rows, int columns,
-                       Material borderMaterial, Material offsetMaterial, Material floorMaterial) {
+    public GridCluster(
+            Plot boundings,
+            int elementSize,
+            int offset,
+            int rows,
+            int columns,
+            Material borderMaterial,
+            Material offsetMaterial,
+            Material floorMaterial) {
         plot = boundings;
         this.elementSize = elementSize;
         this.offset = offset;
@@ -298,12 +303,23 @@ public class GridCluster {
             var columnSize = (elementSize + 2) * columns + (columns - 1) * offset;
             var columnDir = rotate(direction, expandRight);
 
-            var toFarCorner = direction.toVector().multiply(rowsSize - 1).add(columnDir.toVector().multiply(columnSize - 1));
+            var toFarCorner = direction
+                    .toVector()
+                    .multiply(rowsSize - 1)
+                    .add(columnDir.toVector().multiply(columnSize - 1));
 
             var start = center.toVector().toBlockPoint().toBlockVector2();
             var end = center.toVector().add(toFarCorner).toBlockPoint().toBlockVector2();
 
-            return new GridCluster(Plot.of(start, end), elementSize, offset, rows, columns, borderMaterial, offsetMaterial, floorMaterial);
+            return new GridCluster(
+                    Plot.of(start, end),
+                    elementSize,
+                    offset,
+                    rows,
+                    columns,
+                    borderMaterial,
+                    offsetMaterial,
+                    floorMaterial);
         }
 
         /**
@@ -322,38 +338,54 @@ public class GridCluster {
 
         public String asComponent() {
             var message = MessageComposer.create()
-                                         .text("<%s>Cluster Settings", Colors.HEADING).newLine()
-                                         .text("<%s>Location: <%s>%s|%s", Colors.NAME, Colors.VALUE, center.getBlockX(), center.getBlockZ())
-                                         .space()
-                                         .text("<%s><click:run_command:'/sbrg cluster modify center'>[change]</click>", Colors.CHANGE)
-                                         .newLine()
-                                         .text("<%s>Direction: <%s>%s", Colors.NAME, Colors.VALUE, direction.name()).space()
-                                         .text("<%s><click:run_command:'/sbrg cluster modify direction'>[change]</click>", Colors.CHANGE)
-                                         .newLine()
-                                         .text("<%s>Expand: <%s>%s", Colors.NAME, Colors.VALUE, expandRight ? "right" : "left").space()
-                                         .text("<%s><click:run_command:'/sbrg cluster modify expandRight'>[change]</click>", Colors.CHANGE)
-                                         .newLine()
-                                         .text("<%s>Size: <%s>%s", Colors.NAME, Colors.VALUE, elementSize).space()
-                                         .text("<%s><click:suggest_command:'/sbrg cluster modify size '>[change]</click>", Colors.CHANGE)
-                                         .newLine()
-                                         .text("<%s>Rows: <%s>%s", Colors.NAME, Colors.VALUE, rows).space()
-                                         .text("<%s><click:suggest_command:'/sbrg cluster modify rows '>[change]</click>", Colors.CHANGE)
-                                         .newLine()
-                                         .text("<%s>Columns: <%s>%s", Colors.NAME, Colors.VALUE, columns).space()
-                                         .text("<%s><click:suggest_command:'/sbrg cluster modify columns '>[change]</click>", Colors.CHANGE)
-                                         .newLine()
-                                         .text("<%s>Offset: <%s>%s", Colors.NAME, Colors.VALUE, offset).space()
-                                         .text("<%s><click:suggest_command:'/sbrg cluster modify offset '>[change]</click>", Colors.CHANGE)
-                                         .newLine()
-                                         .text("<%s>Floor Material: <%s>%s", Colors.NAME, Colors.VALUE, floorMaterial).space()
-                                         .text("<%s><click:suggest_command:'/sbrg cluster modify floorMaterial '>[change]</click>", Colors.CHANGE)
-                                         .newLine()
-                                         .text("<%s>Border Material: <%s>%s", Colors.NAME, Colors.VALUE, borderMaterial).space()
-                                         .text("<%s><click:suggest_command:'/sbrg cluster modify borderMaterial '>[change]</click>", Colors.CHANGE)
-                                         .newLine()
-                                         .text("<%s>Offset Material: <%s>%s", Colors.NAME, Colors.VALUE, offsetMaterial).space()
-                                         .text("<%s><click:suggest_command:'/sbrg cluster modify offsetMaterial '>[change]</click>", Colors.CHANGE)
-                                         .build();
+                    .text("<%s>Cluster Settings", Colors.HEADING)
+                    .newLine()
+                    .text("<%s>Location: <%s>%s|%s", Colors.NAME, Colors.VALUE, center.getBlockX(), center.getBlockZ())
+                    .space()
+                    .text("<%s><click:run_command:'/sbrg cluster modify center'>[change]</click>", Colors.CHANGE)
+                    .newLine()
+                    .text("<%s>Direction: <%s>%s", Colors.NAME, Colors.VALUE, direction.name())
+                    .space()
+                    .text("<%s><click:run_command:'/sbrg cluster modify direction'>[change]</click>", Colors.CHANGE)
+                    .newLine()
+                    .text("<%s>Expand: <%s>%s", Colors.NAME, Colors.VALUE, expandRight ? "right" : "left")
+                    .space()
+                    .text("<%s><click:run_command:'/sbrg cluster modify expandRight'>[change]</click>", Colors.CHANGE)
+                    .newLine()
+                    .text("<%s>Size: <%s>%s", Colors.NAME, Colors.VALUE, elementSize)
+                    .space()
+                    .text("<%s><click:suggest_command:'/sbrg cluster modify size '>[change]</click>", Colors.CHANGE)
+                    .newLine()
+                    .text("<%s>Rows: <%s>%s", Colors.NAME, Colors.VALUE, rows)
+                    .space()
+                    .text("<%s><click:suggest_command:'/sbrg cluster modify rows '>[change]</click>", Colors.CHANGE)
+                    .newLine()
+                    .text("<%s>Columns: <%s>%s", Colors.NAME, Colors.VALUE, columns)
+                    .space()
+                    .text("<%s><click:suggest_command:'/sbrg cluster modify columns '>[change]</click>", Colors.CHANGE)
+                    .newLine()
+                    .text("<%s>Offset: <%s>%s", Colors.NAME, Colors.VALUE, offset)
+                    .space()
+                    .text("<%s><click:suggest_command:'/sbrg cluster modify offset '>[change]</click>", Colors.CHANGE)
+                    .newLine()
+                    .text("<%s>Floor Material: <%s>%s", Colors.NAME, Colors.VALUE, floorMaterial)
+                    .space()
+                    .text(
+                            "<%s><click:suggest_command:'/sbrg cluster modify floorMaterial '>[change]</click>",
+                            Colors.CHANGE)
+                    .newLine()
+                    .text("<%s>Border Material: <%s>%s", Colors.NAME, Colors.VALUE, borderMaterial)
+                    .space()
+                    .text(
+                            "<%s><click:suggest_command:'/sbrg cluster modify borderMaterial '>[change]</click>",
+                            Colors.CHANGE)
+                    .newLine()
+                    .text("<%s>Offset Material: <%s>%s", Colors.NAME, Colors.VALUE, offsetMaterial)
+                    .space()
+                    .text(
+                            "<%s><click:suggest_command:'/sbrg cluster modify offsetMaterial '>[change]</click>",
+                            Colors.CHANGE)
+                    .build();
             return message;
         }
 
@@ -369,9 +401,7 @@ public class GridCluster {
         public void direction(Direction direction) {
             this.direction = direction;
         }
-
     }
 
-    private record PlotKey(int x, int y) {
-    }
+    private record PlotKey(int x, int y) {}
 }
