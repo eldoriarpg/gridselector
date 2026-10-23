@@ -1,6 +1,6 @@
 [versions]
 jackson = "3.2.4"
-utilities = "3.5.0"
+utilities = "3.5.4"
 paper = "1.21.11-R0.1-SNAPSHOT"
 fawe = "2.16.1"
 plotsquared = "7.6.0"
@@ -16,7 +16,6 @@ jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations
 eldoutil-plugin = { module = "de.eldoria.util:plugin", version.ref = "utilities" }
 eldoutil-jackson = { module = "de.eldoria.util:jackson-configuration", version.ref = "utilities" }
 eldoutil-updater = { module = "de.eldoria.util:updater", version.ref = "utilities" }
-ocular = "dev.chojo:ocular:2.3.1"
 
 schematicbrushreborn-api = "de.eldoria:schematicbrushreborn-api:3.0.1"
 jetbrains-annotations = "org.jetbrains:annotations:26.1.0"
@@ -38,7 +37,7 @@ junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher
 
 [bundles]
 jackson = ["jackson-databind", "jackson-annotations", "jackson-yaml"]
-utilities = ["eldoutil-jackson", "eldoutil-plugin", "eldoutil-updater", "ocular"]
+utilities = ["eldoutil-jackson", "eldoutil-plugin", "eldoutil-updater"]
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version = "8.10.4" }
