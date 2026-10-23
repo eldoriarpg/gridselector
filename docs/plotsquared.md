@@ -29,6 +29,8 @@ When you right click a plot with the selection tool:
 - Clicking a road selects nothing.
 - In classic plot worlds, the floor of the plot is the plot height set in PlotSquared. Only what stands above it is
   saved.
+- Other plot worlds have no set plot height. There the schematic starts at the lowest layer of the plot that has air
+  in it. A bottom layer of a build that covers the whole plot is taken for ground and not saved.
 
 Selecting does not look at who owns a plot. Players with the selection permission can select any plot they can
 click, including the plots of other players.

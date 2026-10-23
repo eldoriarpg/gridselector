@@ -11,6 +11,7 @@ import de.eldoria.gridselector.config.Configuration;
 import org.bukkit.Location;
 
 import java.util.Optional;
+import java.util.OptionalInt;
 
 public class ClusterWorldAdapter implements RegionAdapter {
     private final Configuration configuration;
@@ -31,7 +32,7 @@ public class ClusterWorldAdapter implements RegionAdapter {
                     var optPlot = cluster.getRegion(BukkitAdapter.adapt(location));
                     return optPlot.map(plot -> new RegionResult(plot.id(),
                             plot.borderLessPlot().asRegion(BukkitAdapter.adapt(location.getWorld())),
-                            plot.asRegion(BukkitAdapter.adapt(location.getWorld())), cluster.minHeight()));
+                            plot.asRegion(BukkitAdapter.adapt(location.getWorld())), OptionalInt.of(cluster.minHeight())));
                 });
 
     }

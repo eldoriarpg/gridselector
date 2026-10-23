@@ -14,6 +14,7 @@ import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.Location;
 
 import java.util.Optional;
+import java.util.OptionalInt;
 
 public class PlotWorldAdapter implements RegionAdapter {
     private final PlotAreaManager manager;
@@ -40,11 +41,8 @@ public class PlotWorldAdapter implements RegionAdapter {
                     }
                     var walls = p.getLargestRegion().clone();
                     walls.expand(BlockVector3.at(1, 0, 1));
-                    var minHeight = p.getLargestRegion().getMinimumY();
-                    if (area instanceof ClassicPlotWorld world) {
-                        minHeight = world.PLOT_HEIGHT;
-                    }
-                    return new RegionResult(p.getId().toString(), p.getLargestRegion(), walls, minHeight);
+                    var floor = area instanceof ClassicPlotWorld world ? OptionalInt.of(world.PLOT_HEIGHT) : OptionalInt.empty();
+                    return new RegionResult(p.getId().toString(), p.getLargestRegion(), walls, floor);
 
                 });
     }

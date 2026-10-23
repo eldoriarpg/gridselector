@@ -51,11 +51,7 @@ Each selected plot becomes one schematic. Grid Selector does not save the whole 
 - The floor of the plot is not saved. The schematic starts on the first layer above it.
 - Air around the build is cut away on all sides and at the top, so the schematic is as small as the build.
 
-:::warning Full layers count as floor
-A layer right above the floor that is filled with blocks everywhere is treated as part of the floor and left out.
-If a build has a foundation that covers the whole plot, the foundation is not saved. Leave at least one block of air
-in the bottom layer, or keep the build smaller than the plot.
-:::
+Selecting a plot with nothing built on it gives the message "This plot is empty."
 
 ### Markers
 
