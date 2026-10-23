@@ -5,6 +5,7 @@ plugins {
     `maven-publish`
     alias(libs.plugins.spotless)
     alias(libs.plugins.publishdata)
+    alias(libs.plugins.publishdata.manifest)
     alias(libs.plugins.pluginyml.bukkit)
     alias(libs.plugins.shadow)
     alias(libs.plugins.runserver)
@@ -124,6 +125,24 @@ tasks {
         }
 
         jvmArgs("-Dcom.mojang.eula.agree=true")
+    }
+}
+
+pluginManifest {
+    platforms("paper")
+    requires("SchematicBrushReborn") {
+        spigot(98499)
+        link("https://lyna.eldoria.de/products/1")
+    }
+    requires("FastAsyncWorldEdit") {
+        modrinth("fastasyncworldedit")
+        hangar("IntellectualSites/FastAsyncWorldEdit")
+    }
+    optional("PlotSquared") {
+        spigot(77506)
+    }
+    optional("WorldGuard") {
+        modrinth("worldguard")
     }
 }
 
