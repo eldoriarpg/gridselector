@@ -1,4 +1,3 @@
-import net.minecrell.pluginyml.bukkit.BukkitPluginDescription.Permission.Default.FALSE
 import net.minecrell.pluginyml.bukkit.BukkitPluginDescription.Permission.Default.OP
 
 plugins {
@@ -61,6 +60,7 @@ dependencies {
     }
 
     testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.params)
     testRuntimeOnly(libs.junit.jupiter.engine)
     testRuntimeOnly(libs.junit.platform.launcher)
     testImplementation(libs.paper)
@@ -139,25 +139,27 @@ bukkit {
     commands {
         register("schematicbrushgrid") {
             aliases = listOf("sbrg")
-            permission = "gridselector.use"
         }
     }
 
     permissions {
+        register("gridselector.select") {
+            default = OP
+        }
         register("gridselector.export") {
-            default = FALSE
+            default = OP
         }
         register("gridselector.export.global") {
-            default = FALSE
+            default = OP
         }
         register("gridselector.cluster.create") {
-            default = FALSE
+            default = OP
         }
         register("gridselector.cluster.remove") {
-            default = FALSE
+            default = OP
         }
         register("gridselector.cluster.repair") {
-            default = FALSE
+            default = OP
         }
         register("gridselector.updates") {
             description = "Hear about new versions on join and download them"

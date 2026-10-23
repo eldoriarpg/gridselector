@@ -7,10 +7,16 @@
 package de.eldoria.gridselector.config.elements.cluster;
 
 import com.sk89q.worldedit.math.BlockVector2;
+import com.sk89q.worldedit.math.Vector3;
+import com.sk89q.worldedit.util.Direction;
+import com.sk89q.worldedit.util.Location;
+import com.sk89q.worldedit.world.NullWorld;
 import org.bukkit.Material;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class GridClusterTest {
 
@@ -223,5 +229,38 @@ class GridClusterTest {
         large = new GridCluster(Plot.of(0, 0, fullSize * 200, fullSize * 200), elementSize, offsetSize, 200, 200, border, offset, floor);
         regions = large.getRegions();
         Assertions.assertEquals(200 * 200, regions.size());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "SOUTH, true, -18, 0, 0, 18",
+            "SOUTH, false, 0, 0, 18, 18",
+            "NORTH, true, 0, -18, 18, 0",
+            "NORTH, false, -18, -18, 0, 0",
+            "EAST, true, 0, 0, 18, 18",
+            "EAST, false, 0, -18, 18, 0",
+            "WEST, true, -18, -18, 0, 0",
+            "WEST, false, -18, 0, 0, 18"
+    })
+    void buildStartsOnCenterBlock(Direction direction, boolean expandRight, int minX, int minZ, int maxX, int maxZ) {
+        var builder = GridCluster.builder(new Location(new FlatWorld(), Vector3.at(0.5, 64, 0.5)), direction);
+        builder.expandRight(expandRight);
+
+        var cluster = builder.build();
+
+        Assertions.assertEquals(Plot.of(minX, minZ, maxX, maxZ), cluster.plot());
+        Assertions.assertEquals(4, cluster.getRegions().size());
+    }
+
+    private static final class FlatWorld extends NullWorld {
+        @Override
+        public int getMinY() {
+            return -64;
+        }
+
+        @Override
+        public int getMaxY() {
+            return 319;
+        }
     }
 }

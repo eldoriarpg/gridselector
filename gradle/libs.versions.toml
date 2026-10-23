@@ -31,6 +31,7 @@ worldguard-bukkit = "com.sk89q.worldguard:worldguard-bukkit:7.0.20"
 guice = "com.google.inject:guice:7.0.0"
 
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
+junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit" }
 

@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -49,6 +50,13 @@ public class GridSchematics implements SchematicCache {
         this.plugin = plugin;
     }
 
+    /**
+     * Saves the regions as the player's newest selection.
+     *
+     * @param player  the player whose selection it is
+     * @param regions the regions to save, one schematic each
+     * @return completes once every schematic is written, exceptionally if one could not be written
+     */
     public CompletableFuture<Void> saveRegions(Player player, List<CuboidRegion> regions) {
         var playerDirectory = getDirectory(player, getNextDirectoryId(player));
         return CompletableFuture.runAsync(() -> {
@@ -57,6 +65,8 @@ public class GridSchematics implements SchematicCache {
                 saveSchematic(player, playerDirectory, num, region);
                 num++;
             }
+        }).whenComplete((result, error) -> {
+            if (error != null) plugin.getLogger().log(Level.SEVERE, "Could not save player schematic.", error);
         });
     }
 
@@ -69,14 +79,9 @@ public class GridSchematics implements SchematicCache {
             try (var writer = BuiltInClipboardFormat.FAST_V3.getWriter(new FileOutputStream(schemFile))) {
                 writer.write(clipboard);
             }
-        } catch (WorldEditException e) {
-            plugin.getLogger().log(Level.SEVERE, "Could not save player schematic.", e);
-        } catch (FileNotFoundException e) {
-            plugin.getLogger().log(Level.SEVERE, "Schematic file not found.", e);
-        } catch (IOException e) {
-            plugin.getLogger().log(Level.SEVERE, "Could not write player schematic.", e);
+        } catch (WorldEditException | IOException e) {
+            throw new CompletionException(e);
         }
-
     }
 
     private Path getDirectory(Player player, int id) {

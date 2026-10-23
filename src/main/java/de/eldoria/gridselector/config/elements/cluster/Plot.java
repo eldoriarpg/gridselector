@@ -80,15 +80,15 @@ public class Plot {
     }
 
     /**
-     * Checks if the plot overlaps with another plot
+     * Checks if the plot overlaps with another plot. Both bounds are inclusive, so plots that share a block row
+     * overlap.
      *
      * @param plot another plot
      * @return true if they overlap
      */
     public boolean overlaps(Plot plot) {
-        return min.x() < plot.max().x() && max.x() > plot.min().x()
-               && min.z() < plot.max().z() && max.z() > plot.min().z();
-
+        return min.x() <= plot.max().x() && max.x() >= plot.min().x()
+               && min.z() <= plot.max().z() && max.z() >= plot.min().z();
     }
 
     /**

@@ -12,6 +12,7 @@ import de.eldoria.gridselector.adapter.worldguard.IWorldGuardAdapter;
 import de.eldoria.gridselector.command.grid.cluster.Close;
 import de.eldoria.gridselector.command.grid.cluster.Create;
 import de.eldoria.gridselector.command.grid.cluster.Draw;
+import de.eldoria.gridselector.command.grid.cluster.ListClusters;
 import de.eldoria.gridselector.command.grid.cluster.Modify;
 import de.eldoria.gridselector.command.grid.cluster.Remove;
 import de.eldoria.gridselector.command.grid.cluster.Repair;
@@ -33,7 +34,7 @@ public class Cluster extends AdvancedCommand {
                     cmds.add(new Modify(plugin, sessions));
                     cmds.add(new Repair(plugin, configuration, draw));
                     cmds.add(new Remove(plugin, configuration, worldGuardAdapter));
-                    cmds.add(new Modify(plugin, sessions));
+                    cmds.add(new ListClusters(plugin, configuration));
                     cmds.add(new Close(plugin, sessions));
                     builder.withDefaultCommand(create);
                 })

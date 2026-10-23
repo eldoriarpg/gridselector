@@ -8,7 +8,17 @@ package de.eldoria.gridselector.adapter.regionadapter;
 
 import com.sk89q.worldedit.regions.CuboidRegion;
 
-public record RegionResult(String identifier, CuboidRegion region, CuboidRegion walls, int worldHeight) {
+import java.util.OptionalInt;
+
+/**
+ * A plot that can be selected.
+ *
+ * @param identifier identifies the plot within its world
+ * @param region     the inside of the plot, without border or walls, over the full world height
+ * @param walls      the plot including its border or walls
+ * @param floor      the height of the plot's top floor layer, if the plot's world defines one
+ */
+public record RegionResult(String identifier, CuboidRegion region, CuboidRegion walls, OptionalInt floor) {
 
     @Override
     public boolean equals(Object o) {

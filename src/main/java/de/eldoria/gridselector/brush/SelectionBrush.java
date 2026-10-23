@@ -57,7 +57,11 @@ public class SelectionBrush implements Brush {
 
         var region = result.region();
         var yMax = reduceTop(editSession, region);
-        var yMin = reduceFloor(editSession, region, result.worldHeight());
+        var yMin = result.floor().isPresent() ? result.floor().getAsInt() + 1 : reduceFloor(editSession, region);
+        if (yMax < yMin) {
+            messageSender.sendError(owner, "This plot is empty.");
+            return;
+        }
         var xMin = reduceEastWestSide(editSession, yMin, yMax, region, true);
         var xMax = reduceEastWestSide(editSession, yMin, yMax, region, false);
         var zMin = reduceSouthNorthSide(editSession, yMin, yMax, region, true);
@@ -85,10 +89,13 @@ public class SelectionBrush implements Brush {
         }
     }
 
-    private int reduceFloor(EditSession session, CuboidRegion region, int minHeight) {
+    /**
+     * Finds the floor of a plot whose world does not define one: the lowest layer that is not completely solid.
+     */
+    private int reduceFloor(EditSession session, CuboidRegion region) {
         var min = region.getMinimumPoint();
         var max = region.getMaximumPoint();
-        for (var y = minHeight; y <= max.y(); y++) {
+        for (var y = min.y(); y <= max.y(); y++) {
             if (checkFlat(session, y, min, max, mat -> mat == Material.AIR)) {
                 return y;
             }
@@ -109,8 +116,8 @@ public class SelectionBrush implements Brush {
     }
 
     private boolean checkFlat(EditSession session, int y, BlockVector3 min, BlockVector3 max, Predicate<Material> check) {
-        for (var x = min.x(); x < max.x(); x++) {
-            for (var z = min.z(); z < max.z(); z++) {
+        for (var x = min.x(); x <= max.x(); x++) {
+            for (var z = min.z(); z <= max.z(); z++) {
                 var material = session.getBlock(BlockVector3.at(x, y, z)).getBlockType();
                 if (check.test(BukkitAdapter.adapt(material)))
                     return true;
@@ -124,7 +131,7 @@ public class SelectionBrush implements Brush {
         var max = region.getMaximumPoint();
         for (var x = (east ? min : max).x(); east ? x <= max.x() : x >= min.x(); x += east ? 1 : -1) {
             for (var y = yMin; y <= yMax; y++) {
-                for (var z = min.z(); z < max.z(); z++) {
+                for (var z = min.z(); z <= max.z(); z++) {
                     var material = session.getBlock(BlockVector3.at(x, y, z)).getBlockType();
                     if (BukkitAdapter.adapt(material) != Material.AIR) {
                         return x;
@@ -140,7 +147,7 @@ public class SelectionBrush implements Brush {
         var max = region.getMaximumPoint();
         for (var z = (south ? min : max).z(); south ? z <= max.z() : z >= min.z(); z += south ? 1 : -1) {
             for (var y = yMin; y <= yMax; y++) {
-                for (var x = min.x(); x < max.x(); x++) {
+                for (var x = min.x(); x <= max.x(); x++) {
                     var material = session.getBlock(BlockVector3.at(x, y, z)).getBlockType();
                     if (BukkitAdapter.adapt(material) != Material.AIR) {
                         return z;

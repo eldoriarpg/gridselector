@@ -20,6 +20,7 @@ import de.eldoria.gridselector.adapter.worldguard.IWorldGuardAdapter;
 import de.eldoria.gridselector.config.Configuration;
 import de.eldoria.gridselector.config.elements.cluster.GridCluster;
 import de.eldoria.gridselector.util.Permissions;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -41,22 +42,33 @@ public class Draw extends AdvancedCommand implements IPlayerTabExecutor {
         worldEdit = WorldEdit.getInstance();
     }
 
-    public void draw(GridCluster cluster, Player player) {
-        var y = cluster.minHeight();
-
+    /**
+     * Paints the cluster as one WorldEdit change of the player, so it can be undone.
+     *
+     * @param cluster the cluster to paint
+     * @param world   the world of the cluster
+     * @param player  the player who paints it
+     * @return false if the cluster did not fit into the player's WorldEdit limits and was only partly painted
+     */
+    public boolean draw(GridCluster cluster, World world, Player player) {
         var actor = BukkitAdapter.adapt(player);
-
-        var session = worldEdit.newEditSessionBuilder().actor(actor).world(BukkitAdapter.adapt(player.getWorld())).build();
+        var session = worldEdit.newEditSessionBuilder().actor(actor).world(BukkitAdapter.adapt(world)).build();
+        var painted = true;
         try (session) {
-            drawRegions(cluster, session, y, player);
+            drawRegions(cluster, session, cluster.minHeight());
         } catch (MaxChangedBlocksException e) {
-            messageSender().sendError(player, "Grid exceeds maximum world edit size.");
+            painted = false;
         }
         worldEdit.getSessionManager().get(actor).remember(session);
-        messageSender().sendMessage(player, "Created grid. Changed " + session.size() + " blocks.");
+        if (!painted) {
+            messageSender().sendError(player, "Grid exceeds maximum world edit size. Use //undo to revert the partly painted grid.");
+            return false;
+        }
+        messageSender().sendMessage(player, "Painted grid. Changed " + session.size() + " blocks.");
+        return true;
     }
 
-    private void drawRegions(GridCluster cluster, EditSession session, int y, Player player) throws MaxChangedBlocksException {
+    private void drawRegions(GridCluster cluster, EditSession session, int y) throws MaxChangedBlocksException {
         session.setBlocks((Region) cluster.plot().as2DRegion(y), BukkitAdapter.adapt(cluster.offsetMaterial().createBlockData()));
         for (var plot : cluster.getRegions()) {
             session.setBlocks((Region) plot.as2DRegion(y), BukkitAdapter.adapt(cluster.borderMaterial().createBlockData()));
@@ -64,21 +76,26 @@ public class Draw extends AdvancedCommand implements IPlayerTabExecutor {
         }
     }
 
+    /**
+     * Creates the cluster of the player's session in the session's world, on the highest block at the session's
+     * start. The cluster is only registered once it is fully painted.
+     */
     @Override
     public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
         var builder = sessions.getOrCreateSession(player);
+        var world = BukkitAdapter.adapt(builder.world());
+        var start = builder.center();
 
         var cluster = builder.build();
+        cluster.updateMinHeight(world.getHighestBlockYAt(start.getBlockX(), start.getBlockZ()));
 
-        var y = player.getWorld().getHighestBlockYAt(player.getLocation().getBlockX(), player.getLocation().getBlockZ());
-        cluster.updateMinHeight(y);
-
-
-        configuration.cluster().world(player.getWorld()).assertOverlap(cluster);
-        draw(cluster, player);
-        configuration.cluster().world(player.getWorld()).register(cluster);
-        worldGuardAdapter.register(cluster, player);
+        var clusterWorld = configuration.cluster().world(world);
+        clusterWorld.assertOverlap(cluster);
+        if (!draw(cluster, world, player)) return;
+        clusterWorld.register(cluster);
+        worldGuardAdapter.register(cluster, world, player);
         configuration.save();
         sessions.close(player);
+        messageSender().sendMessage(player, "Created cluster " + cluster.id() + ".");
     }
 }

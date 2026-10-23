@@ -18,6 +18,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.HashMap;
@@ -50,10 +51,8 @@ public class SelectionListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onInteract(PlayerInteractEvent event) {
-        var player = event.getPlayer();
-        if (!players.containsKey(player.getUniqueId())) return;
-
         if (event.getAction() != Action.LEFT_CLICK_AIR) return;
+        var player = event.getPlayer();
 
         if (!(WorldEditBrush.getBrush(player) instanceof SelectionBrush brush)) {
             return;
@@ -64,11 +63,21 @@ public class SelectionListener implements Listener {
             return;
         }
 
-        schematicService.saveRegions(player, brush.getRegions());
+        schematicService.saveRegions(player, brush.getRegions()).whenComplete((result, error) -> {
+            if (error != null) {
+                messageSender.sendError(player, "Could not save the selection. See console for further information.");
+                return;
+            }
+            messageSender.sendMessage(player, "Selections saved. Use the grid Selector to use them.");
+        });
 
         brush.clearRegions();
-        messageSender.sendMessage(player, "Selections saved. Use the grid Selector to use them.");
         event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        players.remove(event.getPlayer().getUniqueId());
     }
 
     public void register(Player player) {

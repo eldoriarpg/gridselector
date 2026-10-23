@@ -22,7 +22,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Map;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 public class Export extends AdvancedCommand implements IPlayerTabExecutor {
     private GridSelector plugin;
@@ -37,9 +39,13 @@ public class Export extends AdvancedCommand implements IPlayerTabExecutor {
         this.gridSchematics = gridSchematics;
     }
 
+    /**
+     * Copies the player's newest saved selection. Without {@code -f} nothing is copied if any target file exists.
+     */
     @Override
     public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
         var schematics = gridSchematics.getSchematicsByName(player, null);
+        CommandAssertions.isFalse(schematics.isEmpty(), "You have no saved selection to export.");
 
         Path basePath;
         if (!args.flags().has("g")) {
@@ -56,23 +62,28 @@ public class Export extends AdvancedCommand implements IPlayerTabExecutor {
             messageSender().sendError(player, "Failed to save schematics. See console for further information.");
             return;
         }
+
+        var name = args.asString(0);
+        var overwrite = args.flags().has("f");
+        Map<Path, Path> targets = schematics.stream()
+                .map(schematic -> schematic.getFile().toPath())
+                .collect(Collectors.toMap(source -> source, source -> basePath.resolve(name + "_" + source.getFileName())));
+
         plugin.getScheduler().runTaskAsynchronously(plugin, () -> {
-            for (var schematic : schematics) {
-                try {
-                    var target = basePath.resolve(args.asString(0) + "_" + schematic.getFile().getName());
-                    Files.createDirectories(target.getParent());
-                    if (target.toFile().exists() && !args.flags().has("f")) {
-                        messageSender().sendError(player, "Name already in use.");
-                        return;
-                    }
-                    Files.copy(schematic.getFile().toPath(), target, StandardCopyOption.REPLACE_EXISTING);
-                } catch (IOException e) {
-                    plugin().getLogger().log(Level.WARNING, "Could not save schematic", e);
-                    messageSender().sendError(player, "Failed to save schematics. See console for further information.");
-                    return;
-                }
+            if (!overwrite && targets.values().stream().anyMatch(Files::exists)) {
+                messageSender().sendError(player, "Name already in use.");
+                return;
             }
-            messageSender().sendMessage(player, "Saved " + schematics.size() + " schematics.");
+            try {
+                for (var target : targets.entrySet()) {
+                    Files.copy(target.getKey(), target.getValue(), StandardCopyOption.REPLACE_EXISTING);
+                }
+            } catch (IOException e) {
+                plugin().getLogger().log(Level.WARNING, "Could not save schematic", e);
+                messageSender().sendError(player, "Failed to save schematics. See console for further information.");
+                return;
+            }
+            messageSender().sendMessage(player, "Saved " + targets.size() + " schematics.");
         });
     }
 }

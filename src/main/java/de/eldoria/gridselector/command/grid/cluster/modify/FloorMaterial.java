@@ -10,6 +10,7 @@ import de.eldoria.eldoutilities.commands.Completion;
 import de.eldoria.eldoutilities.commands.command.AdvancedCommand;
 import de.eldoria.eldoutilities.commands.command.CommandMeta;
 import de.eldoria.eldoutilities.commands.command.util.Arguments;
+import de.eldoria.eldoutilities.commands.command.util.CommandAssertions;
 import de.eldoria.eldoutilities.commands.exceptions.CommandException;
 import de.eldoria.eldoutilities.commands.executor.IPlayerTabExecutor;
 import de.eldoria.gridselector.command.grid.cluster.Sessions;
@@ -32,7 +33,9 @@ public class FloorMaterial extends AdvancedCommand implements IPlayerTabExecutor
 
     @Override
     public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
-        sessions.getOrCreateSession(player).floorMaterial(args.asMaterial(0));
+        var material = args.asMaterial(0);
+        CommandAssertions.isTrue(material.isBlock(), "%s is not a block.".formatted(material));
+        sessions.getOrCreateSession(player).floorMaterial(material);
         sessions.showBuilder(player);
     }
 

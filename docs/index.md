@@ -54,11 +54,6 @@ Players still need the Schematic Brush Reborn permissions to use brushes, see th
 
 The add-on creates its files in `plugins/GridSelector/`.
 
-:::note Permissions are not given to operators
-The permissions to create, repair and remove clusters and to export schematics are off for everyone by default,
-operators included. Grant them with your permission plugin. See [Permissions](./commands.md#permissions).
-:::
-
 ### Updating from version 1
 
 Version 2 needs Schematic Brush Reborn 3. Your clusters in `clusterWorlds.yml` are kept.
