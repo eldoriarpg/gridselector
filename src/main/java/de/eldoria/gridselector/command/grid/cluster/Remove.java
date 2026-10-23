@@ -29,16 +29,19 @@ public class Remove extends AdvancedCommand implements IPlayerTabExecutor {
     private final IWorldGuardAdapter worldGuardAdapter;
 
     public Remove(Plugin plugin, Configuration configuration, IWorldGuardAdapter worldGuardAdapter) {
-        super(plugin, CommandMeta.builder("remove")
-                .addUnlocalizedArgument("id", false)
-                .withPermission(Permissions.Cluster.REMOVE)
-                .build());
+        super(
+                plugin,
+                CommandMeta.builder("remove")
+                        .addUnlocalizedArgument("id", false)
+                        .withPermission(Permissions.Cluster.REMOVE)
+                        .build());
         this.configuration = configuration;
         this.worldGuardAdapter = worldGuardAdapter;
     }
 
     @Override
-    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args)
+            throws CommandException {
         Optional<GridCluster> cluster;
         if (args.isEmpty()) {
             cluster = configuration.cluster().world(player.getWorld()).getCluster(player.getLocation());
@@ -50,13 +53,17 @@ public class Remove extends AdvancedCommand implements IPlayerTabExecutor {
 
         worldGuardAdapter.unregister(cluster.get(), player.getWorld());
 
-        configuration.cluster().world(player.getWorld()).unregister(cluster.get().id());
+        configuration
+                .cluster()
+                .world(player.getWorld())
+                .unregister(cluster.get().id());
         messageSender().sendMessage(player, "Cluster removed");
         configuration.save();
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+    public @Nullable List<String> onTabComplete(@NotNull Player player, @NotNull String alias, @NotNull Arguments args)
+            throws CommandException {
         return configuration.cluster().world(player.getWorld()).matchingIds(args.asString(0));
     }
 }

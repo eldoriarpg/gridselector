@@ -6,7 +6,6 @@
 
 package de.eldoria.gridselector;
 
-
 import com.plotsquared.core.PlotSquared;
 import de.eldoria.eldoutilities.config.template.PluginBaseConfiguration;
 import de.eldoria.eldoutilities.localization.ILocalizer;
@@ -51,7 +50,8 @@ public class GridSelector extends EldoPlugin {
         PluginBaseConfiguration base = configuration.secondary(PluginBaseConfiguration.KEY);
         if (base.version() == 0) {
             if (isPreJacksonInstall()) {
-                throw new IllegalStateException("The configuration was written by a version older than 1.3.0. Update to the latest 1.3 release first, start the server once, then update to this version.");
+                throw new IllegalStateException(
+                        "The configuration was written by a version older than 1.3.0. Update to the latest 1.3 release first, start the server once, then update to this version.");
             }
             base.version(1);
             base.lastInstalledVersion(this);

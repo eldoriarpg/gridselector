@@ -31,7 +31,8 @@ public class Sessions {
 
     public GridCluster.Builder getOrCreateSession(Player player) throws CommandException {
         if (!sessions.containsKey(player.getUniqueId())) {
-            var direction = Direction.findClosest(BukkitAdapter.adapt(player).getLocation().getDirection(), Direction.Flag.CARDINAL);
+            var direction = Direction.findClosest(
+                    BukkitAdapter.adapt(player).getLocation().getDirection(), Direction.Flag.CARDINAL);
             CommandAssertions.isTrue(direction != null, "Invalid direction. Please look in the requested direction");
             var builder = GridCluster.builder(BukkitAdapter.adapt(player.getLocation()), direction);
             sessions.put(player.getUniqueId(), builder);
@@ -41,8 +42,7 @@ public class Sessions {
 
     public void showBuilder(Player player) throws CommandException {
         var session = getOrCreateSession(player);
-        var composer = MessageComposer.create()
-                                      .text(session.asComponent());
+        var composer = MessageComposer.create().text(session.asComponent());
         composer.newLine()
                 .text("<%s><click:run_command:'/sbrg cluster draw'>[Create]</click>", Colors.ADD)
                 .space()

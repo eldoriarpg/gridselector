@@ -19,8 +19,10 @@ import org.jetbrains.annotations.NotNull;
 import java.nio.file.Path;
 
 public class JacksonConfiguration extends JacksonConfig<ConfigFile> implements Configuration {
-    public static final Key<ClusterWorlds> CLUSTER_WORLDS =
-            Key.builder(Path.of("clusterWorlds.yml"), ClusterWorlds::new).name("Cluster Worlds").build();
+    public static final Key<ClusterWorlds> CLUSTER_WORLDS = Key.builder(
+                    Path.of("clusterWorlds.yml"), ClusterWorlds::new)
+            .name("Cluster Worlds")
+            .build();
 
     public JacksonConfiguration(@NotNull Plugin plugin) {
         super(plugin, Key.builder(Path.of("config.yml"), ConfigFile::new).build());

@@ -28,16 +28,19 @@ public class Repair extends AdvancedCommand implements IPlayerTabExecutor {
     private final Draw draw;
 
     public Repair(Plugin plugin, Configuration configuration, Draw draw) {
-        super(plugin, CommandMeta.builder("repair")
-                .addUnlocalizedArgument("id", false)
-                .withPermission(Permissions.Cluster.REPAIR)
-                .build());
+        super(
+                plugin,
+                CommandMeta.builder("repair")
+                        .addUnlocalizedArgument("id", false)
+                        .withPermission(Permissions.Cluster.REPAIR)
+                        .build());
         this.configuration = configuration;
         this.draw = draw;
     }
 
     @Override
-    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args)
+            throws CommandException {
         Optional<GridCluster> cluster;
         if (args.isEmpty()) {
             cluster = configuration.cluster().world(player.getWorld()).getCluster(player.getLocation());
@@ -53,7 +56,8 @@ public class Repair extends AdvancedCommand implements IPlayerTabExecutor {
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+    public @Nullable List<String> onTabComplete(@NotNull Player player, @NotNull String alias, @NotNull Arguments args)
+            throws CommandException {
         return configuration.cluster().world(player.getWorld()).matchingIds(args.asString(0));
     }
 }

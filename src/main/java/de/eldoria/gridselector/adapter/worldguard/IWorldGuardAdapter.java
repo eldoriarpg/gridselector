@@ -13,14 +13,10 @@ import org.bukkit.entity.Player;
 public interface IWorldGuardAdapter {
     IWorldGuardAdapter DEFAULT = new IWorldGuardAdapter() {
         @Override
-        public void register(GridCluster cluster, World world, Player owner) {
-
-        }
+        public void register(GridCluster cluster, World world, Player owner) {}
 
         @Override
-        public void unregister(GridCluster cluster, World world) {
-
-        }
+        public void unregister(GridCluster cluster, World world) {}
     };
 
     /**

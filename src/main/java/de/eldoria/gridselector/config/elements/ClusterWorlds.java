@@ -17,8 +17,7 @@ import java.util.UUID;
 public class ClusterWorlds {
     private Map<UUID, ClusterWorld> clusterWorlds = new HashMap<>();
 
-    public ClusterWorlds() {
-    }
+    public ClusterWorlds() {}
 
     public ClusterWorld world(World world) {
         return clusterWorlds.computeIfAbsent(world.getUID(), k -> new ClusterWorld(world));

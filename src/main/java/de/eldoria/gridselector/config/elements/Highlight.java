@@ -13,8 +13,7 @@ public class Highlight {
     private boolean highlightBorder = false;
     private boolean highlightBounds = true;
 
-    public Highlight() {
-    }
+    public Highlight() {}
 
     /**
      * The material used to hightlight selections

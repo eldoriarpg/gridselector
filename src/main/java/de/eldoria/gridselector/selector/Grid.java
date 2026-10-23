@@ -17,8 +17,7 @@ import java.util.Set;
 
 public class Grid implements Selector {
 
-    public Grid() {
-    }
+    public Grid() {}
 
     @Override
     public Set<Schematic> select(Player player, SchematicRegistry registry) {

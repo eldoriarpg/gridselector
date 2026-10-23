@@ -20,14 +20,17 @@ public class Create extends AdvancedCommand implements IPlayerTabExecutor {
     private final Sessions sessions;
 
     public Create(Plugin plugin, Sessions sessions) {
-        super(plugin, CommandMeta.builder("create")
-                .withPermission(Permissions.Cluster.CREATE)
-                .build());
+        super(
+                plugin,
+                CommandMeta.builder("create")
+                        .withPermission(Permissions.Cluster.CREATE)
+                        .build());
         this.sessions = sessions;
     }
 
     @Override
-    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args)
+            throws CommandException {
         sessions.getOrCreateSession(player);
         sessions.showBuilder(player);
     }

@@ -15,8 +15,7 @@ public class General {
     private String schematicPath = "SchematicBrushReborn/schematics";
     private boolean absolutePath = false;
 
-    public General() {
-    }
+    public General() {}
 
     public boolean isCreateWorldGuardRegions() {
         return createWorldGuardRegions;
@@ -26,6 +25,10 @@ public class General {
         if (absolutePath) {
             return Path.of(schematicPath);
         }
-        return Bukkit.getUpdateFolderFile().toPath().toAbsolutePath().getParent().resolve(schematicPath);
+        return Bukkit.getUpdateFolderFile()
+                .toPath()
+                .toAbsolutePath()
+                .getParent()
+                .resolve(schematicPath);
     }
 }

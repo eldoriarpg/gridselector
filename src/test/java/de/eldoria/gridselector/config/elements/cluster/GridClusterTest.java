@@ -28,10 +28,8 @@ class GridClusterTest {
 
     @BeforeEach
     void setUp() {
-        pCluster = new GridCluster(Plot.of(0, 0, 17, 17), 3, 1, 3, 3,
-                border, offset, floor);
-        nCluster = new GridCluster(Plot.of(-17, -17, 0, 0), 3, 1, 3, 3,
-                border, offset, floor);
+        pCluster = new GridCluster(Plot.of(0, 0, 17, 17), 3, 1, 3, 3, border, offset, floor);
+        nCluster = new GridCluster(Plot.of(-17, -17, 0, 0), 3, 1, 3, 3, border, offset, floor);
     }
 
     @Test
@@ -223,24 +221,33 @@ class GridClusterTest {
         var elementSize = 20;
         var offsetSize = 1;
         var fullSize = elementSize + offsetSize + 2;
-        var large = new GridCluster(Plot.of(0, 0, fullSize * 30, fullSize * 30), elementSize, offsetSize, 30, 30, border, offset, floor);
+        var large = new GridCluster(
+                Plot.of(0, 0, fullSize * 30, fullSize * 30), elementSize, offsetSize, 30, 30, border, offset, floor);
         regions = large.getRegions();
         Assertions.assertEquals(30 * 30, regions.size());
-        large = new GridCluster(Plot.of(0, 0, fullSize * 200, fullSize * 200), elementSize, offsetSize, 200, 200, border, offset, floor);
+        large = new GridCluster(
+                Plot.of(0, 0, fullSize * 200, fullSize * 200),
+                elementSize,
+                offsetSize,
+                200,
+                200,
+                border,
+                offset,
+                floor);
         regions = large.getRegions();
         Assertions.assertEquals(200 * 200, regions.size());
     }
 
     @ParameterizedTest
     @CsvSource({
-            "SOUTH, true, -18, 0, 0, 18",
-            "SOUTH, false, 0, 0, 18, 18",
-            "NORTH, true, 0, -18, 18, 0",
-            "NORTH, false, -18, -18, 0, 0",
-            "EAST, true, 0, 0, 18, 18",
-            "EAST, false, 0, -18, 18, 0",
-            "WEST, true, -18, -18, 0, 0",
-            "WEST, false, -18, 0, 0, 18"
+        "SOUTH, true, -18, 0, 0, 18",
+        "SOUTH, false, 0, 0, 18, 18",
+        "NORTH, true, 0, -18, 18, 0",
+        "NORTH, false, -18, -18, 0, 0",
+        "EAST, true, 0, 0, 18, 18",
+        "EAST, false, 0, -18, 18, 0",
+        "WEST, true, -18, -18, 0, 0",
+        "WEST, false, -18, 0, 0, 18"
     })
     void buildStartsOnCenterBlock(Direction direction, boolean expandRight, int minX, int minZ, int maxX, int maxZ) {
         var builder = GridCluster.builder(new Location(new FlatWorld(), Vector3.at(0.5, 64, 0.5)), direction);

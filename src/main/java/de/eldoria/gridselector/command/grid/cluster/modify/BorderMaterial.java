@@ -25,14 +25,17 @@ public class BorderMaterial extends AdvancedCommand implements IPlayerTabExecuto
     private final Sessions sessions;
 
     public BorderMaterial(Plugin plugin, Sessions sessions) {
-        super(plugin, CommandMeta.builder("borderMaterial")
-                .addUnlocalizedArgument("material", true)
-                .build());
+        super(
+                plugin,
+                CommandMeta.builder("borderMaterial")
+                        .addUnlocalizedArgument("material", true)
+                        .build());
         this.sessions = sessions;
     }
 
     @Override
-    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args)
+            throws CommandException {
         var material = args.asMaterial(0);
         CommandAssertions.isTrue(material.isBlock(), "%s is not a block.".formatted(material));
         sessions.getOrCreateSession(player).borderMaterial(material);
@@ -40,7 +43,8 @@ public class BorderMaterial extends AdvancedCommand implements IPlayerTabExecuto
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+    public @Nullable List<String> onTabComplete(@NotNull Player player, @NotNull String alias, @NotNull Arguments args)
+            throws CommandException {
         return Completion.completeMaterial(args.asString(0), true);
     }
 }

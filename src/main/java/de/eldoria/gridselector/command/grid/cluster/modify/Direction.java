@@ -25,21 +25,24 @@ public class Direction extends AdvancedCommand implements IPlayerTabExecutor {
     private final Sessions sessions;
 
     public Direction(Plugin plugin, Sessions sessions) {
-        super(plugin, CommandMeta.builder("direction")
-                .build());
+        super(plugin, CommandMeta.builder("direction").build());
         this.sessions = sessions;
     }
 
     @Override
-    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
-        var direction = com.sk89q.worldedit.util.Direction.findClosest(BukkitAdapter.adapt(player).getLocation().getDirection(), com.sk89q.worldedit.util.Direction.Flag.CARDINAL);
+    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args)
+            throws CommandException {
+        var direction = com.sk89q.worldedit.util.Direction.findClosest(
+                BukkitAdapter.adapt(player).getLocation().getDirection(),
+                com.sk89q.worldedit.util.Direction.Flag.CARDINAL);
         CommandAssertions.isTrue(direction != null, "Invalid direction. Please look in the requested direction");
         sessions.getOrCreateSession(player).direction(direction);
         sessions.showBuilder(player);
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+    public @Nullable List<String> onTabComplete(@NotNull Player player, @NotNull String alias, @NotNull Arguments args)
+            throws CommandException {
         return IPlayerTabExecutor.super.onTabComplete(player, alias, args);
     }
 }

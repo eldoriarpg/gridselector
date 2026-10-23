@@ -32,18 +32,16 @@ public class PlotWorldAdapter implements RegionAdapter {
     @Override
     public Optional<RegionResult> getRegion(Location location) {
         var loc = BukkitUtil.adapt(location);
-        return Optional.ofNullable(manager.getPlotArea(loc))
-                .map(area -> {
-
-                    var p = area.getPlot(loc);
-                    if (p == null) {
-                        return null;
-                    }
-                    var walls = p.getLargestRegion().clone();
-                    walls.expand(BlockVector3.at(1, 0, 1));
-                    var floor = area instanceof ClassicPlotWorld world ? OptionalInt.of(world.PLOT_HEIGHT) : OptionalInt.empty();
-                    return new RegionResult(p.getId().toString(), p.getLargestRegion(), walls, floor);
-
-                });
+        return Optional.ofNullable(manager.getPlotArea(loc)).map(area -> {
+            var p = area.getPlot(loc);
+            if (p == null) {
+                return null;
+            }
+            var walls = p.getLargestRegion().clone();
+            walls.expand(BlockVector3.at(1, 0, 1));
+            var floor =
+                    area instanceof ClassicPlotWorld world ? OptionalInt.of(world.PLOT_HEIGHT) : OptionalInt.empty();
+            return new RegionResult(p.getId().toString(), p.getLargestRegion(), walls, floor);
+        });
     }
 }

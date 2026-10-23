@@ -27,14 +27,18 @@ public class ListClusters extends AdvancedCommand implements IPlayerTabExecutor 
     private final Configuration configuration;
 
     public ListClusters(Plugin plugin, Configuration configuration) {
-        super(plugin, CommandMeta.builder("list")
-                .withPermission(Permissions.Cluster.CREATE, Permissions.Cluster.REMOVE, Permissions.Cluster.REPAIR)
-                .build());
+        super(
+                plugin,
+                CommandMeta.builder("list")
+                        .withPermission(
+                                Permissions.Cluster.CREATE, Permissions.Cluster.REMOVE, Permissions.Cluster.REPAIR)
+                        .build());
         this.configuration = configuration;
     }
 
     @Override
-    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args)
+            throws CommandException {
         var clusters = configuration.cluster().world(player.getWorld()).cluster();
         if (clusters.isEmpty()) {
             messageSender().sendMessage(player, "There are no clusters in this world.");
@@ -50,8 +54,17 @@ public class ListClusters extends AdvancedCommand implements IPlayerTabExecutor 
     private static String describe(GridCluster cluster) {
         var min = cluster.plot().min();
         var max = cluster.plot().max();
-        return "<%s>%d: <%s>%d|%d to %d|%d, %d × %d plots of size %d".formatted(
-                Colors.NAME, cluster.id(), Colors.VALUE, min.x(), min.z(), max.x(), max.z(),
-                cluster.rows(), cluster.columns(), cluster.elementSize());
+        return "<%s>%d: <%s>%d|%d to %d|%d, %d × %d plots of size %d"
+                .formatted(
+                        Colors.NAME,
+                        cluster.id(),
+                        Colors.VALUE,
+                        min.x(),
+                        min.z(),
+                        max.x(),
+                        max.z(),
+                        cluster.rows(),
+                        cluster.columns(),
+                        cluster.elementSize());
     }
 }

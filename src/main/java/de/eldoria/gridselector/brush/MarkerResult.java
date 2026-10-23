@@ -39,9 +39,9 @@ public record MarkerResult(String identifier, CuboidRegion schematicRegion, Cubo
         List<Vector> result = new ArrayList<>();
         var max = schematicRegion.getMaximumPoint();
         var min = schematicRegion.getMinimumPoint();
-        for (var x : new int[]{min.x() - 1, max.x() + 1}) {
-            for (var y : new int[]{min.y() - 1, max.y() + 1}) {
-                for (var z : new int[]{min.z() - 1, max.z() + 1}) {
+        for (var x : new int[] {min.x() - 1, max.x() + 1}) {
+            for (var y : new int[] {min.y() - 1, max.y() + 1}) {
+                for (var z : new int[] {min.z() - 1, max.z() + 1}) {
                     result.add(new Vector(x, y, z));
                 }
             }

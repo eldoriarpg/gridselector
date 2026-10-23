@@ -23,8 +23,7 @@ public class ClusterWorld {
     private List<GridCluster> cluster;
     private int id = 1;
 
-    public ClusterWorld() {
-    }
+    public ClusterWorld() {}
 
     public ClusterWorld(World world) {
         this.uid = world.getUID();
@@ -51,7 +50,10 @@ public class ClusterWorld {
      */
     public void assertOverlap(GridCluster cluster) throws CommandException {
         for (var gridCluster : this.cluster) {
-            CommandAssertions.isFalse(gridCluster.plot().overlaps(cluster.plot()), "Cluster overlaps with cluster " + gridCluster.id() + ". Change dimensions/position or remove other cluster first.");
+            CommandAssertions.isFalse(
+                    gridCluster.plot().overlaps(cluster.plot()),
+                    "Cluster overlaps with cluster " + gridCluster.id()
+                            + ". Change dimensions/position or remove other cluster first.");
         }
     }
 
@@ -104,7 +106,10 @@ public class ClusterWorld {
      * @return matching cluster IDs
      */
     public List<String> matchingIds(String prefix) {
-        return cluster.stream().map(c -> String.valueOf(c.id())).filter(id -> id.startsWith(prefix)).toList();
+        return cluster.stream()
+                .map(c -> String.valueOf(c.id()))
+                .filter(id -> id.startsWith(prefix))
+                .toList();
     }
 
     /**

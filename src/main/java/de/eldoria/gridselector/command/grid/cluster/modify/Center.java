@@ -24,19 +24,20 @@ public class Center extends AdvancedCommand implements IPlayerTabExecutor {
     private final Sessions sessions;
 
     public Center(Plugin plugin, Sessions sessions) {
-        super(plugin, CommandMeta.builder("center")
-                .build());
+        super(plugin, CommandMeta.builder("center").build());
         this.sessions = sessions;
     }
 
     @Override
-    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+    public void onCommand(@NotNull Player player, @NotNull String alias, @NotNull Arguments args)
+            throws CommandException {
         sessions.getOrCreateSession(player).center(BukkitAdapter.adapt(player.getLocation()));
         sessions.showBuilder(player);
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
+    public @Nullable List<String> onTabComplete(@NotNull Player player, @NotNull String alias, @NotNull Arguments args)
+            throws CommandException {
         return IPlayerTabExecutor.super.onTabComplete(player, alias, args);
     }
 }

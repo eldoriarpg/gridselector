@@ -32,7 +32,11 @@ public class SelectionListener implements Listener {
     private final MessageSender messageSender;
     private final Configuration configuration;
 
-    public SelectionListener(WorldAdapter adapter, GridSchematics schematicService, MessageSender messageSender, Configuration configuration) {
+    public SelectionListener(
+            WorldAdapter adapter,
+            GridSchematics schematicService,
+            MessageSender messageSender,
+            Configuration configuration) {
         this.adapter = adapter;
         this.schematicService = schematicService;
         this.messageSender = messageSender;
@@ -86,6 +90,7 @@ public class SelectionListener implements Listener {
             return;
         }
         players.put(player.getUniqueId(), brush);
-        messageSender.sendMessage(player, "Selection tool bound. Select schematics with right clicks. Left click when you are done.");
+        messageSender.sendMessage(
+                player, "Selection tool bound. Select schematics with right clicks. Left click when you are done.");
     }
 }

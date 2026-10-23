@@ -23,21 +23,24 @@ import org.bukkit.plugin.Plugin;
 
 public class Cluster extends AdvancedCommand {
     public Cluster(Plugin plugin, Configuration configuration, IWorldGuardAdapter worldGuardAdapter) {
-        super(plugin, CommandMeta.builder("cluster")
-                .withPermission(Permissions.Cluster.REMOVE, Permissions.Cluster.CREATE, Permissions.Cluster.REPAIR)
-                .buildSubCommands((cmds, builder) -> {
-                    var sessions = new Sessions(plugin);
-                    var create = new Create(plugin, sessions);
-                    var draw = new Draw(plugin, sessions, configuration, worldGuardAdapter);
-                    cmds.add(create);
-                    cmds.add(draw);
-                    cmds.add(new Modify(plugin, sessions));
-                    cmds.add(new Repair(plugin, configuration, draw));
-                    cmds.add(new Remove(plugin, configuration, worldGuardAdapter));
-                    cmds.add(new ListClusters(plugin, configuration));
-                    cmds.add(new Close(plugin, sessions));
-                    builder.withDefaultCommand(create);
-                })
-                .build());
+        super(
+                plugin,
+                CommandMeta.builder("cluster")
+                        .withPermission(
+                                Permissions.Cluster.REMOVE, Permissions.Cluster.CREATE, Permissions.Cluster.REPAIR)
+                        .buildSubCommands((cmds, builder) -> {
+                            var sessions = new Sessions(plugin);
+                            var create = new Create(plugin, sessions);
+                            var draw = new Draw(plugin, sessions, configuration, worldGuardAdapter);
+                            cmds.add(create);
+                            cmds.add(draw);
+                            cmds.add(new Modify(plugin, sessions));
+                            cmds.add(new Repair(plugin, configuration, draw));
+                            cmds.add(new Remove(plugin, configuration, worldGuardAdapter));
+                            cmds.add(new ListClusters(plugin, configuration));
+                            cmds.add(new Close(plugin, sessions));
+                            builder.withDefaultCommand(create);
+                        })
+                        .build());
     }
 }
