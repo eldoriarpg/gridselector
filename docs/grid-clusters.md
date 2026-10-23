@@ -66,7 +66,8 @@ Painting a cluster is a normal WorldEdit change in your session. If the result i
 puts the blocks back. The cluster itself stays registered, so remove it with `/sbrg cluster remove` as well.
 :::
 
-A cluster must not overlap another cluster in the same world. If it does, you get the message
+A cluster must not overlap another cluster in the same world. Clusters may sit right next to each other, but they
+must not share a single block. If they do, you get the message
 "Cluster overlaps with cluster" and the ID of the other cluster. Move or shrink the new cluster, or remove the
 other one first.
 
@@ -120,8 +121,10 @@ Did someone break the floor or the border? Stand inside the cluster and run:
 /sbrg cluster repair
 ```
 
-Grid Selector paints the cluster again, with its blocks and at its height. Like the first paint job, this is a
-WorldEdit change in your session, so `//undo` reverts it.
+Grid Selector paints the cluster again, with its blocks and at its height, and says "Cluster redrawn." Like the first
+paint job, this is a WorldEdit change in your session, so `//undo` reverts it. It counts against your WorldEdit
+limits too: if the cluster is too large for them, you get "Grid exceeds maximum world edit size." and `//undo` removes
+the part that was painted.
 
 :::warning
 Repairing paints the whole cluster layer again. Blocks of a build that sit in that layer are replaced.

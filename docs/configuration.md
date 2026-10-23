@@ -16,8 +16,8 @@ Grid Selector keeps its files in `plugins/GridSelector/`:
 
 The files are created with default values when they are needed first.
 
-The add-on reads the files on startup. It writes the three `.yml` files again whenever a cluster is created, repaired or
-removed, and when an admin answers the update question in chat. Changes you make to a file while the server runs
+The add-on reads the files on startup. It writes the three `.yml` files again whenever a cluster is created or removed,
+and when an admin answers the update question in chat. Changes you make to a file while the server runs
 are then overwritten. Stop the server, edit the file, then start the server again.
 
 ## config.yml
