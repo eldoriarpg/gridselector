@@ -40,6 +40,6 @@ public class Size extends AdvancedCommand implements IPlayerTabExecutor {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull Player player, @NotNull String alias, @NotNull Arguments args) throws CommandException {
-        return Completion.completeMinInt(args.asString(0), 0);
+        return Completion.completeMinInt(args.asString(0), 1);
     }
 }

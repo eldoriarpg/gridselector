@@ -36,7 +36,6 @@ public class Modify extends AdvancedCommand {
                 .withSubCommand(new FloorMaterial(plugin, sessions))
                 .withSubCommand(new BorderMaterial(plugin, sessions))
                 .withSubCommand(new OffsetMaterial(plugin, sessions))
-                .withSubCommand(new Center(plugin, sessions))
                 .build());
     }
 }

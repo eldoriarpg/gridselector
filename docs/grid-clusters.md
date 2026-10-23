@@ -91,7 +91,7 @@ click `[Create]` again.
 | Offset Material | `LIGHT_GRAY_CONCRETE` | Block for the gaps between the plots. |
 
 The `[change]` buttons for numbers and blocks put a command into your chat bar. Add the value and press enter, for
-example `/sbrg cluster modify size 15`. Block names are tab completed. Use blocks only, not items.
+example `/sbrg cluster modify size 15`. Block names are tab completed. Only blocks are accepted, not items.
 
 A cluster is `(size + 2) × rows + offset × (rows - 1)` blocks long and
 `(size + 2) × columns + offset × (columns - 1)` blocks wide. With the defaults that is 19 by 19 blocks.
