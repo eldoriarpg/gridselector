@@ -140,12 +140,8 @@ logLevel: "INFO"
 | `logLevel` | How much the add-on logs. `INFO` is normal. |
 
 The log levels work as in Schematic Brush Reborn, see its
-[configuration](/schematic-brush-reborn/configuration).
-
-:::warning
-`DEBUG` does not last at the moment. When Grid Selector writes its files, for example after a cluster change, it
-stores `DEBUG` as `CONFIG`, which is read back as `INFO` on the next start. Set it again if that happens.
-:::
+[configuration](/schematic-brush-reborn/configuration). When Grid Selector writes the file, `DEBUG` is stored
+as `CONFIG`. Both mean the same.
 
 ## Messages
 
