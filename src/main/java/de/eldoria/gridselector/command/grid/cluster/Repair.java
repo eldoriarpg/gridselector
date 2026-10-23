@@ -45,8 +45,8 @@ public class Repair extends AdvancedCommand implements IPlayerTabExecutor {
             CommandAssertions.isTrue(cluster.isPresent(), "Unkown cluster id");
         }
 
-        draw.draw(cluster.get(), player);
-        configuration.save();
-        messageSender().sendMessage(player, "Cluster redrawn.");
+        if (draw.draw(cluster.get(), player.getWorld(), player)) {
+            messageSender().sendMessage(player, "Cluster redrawn.");
+        }
     }
 }

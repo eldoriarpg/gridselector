@@ -8,7 +8,6 @@ package de.eldoria.gridselector.config.elements.cluster;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector2;
-import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.util.Direction;
 import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldedit.world.World;
@@ -17,7 +16,6 @@ import de.eldoria.eldoutilities.localization.MessageComposer;
 import de.eldoria.eldoutilities.utils.EMath;
 import de.eldoria.gridselector.util.Colors;
 import org.bukkit.Material;
-import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -289,23 +287,37 @@ public class GridCluster {
             this.floorMaterial = floorMaterial;
         }
 
+        /**
+         * Builds the cluster. It starts on the block of the center and reaches {@code rows} plots into the direction
+         * and {@code columns} plots to the chosen side, whichever way those point.
+         *
+         * @return the cluster
+         */
         public GridCluster build() {
             var rowsSize = (elementSize + 2) * rows + (rows - 1) * offset;
             var columnSize = (elementSize + 2) * columns + (columns - 1) * offset;
             var columnDir = rotate(direction, expandRight);
 
-            var offsetVec = Vector3.ZERO.add(direction.toVector().multiply(rowsSize)).add(columnDir.toVector().multiply(columnSize));
+            var toFarCorner = direction.toVector().multiply(rowsSize - 1).add(columnDir.toVector().multiply(columnSize - 1));
 
-            var first = BukkitAdapter.adapt(center).toVector().toBlockVector();
-            var second = BukkitAdapter.adapt(new Location(world, center.toVector().add(offsetVec).withY(world.getMaxY()))).toVector().toBlockVector();
+            var start = center.toVector().toBlockPoint().toBlockVector2();
+            var end = center.toVector().add(toFarCorner).toBlockPoint().toBlockVector2();
 
-            var boundings = Plot.of(floorVector(first), floorVector(second)).modify(min -> min, max -> max.subtract(1, 1));
-
-            return new GridCluster(boundings, elementSize, offset, rows, columns, borderMaterial, offsetMaterial, floorMaterial);
+            return new GridCluster(Plot.of(start, end), elementSize, offset, rows, columns, borderMaterial, offsetMaterial, floorMaterial);
         }
 
-        public BlockVector2 floorVector(Vector vector) {
-            return BlockVector2.at(vector.getBlockX(), vector.getBlockZ());
+        /**
+         * @return the world the cluster is laid out in
+         */
+        public World world() {
+            return world;
+        }
+
+        /**
+         * @return the block the cluster starts on, at the bottom of the world
+         */
+        public Location center() {
+            return center;
         }
 
         public String asComponent() {

@@ -48,7 +48,7 @@ public class Remove extends AdvancedCommand implements IPlayerTabExecutor {
             CommandAssertions.isTrue(cluster.isPresent(), "Unkown cluster id");
         }
 
-        worldGuardAdapter.unregister(cluster.get(), player);
+        worldGuardAdapter.unregister(cluster.get(), player.getWorld());
 
         configuration.cluster().world(player.getWorld()).unregister(cluster.get().id());
         messageSender().sendMessage(player, "Cluster removed");

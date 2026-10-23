@@ -46,19 +46,20 @@ The cluster is painted as a single layer of blocks. Everything above that layer 
 4. Change the settings with the `[change]` buttons, see [Settings](#settings).
 5. Click `[Create]`.
 
-Grid Selector paints the cluster and tells you how many blocks it changed. The cluster is saved right away.
+Grid Selector paints the cluster and tells you how many blocks it changed. The cluster is saved right away, and you
+see its [ID](#cluster-ids).
 
 ### Where the cluster goes
 
-- **Start.** The cluster starts at the spot where you stood when you opened the builder. Use `[change]` next to
-  *Location* to move the start to where you stand now.
+- **Start.** The block you stood on when you opened the builder becomes the outer corner of the first plot.
+  Use `[change]` next to *Location* to move the start to where you stand now.
 - **Direction.** Rows run in the direction you looked when you opened the builder: north, east, south or west.
   Use `[change]` next to *Direction* to take the direction you look at now.
 - **Side.** Columns grow to your right. Use `[change]` next to *Expand* to switch between right and left.
-- **Height.** The cluster is painted on the highest block at the spot where you stand **when you click
-  `[Create]`**. That block layer becomes the floor of every plot. Stand on the ground of the area, with nothing
-  above you. A roof or leaves over your head would set the height instead.
-- **World.** The cluster is created in the world you are in when you click `[Create]`.
+- **Height.** The cluster is painted on the highest block at its start. That block layer becomes the floor of
+  every plot. Make sure nothing is above the start: a roof or leaves there would set the height instead.
+- **World.** The cluster is created in the world of its start, even if you are somewhere else when you click
+  `[Create]`.
 
 :::tip
 Painting a cluster is a normal WorldEdit change in your session. If the result is not what you wanted, `//undo`
@@ -70,12 +71,9 @@ A cluster must not overlap another cluster in the same world. If it does, you ge
 other one first.
 
 The paint job counts against your WorldEdit limits. If the cluster is too large for them, you get the message
-"Grid exceeds maximum world edit size."
-
-:::warning
-The cluster is saved even when it did not fit into your WorldEdit limits, so it may be only partly painted.
-Run `/sbrg cluster repair` once your limits allow it, or remove the cluster.
-:::
+"Grid exceeds maximum world edit size." The cluster is then not created and your session stays open. The part that
+was already painted stays in the world; `//undo` removes it. Make the cluster smaller or raise your limits, then
+click `[Create]` again.
 
 ### Settings
 
@@ -172,6 +170,6 @@ Grid Selector only creates the region. Set flags and add members with WorldGuard
 
 :::note
 - Repairing a cluster does not create a region.
-- The setting is checked at the time you create or remove a cluster. Clusters created while it was off have no
-  region. If you turn it off, removing a cluster leaves its region in place.
+- The setting is checked at the time you create a cluster. Clusters created while it was off have no region.
+- Removing a cluster removes its region even if you turned the setting off since.
 :::

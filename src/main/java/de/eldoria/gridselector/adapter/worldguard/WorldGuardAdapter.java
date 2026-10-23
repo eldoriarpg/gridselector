@@ -11,6 +11,7 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import de.eldoria.gridselector.config.Configuration;
 import de.eldoria.gridselector.config.elements.cluster.GridCluster;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 public class WorldGuardAdapter implements IWorldGuardAdapter {
@@ -23,22 +24,25 @@ public class WorldGuardAdapter implements IWorldGuardAdapter {
     }
 
     @Override
-    public void register(GridCluster cluster, Player player) {
+    public void register(GridCluster cluster, World world, Player owner) {
         if (configuration.general().isCreateWorldGuardRegions() && worldGuard != null) {
-            var world = BukkitAdapter.adapt(player.getWorld());
+            var weWorld = BukkitAdapter.adapt(world);
             var region = new ProtectedCuboidRegion(cluster.plot().id(),
-                    cluster.plot().min().toBlockVector3(world.getMinY()),
-                    cluster.plot().max().toBlockVector3(world.getMaxY()));
-            region.getOwners().addPlayer(player.getUniqueId());
-            worldGuard.getPlatform().getRegionContainer().get(world).addRegion(region);
+                    cluster.plot().min().toBlockVector3(weWorld.getMinY()),
+                    cluster.plot().max().toBlockVector3(weWorld.getMaxY()));
+            region.getOwners().addPlayer(owner.getUniqueId());
+            worldGuard.getPlatform().getRegionContainer().get(weWorld).addRegion(region);
         }
     }
 
+    /**
+     * Removes the region whether or not regions are switched on, so a cluster created while they were on does not
+     * leave its region behind.
+     */
     @Override
-    public void unregister(GridCluster cluster, Player player) {
-        if (configuration.general().isCreateWorldGuardRegions() && worldGuard != null) {
-            var world = BukkitAdapter.adapt(player.getWorld());
-            worldGuard.getPlatform().getRegionContainer().get(world).removeRegion(cluster.plot().id());
-        }
+    public void unregister(GridCluster cluster, World world) {
+        if (worldGuard == null) return;
+        var regions = worldGuard.getPlatform().getRegionContainer().get(BukkitAdapter.adapt(world));
+        if (regions != null) regions.removeRegion(cluster.plot().id());
     }
 }
