@@ -102,24 +102,24 @@ public class GridSchematics implements SchematicCache {
 
     @Override
     public CompletableFuture<Void> init() {
-        // Clear the schematic directory on startup
         clearSchematics();
         return CompletableFuture.completedFuture(null);
     }
 
     @Override
     public void shutdown() {
-        // Clear the schematic directory on shutdown
         clearSchematics();
     }
 
+    /**
+     * Deletes every saved selection. Selections only live until the server stops, so this runs on start and shutdown.
+     */
     private void clearSchematics() {
         try (var stream = Files.walk(plugin.getDataFolder().toPath().resolve(Path.of("schematics")))) {
             stream.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
-        } catch (NoSuchFileException | FileNotFoundException e) {
-            // ignore
+        } catch (NoSuchFileException | FileNotFoundException ignored) {
         } catch (IOException e) {
-            plugin.getLogger().log(Level.SEVERE, "Cloud not clear player directory", e);
+            plugin.getLogger().log(Level.SEVERE, "Could not clear player directory", e);
         }
     }
 
