@@ -1,5 +1,5 @@
 [versions]
-jackson = "3.2.4"
+jackson = "3.3.0"
 utilities = "3.7.0"
 paper = "1.21.11-R0.1-SNAPSHOT"
 fawe = "2.16.2"
@@ -27,7 +27,7 @@ fawe-bukkit = { module = "com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit", ver
 
 plotsquared-core = { module = "com.intellectualsites.plotsquared:plotsquared-core", version.ref = "plotsquared" }
 plotsquared-bukkit = { module = "com.intellectualsites.plotsquared:plotsquared-bukkit", version.ref = "plotsquared" }
-worldguard-bukkit = "com.sk89q.worldguard:worldguard-bukkit:7.0.20"
+worldguard-bukkit = "com.sk89q.worldguard:worldguard-bukkit:7.0.21"
 guice = "com.google.inject:guice:7.0.0"
 
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
@@ -40,7 +40,7 @@ jackson = ["jackson-databind", "jackson-annotations", "jackson-yaml"]
 utilities = ["eldoutil-jackson", "eldoutil-plugin", "eldoutil-updater"]
 
 [plugins]
-spotless = { id = "com.diffplug.spotless", version = "8.10.4" }
+spotless = { id = "com.diffplug.spotless", version = "8.11.0" }
 publishdata = { id = "de.chojo.publishdata", version = "2.3.0" }
 publishdata-manifest = { id = "de.chojo.publishdata.manifest", version = "2.3.0" }
 shadow = { id = "com.gradleup.shadow", version = "9.6.1" }
